@@ -73,6 +73,8 @@ export default {
         .then(async (res) => {
           console.log(res);
           this.airtableData = await res.data.records;
+          // this.$store.state.user.profile = this.airtableData;
+          this.$store.dispatch("fetchProfile", await res.data.records);
           if (this.airtableData.length == 0) {
             console.log("New User");
             this.addNewUserToAirtable();
@@ -81,6 +83,9 @@ export default {
             console.log("Existing User");
             // todo - redirect user
           }
+        })
+        .finally(() => {
+          this.$router.push("profile");
         })
         .catch((err) => {
           console.error(err);

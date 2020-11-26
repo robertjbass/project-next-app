@@ -5,12 +5,16 @@ export default new Vuex.Store({
   state: {
     user: {
       loggedIn: false,
-      data: null
-    }
+      data: null,
+    },
+    profile: null
   },
   getters: {
     user(state){
       return state.user
+    },
+    profile(state){
+      return state.profile
     }
   },
   mutations: {
@@ -19,6 +23,9 @@ export default new Vuex.Store({
     },
     SET_USER(state, data) {
       state.user.data = data;
+    },
+    SET_PROFILE(state, profile) {
+      state.profile = profile
     }
   },
   actions: {
@@ -27,11 +34,30 @@ export default new Vuex.Store({
       if (user) {
         commit("SET_USER", {
           displayName: user.displayName,
-          email: user.email
+          email: user.email,
+          uid: user.uid
         });
       } else {
         commit("SET_USER", null);
       }
+    },
+    fetchProfile({ commit }, profile) {
+      commit("SET_PROFILE", {
+        profile: profile[0].fields,
+          // active: profile[0].fields.active,
+          // name: profile[0].fields.name,
+          // email: profile[0].fields.email,
+          // profilePicUrl: profile[0].fields.profilePicUrl,
+          // profileSummary: profile[0].fields.profileSummary,
+          // firebaseUid: profile[0].fields.firebaseUid
+        // 
+        // name: profile[0].fields.name,
+        // active: profile[0].fields.active,
+        // email: profile[0].fields.email,
+        // profilePicUrl: profile[0].fields.profilePicUrl,
+        // profileSummary: profile[0].fields.profileSummary,
+        // firebaseUid: profile[0].fields.firebaseUid
+      })
     }
   }
 });

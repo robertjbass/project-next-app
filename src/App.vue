@@ -6,32 +6,44 @@
       src="./assets/images/blackBGWhiteTextThinLighning.png"
     />
     <router-view></router-view>
-    <div class="bottomBar"></div>
+    <div class="bottomBar">
+      <!-- {{ this.user }} -->
+      <!-- {{ this.user.loggedIn }} -->
+      <div class="logout" v-if="this.user.loggedIn">
+        <Login />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { auth } from "./firebase";
+import { mapGetters } from "vuex";
+import Login from "./components/Login";
+// import { auth } from "./firebase";
 
 export default {
   name: "App",
-  data() {
-    return {
-      auth,
-    };
-  },
-  methods: {
-    logout() {
-      auth.signOut();
-    },
-    checkUser() {
-      console.log(this.currentUser);
-    },
-  },
+  // data() {
+  //   return {
+  //     auth,
+  //   };
+  // },
+  // methods: {
+  //   logout() {
+  //     auth.signOut();
+  //   },
+  // checkUser() {
+  //   console.log(this.user);
+  // },
+  // },
   computed: {
-    currentUser() {
-      return this.auth.currentUser;
-    },
+    ...mapGetters(["user"]),
+    // currentUser() {
+    //   return this.auth.currentUser;
+    // },
+  },
+  components: {
+    Login,
   },
 };
 </script>
