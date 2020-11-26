@@ -1,6 +1,7 @@
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 import 'firebase/auth'
+import store from './store'
 
 const firebaseConfig = {
   apiKey: "AIzaSyCC8VUrpoEii3a32r5TA3KJEh481fSHGdA",
@@ -18,3 +19,7 @@ firebase.initializeApp(firebaseConfig)
 export const db = firebase.firestore()
 export const auth = firebase.auth()
 export const provider = new firebase.auth.GithubAuthProvider()
+
+firebase.auth().onAuthStateChanged(user => {
+  store.dispatch("fetchUser", user);
+});

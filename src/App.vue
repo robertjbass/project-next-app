@@ -1,5 +1,3 @@
-<!-- https://firebase.google.com/docs/auth/web/github-auth
-https://fireship.io/courses/vue/auth-anonymous/ -->
 <template>
   <div id="app">
     <img
@@ -7,17 +5,14 @@ https://fireship.io/courses/vue/auth-anonymous/ -->
       class="logo"
       src="./assets/images/blackBGWhiteTextThinLighning.png"
     />
-    <Home />
-    <div class="bottomBar">
-      <!-- <v-btn @click="this.logout">LogOut</v-btn> -->
-      <!-- {{ this.currentUser }}
-      <br /><br /> -->
-    </div>
+    <!-- <Home /> -->
+    <router-view></router-view>
+    <div class="bottomBar"></div>
   </div>
 </template>
 
 <script>
-import Home from "./components/Home.vue";
+// import Home from "./components/Home.vue";
 import { auth } from "./firebase";
 
 export default {
@@ -40,9 +35,9 @@ export default {
       return this.auth.currentUser;
     },
   },
-  components: {
-    Home,
-  },
+  // components: {
+  //   Home,
+  // },
 };
 </script>
 
