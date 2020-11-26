@@ -5,14 +5,12 @@
       class="logo"
       src="./assets/images/blackBGWhiteTextThinLighning.png"
     />
-    <!-- <Home /> -->
     <router-view></router-view>
     <div class="bottomBar"></div>
   </div>
 </template>
 
 <script>
-// import Home from "./components/Home.vue";
 import { auth } from "./firebase";
 
 export default {
@@ -35,9 +33,6 @@ export default {
       return this.auth.currentUser;
     },
   },
-  // components: {
-  //   Home,
-  // },
 };
 </script>
 

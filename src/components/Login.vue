@@ -1,46 +1,21 @@
 <template>
   <div class="login">
-    <h3>Login</h3>
+    <h3>
+      {{ this.isUserLoggedIn ? this.ghEmail : "Login" }}
+    </h3>
     <br />
-    <h1>{{ this.currentUser }}</h1>
     <div class="signin" v-if="!this.user">
-      <v-btn large class="gh-button ma-2 white--text" @click="this.loginWithGH">
+      <v-btn
+        large
+        class="gh-button ma-2 white--text"
+        @click="this.signInWithGH"
+      >
         GitHub
         <v-icon right> mdi-github </v-icon>
       </v-btn>
     </div>
     <div class="signout" v-else>
       <v-btn light @click="this.signOut">SignOut</v-btn>
-    </div>
-
-    <!--  -->
-    <!-- {{ this.currentUser }}
-    <div class="signOut" v-show="this.currentUser != 'Signed Out'"></div> -->
-    <!--  -->
-    <!-- <div class="checkUser">
-      <h3>{{ this.currentUser }}</h3>
-    </div> -->
-    <!--  -->
-    <div class="userInfo" v-if="this.user">
-      uid: {{ this.uid }}
-      <br />
-      displayName: {{ this.displayName }}
-      <br />
-      photoURL: {{ this.photoURL }}
-      <br />
-      ghEmail: {{ this.ghEmail }}
-      <br />
-      providerId: {{ this.providerId }}
-      <br />
-      emailVerified: {{ this.emailVerified }}
-      <br />
-      airtableUrlByEmail: {{ this.airtableUrlByEmail }}
-      <br />
-      ghEmailEencodedURI: {{ this.ghEmailEencodedURI }}
-      <br />
-      airtableData: {{ this.airtableData }}
-      <br />
-      profileBio: {{ this.profileBio }} <br /><br />
     </div>
   </div>
 </template>
@@ -62,7 +37,7 @@ export default {
     };
   },
   methods: {
-    loginWithGH() {
+    signInWithGH() {
       auth.signInWithPopup(provider).then((user) => {
         this.user = user;
         console.log(user);
@@ -122,28 +97,56 @@ export default {
       return `https://v1.nocodeapi.com/bbass/airtable/OWBByjdlNVhiKRiR?tableName=Users&view=User%20Data&filterByFormula=email%20%3D%20%22${this.ghEmailEencodedURI}%22`;
     },
     uid() {
-      return this.user.user.uid;
+      if (this.user) {
+        return this.user.user.uid;
+      } else {
+        return "";
+      }
     },
     displayName() {
-      return this.user.user.displayName;
+      if (this.user) {
+        return this.user.user.displayName;
+      } else {
+        return "";
+      }
     },
     photoURL() {
-      return this.user.user.photoURL;
+      if (this.user) {
+        return this.user.user.photoURL;
+      } else {
+        return "";
+      }
     },
     ghEmail() {
-      return this.user.user.email;
+      if (this.user) {
+        return this.user.user.email;
+      } else {
+        return "";
+      }
     },
     ghEmailEencodedURI() {
       return this.ghEmail.split("@").join("%40");
     },
     providerId() {
-      return this.user.user.providerId;
+      if (this.user) {
+        return this.user.user.providerId;
+      } else {
+        return "";
+      }
     },
     emailVerified() {
-      return this.user.user.emailVerified;
+      if (this.user) {
+        return this.user.user.emailVerified;
+      } else {
+        return "";
+      }
     },
     profileBio() {
-      return this.user.additionalUserInfo.profile.bio;
+      if (this.user) {
+        return this.user.additionalUserInfo.profile.bio;
+      } else {
+        return "";
+      }
     },
     currentUser() {
       if (this.auth.currentUser) {
@@ -151,6 +154,9 @@ export default {
       } else {
         return null;
       }
+    },
+    isUserLoggedIn() {
+      return this.$store.state.user.loggedIn;
     },
   },
 };
