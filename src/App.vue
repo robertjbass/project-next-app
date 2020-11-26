@@ -8,13 +8,38 @@ https://fireship.io/courses/vue/auth-anonymous/ -->
       src="./assets/images/blackBGWhiteTextThinLighning.png"
     />
     <Home />
+    <div class="bottomBar">
+      <!-- <v-btn @click="this.logout">LogOut</v-btn> -->
+      <!-- {{ this.currentUser }}
+      <br /><br /> -->
+    </div>
   </div>
 </template>
 
 <script>
 import Home from "./components/Home.vue";
+import { auth } from "./firebase";
+
 export default {
   name: "App",
+  data() {
+    return {
+      auth,
+    };
+  },
+  methods: {
+    logout() {
+      auth.signOut();
+    },
+    checkUser() {
+      console.log(this.currentUser);
+    },
+  },
+  computed: {
+    currentUser() {
+      return this.auth.currentUser;
+    },
+  },
   components: {
     Home,
   },
