@@ -42,22 +42,10 @@ export default new Vuex.Store({
       }
     },
     fetchProfile({ commit }, profile) {
-      commit("SET_PROFILE", {
-        profile: profile[0].fields,
-          // active: profile[0].fields.active,
-          // name: profile[0].fields.name,
-          // email: profile[0].fields.email,
-          // profilePicUrl: profile[0].fields.profilePicUrl,
-          // profileSummary: profile[0].fields.profileSummary,
-          // firebaseUid: profile[0].fields.firebaseUid
-        // 
-        // name: profile[0].fields.name,
-        // active: profile[0].fields.active,
-        // email: profile[0].fields.email,
-        // profilePicUrl: profile[0].fields.profilePicUrl,
-        // profileSummary: profile[0].fields.profileSummary,
-        // firebaseUid: profile[0].fields.firebaseUid
-      })
+      console.table('value sent to vuex', {profile})
+        commit("SET_PROFILE",
+          {profile: profile}
+      )
     }
   }
 });

@@ -1,28 +1,25 @@
 <template>
   <div class="home">
-    <v-card dark class="login-card">
-      <Login />
-    </v-card>
+    <div class="profile" v-if="this.user.loggedIn">
+      <Profile />
+    </div>
   </div>
 </template>
 
 <script>
-import Login from "@/components/Login.vue";
+import Profile from "@/components/Profile.vue";
+import { mapGetters } from "vuex";
 export default {
   name: "Home",
-  data() {
-    return {
-      key: "value",
-    };
+  computed: {
+    ...mapGetters(["user", "profile"]),
   },
   components: {
-    Login,
+    Profile,
   },
 };
 </script>
 
 <style scoped>
-.login-card {
-  padding: 20px 0;
-}
+/*  */
 </style>

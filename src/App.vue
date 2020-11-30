@@ -1,49 +1,30 @@
 <template>
   <div id="app">
-    <img
-      alt="Logo"
-      class="logo"
-      src="./assets/images/blackBGWhiteTextThinLighning.png"
-    />
-    <router-view></router-view>
-    <div class="bottomBar">
-      <!-- {{ this.user }} -->
-      <!-- {{ this.user.loggedIn }} -->
-      <div class="logout" v-if="this.user.loggedIn">
-        <Login />
-      </div>
-    </div>
+    <v-card dark class="login-card">
+      <Navbar />
+    </v-card>
+    <Drawer />
+
+    <!-- <router-view></router-view> -->
+    <!-- <div class="bottom-bar">logout</div> -->
   </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
-import Login from "./components/Login";
-// import { auth } from "./firebase";
+import Navbar from "@/components/Navbar.vue";
+// import Home from "@/components/Home.vue";
+import Drawer from "@/components/Drawer.vue";
 
 export default {
   name: "App",
-  // data() {
-  //   return {
-  //     auth,
-  //   };
-  // },
-  // methods: {
-  //   logout() {
-  //     auth.signOut();
-  //   },
-  // checkUser() {
-  //   console.log(this.user);
-  // },
-  // },
   computed: {
-    ...mapGetters(["user"]),
-    // currentUser() {
-    //   return this.auth.currentUser;
-    // },
+    ...mapGetters(["user", "profile"]),
   },
   components: {
-    Login,
+    Navbar,
+    Drawer,
+    // Home,
   },
 };
 </script>
@@ -60,6 +41,17 @@ export default {
 }
 
 .logo {
-  width: 70%;
+  width: 40%;
 }
+
+.bottom-bar {
+  height: 40px;
+  position: fixed;
+  bottom: 0%;
+  width: 100%;
+  background-color: #393838;
+  opacity: 1;
+}
+/* .login-card {
+} */
 </style>

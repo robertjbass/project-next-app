@@ -1,20 +1,17 @@
 <template>
   <div class="login">
-    <h3>
-      {{ this.isUserLoggedIn ? this.ghEmail : "Login" }}
-    </h3>
-    <br />
-    <div class="signin" v-if="!this.user">
-      <v-btn
-        large
-        class="gh-button ma-2 white--text"
-        @click="this.signInWithGH"
-      >
-        GitHub
+    <div class="email">
+      <h3 class="upper-left" v-if="this.user.loggedIn">
+        {{ this.user.data.email }}
+      </h3>
+    </div>
+    <div class="signin" v-if="!this.user.loggedIn">
+      <v-btn class="gh-button ma-2 white--text" @click="this.signInWithGH">
+        {{ this.user.loggedIn ? "logout" : "login" }}
         <v-icon right> mdi-github </v-icon>
       </v-btn>
     </div>
-    <div class="signout" v-else>
+    <div class="gh-button ma-2 white--text" v-else>
       <v-btn light @click="this.signOut">SignOut</v-btn>
     </div>
   </div>
@@ -23,8 +20,7 @@
 <script>
 import { auth, provider } from "../firebase";
 import axios from "axios";
-
-console.log(auth);
+import { mapGetters } from "vuex";
 
 export default {
   name: "Login",
@@ -32,17 +28,44 @@ export default {
     return {
       auth,
       provider,
-      user: null,
+      authUser: null,
       airtableData: null,
+      ghUsername: null,
     };
   },
   methods: {
     signInWithGH() {
-      auth.signInWithPopup(provider).then((user) => {
-        this.user = user;
-        console.log(user);
+      auth.signInWithPopup(provider).then((authUser) => {
+        this.authUser = authUser;
+        this.ghUsername = authUser.additionalUserInfo.username;
         this.getAirtableUsers();
       });
+    },
+    getAirtableUsers() {
+      console.log(url);
+      let url = this.airtableUrlByEmail;
+      axios
+        .get(url)
+        .then(async (res) => {
+          this.airtableData = await res.data.records;
+          if (this.airtableData.length == 0) {
+            console.log("New User");
+            this.addNewUserToAirtable();
+          } else {
+            console.log("Existing User");
+            this.$store.dispatch(
+              "fetchProfile",
+              await res.data.records[0].fields
+            );
+          }
+        })
+        .finally(() => {
+          // todo - redirect user
+          // this.$router.push("profile");
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     },
     addNewUserToAirtable() {
       let url =
@@ -55,37 +78,13 @@ export default {
           ProfileSummary: this.profileBio,
           ProfilePicURL: this.photoURL,
           FirebaseUID: this.uid,
+          GitHubUsername: this.ghUsername,
         },
       ];
       axios
         .post(url, params)
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    },
-    getAirtableUsers() {
-      let url = this.airtableUrlByEmail;
-      axios
-        .get(url)
         .then(async (res) => {
-          console.log(res);
-          this.airtableData = await res.data.records;
-          // this.$store.state.user.profile = this.airtableData;
-          this.$store.dispatch("fetchProfile", await res.data.records);
-          if (this.airtableData.length == 0) {
-            console.log("New User");
-            this.addNewUserToAirtable();
-            // todo - redirect user
-          } else {
-            console.log("Existing User");
-            // todo - redirect user
-          }
-        })
-        .finally(() => {
-          this.$router.push("profile");
+          this.$store.dispatch("fetchProfile", await res.data[0].fields);
         })
         .catch((err) => {
           console.error(err);
@@ -93,38 +92,46 @@ export default {
     },
     signOut() {
       this.auth.signOut();
-      console.log(this.currentUser);
       this.$router.go();
+      this.$store.dispatch("fetchProfile", null);
+    },
+  },
+  watch: {
+    user() {
+      if (!this.user) {
+        this.signOut();
+      }
     },
   },
   computed: {
+    ...mapGetters(["user", "profile"]),
     airtableUrlByEmail() {
       return `https://v1.nocodeapi.com/bbass/airtable/OWBByjdlNVhiKRiR?tableName=Users&view=User%20Data&filterByFormula=email%20%3D%20%22${this.ghEmailEencodedURI}%22`;
     },
     uid() {
-      if (this.user) {
-        return this.user.user.uid;
+      if (this.authUser) {
+        return this.authUser.user.uid;
       } else {
         return "";
       }
     },
     displayName() {
-      if (this.user) {
-        return this.user.user.displayName;
+      if (this.authUser) {
+        return this.authUser.user.displayName;
       } else {
         return "";
       }
     },
     photoURL() {
-      if (this.user) {
-        return this.user.user.photoURL;
+      if (this.authUser) {
+        return this.authUser.user.photoURL;
       } else {
         return "";
       }
     },
     ghEmail() {
-      if (this.user) {
-        return this.user.user.email;
+      if (this.authUser) {
+        return this.authUser.user.email;
       } else {
         return "";
       }
@@ -133,22 +140,22 @@ export default {
       return this.ghEmail.split("@").join("%40");
     },
     providerId() {
-      if (this.user) {
-        return this.user.user.providerId;
+      if (this.authUser) {
+        return this.authUser.user.providerId;
       } else {
         return "";
       }
     },
     emailVerified() {
-      if (this.user) {
-        return this.user.user.emailVerified;
+      if (this.authUser) {
+        return this.authUser.user.emailVerified;
       } else {
         return "";
       }
     },
     profileBio() {
-      if (this.user) {
-        return this.user.additionalUserInfo.profile.bio;
+      if (this.user.loggedIn) {
+        return this.authUser.additionalUserInfo.profile.bio;
       } else {
         return "";
       }
@@ -161,22 +168,34 @@ export default {
       }
     },
     isUserLoggedIn() {
-      return this.$store.state.user.loggedIn;
+      return this.user.loggedIn;
     },
   },
 };
 </script>
 
 <style scoped>
+.upper-left {
+  font-size: 0.8rem;
+}
 .login {
-  background-color: #222;
-  padding: 5%;
-  margin: 0 10%;
-  border-radius: 1.2rem;
+  background-color: #393838;
+  padding: 5px 2.5%;
+  margin: auto;
+  display: flex;
+  flex: wrap;
+  padding-left: 2.5%;
+}
+.email {
+  margin: auto;
+  text-align: left;
+  justify-content: left;
+  width: 90%;
+}
+.signout {
+  margin: auto;
 }
 .gh-button {
-  padding-top: 0;
-  margin: 0;
-  border: 0;
+  margin: 10px;
 }
 </style>

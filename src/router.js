@@ -20,6 +20,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   // store.dispatch('fetchProfile');
   if (to.fullPath === '/users') {
+    console.table({to: to, to_fullPath: to.fullPath, from: from, next: next, storeLoggedIn: store.state.user.loggedIn})
     if (!store.state.user.loggedIn) {
       next('/login');
     }
