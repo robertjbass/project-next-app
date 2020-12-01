@@ -37,36 +37,41 @@ export default {
     signInWithGH() {
       auth.signInWithPopup(provider).then((authUser) => {
         this.authUser = authUser;
-        this.ghUsername = authUser.additionalUserInfo.username;
+        // todo - get this data to get bio
+        this.authUser.additionalUserInfo;
+        console.log(this.authUser.additionalUserInfo);
+        // this.ghUsername = authUser.additionalUserInfo.username;
         this.getAirtableUsers();
       });
     },
-    getAirtableUsers() {
-      console.log(url);
-      let url = this.airtableUrlByEmail;
-      axios
-        .get(url)
-        .then(async (res) => {
-          this.airtableData = await res.data.records;
-          if (this.airtableData.length == 0) {
-            console.log("New User");
-            this.addNewUserToAirtable();
-          } else {
-            console.log("Existing User");
-            this.$store.dispatch(
-              "fetchProfile",
-              await res.data.records[0].fields
-            );
-          }
-        })
-        .finally(() => {
-          // todo - redirect user
-          // this.$router.push("profile");
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    },
+    // todo - moved to firebase.js
+    // getAirtableUsers() {
+    //   console.log(url);
+    //   let url = this.airtableUrlByEmail;
+    //   axios
+    //     .get(url)
+    //     .then(async (res) => {
+    //       this.airtableData = await res.data.records;
+    //       if (this.airtableData.length == 0) {
+    //         console.log("New User");
+    //         this.addNewUserToAirtable();
+    //       } else {
+    //         console.log("Existing User");
+    //         this.$store.dispatch(
+    //           "fetchProfile",
+    //           await res.data.records[0].fields
+    //         );
+    //       }
+    //     })
+    //     .finally(() => {
+    //       // todo - redirect user
+    //       // this.$router.push("profile");
+    //     })
+    //     .catch((err) => {
+    //       console.error(err);
+    //     });
+    // },
+    // todo - MOVING to firebase.js
     addNewUserToAirtable() {
       let url =
         "https://v1.nocodeapi.com/bbass/airtable/OWBByjdlNVhiKRiR?tableName=Users";
@@ -93,7 +98,7 @@ export default {
     signOut() {
       this.auth.signOut();
       this.$router.go();
-      this.$store.dispatch("fetchProfile", null);
+      // this.$store.dispatch("fetchProfile", null);
     },
   },
   watch: {
@@ -104,7 +109,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["user", "profile"]),
+    ...mapGetters(["user"]),
     airtableUrlByEmail() {
       return `https://v1.nocodeapi.com/bbass/airtable/OWBByjdlNVhiKRiR?tableName=Users&view=User%20Data&filterByFormula=email%20%3D%20%22${this.ghEmailEencodedURI}%22`;
     },

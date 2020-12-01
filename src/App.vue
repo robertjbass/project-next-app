@@ -1,30 +1,147 @@
+<!-- https://www.youtube.com/watch?v=at6QjSwKOuA&list=PL55RiY5tL51qxUbODJG9cgrsVd7ZHbPrt&index=6 -->
 <template>
-  <div id="app">
-    <v-card dark class="login-card">
-      <Navbar />
-    </v-card>
-    <Drawer />
+  <div dark id="app">
+    <v-toolbar height="50" color="#393838" class="toolbar">
+      <v-app-bar-nav-icon
+        color="#fff"
+        @click.native.stop="sideNav = !sideNav"
+      ></v-app-bar-nav-icon>
+      <v-toolbar-title class="title">
+        <router-link to="/" tag="span" style="cursor: pointer" class="title"
+          >project(() => nextApp('💡'))</router-link
+        >
+      </v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-toolbar-items>
+        <!-- //! flat has been removed from buttons -->
+        <v-btn
+          v-for="item in menuItems"
+          :key="item.title"
+          class="btn-nav"
+          dark
+          router
+          :to="item.link"
+          ><v-icon left>{{ item.icon }}</v-icon>
+          <!-- {{ item.title }} -->
+        </v-btn>
+      </v-toolbar-items>
+    </v-toolbar>
+    <router-view />
+    <!-- //? add temporary tag if drawer starts being open by default -->
+    <v-navigation-drawer
+      absolute
+      dark
+      v-model="sideNav"
+      height="100vh"
+      width="256"
+    >
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title class="title">
+            Project Next App
+          </v-list-item-title>
+          <v-list-item-subtitle>
+            Start something new... again
+          </v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
 
-    <!-- <router-view></router-view> -->
-    <!-- <div class="bottom-bar">logout</div> -->
+      <v-divider></v-divider>
+
+      <v-list dense nav>
+        <v-list-item
+          v-for="item in this.menuItems"
+          :key="item.title"
+          router
+          :to="item.link"
+          link
+        >
+          <v-list-item-icon>
+            <v-icon left>{{ item.icon }}</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>{{ item.title }}</v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+
+    <!-- <Navbar /> -->
+    <!-- <v-card dark class="login-card"> </v-card> -->
+    <!-- <router-view /> -->
+    <!-- <div class="bottom-bar">
+      <router-link to="./profile">Profile</router-link>
+    </div> -->
   </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
-import Navbar from "@/components/Navbar.vue";
 // import Home from "@/components/Home.vue";
-import Drawer from "@/components/Drawer.vue";
+// import Navbar from "@/components/Navbar.vue";
+import axios from "axios";
 
 export default {
   name: "App",
+  data() {
+    return {
+      loggedIn: false,
+      menuItems: [
+        {
+          icon: "mdi-head-lightbulb-outline",
+          title: "Hackers",
+          link: "/hackers",
+        },
+        {
+          icon: "mdi-code-tags",
+          title: "Projects",
+          link: "/projects",
+        },
+        {
+          icon: "mdi-github",
+          title: "Profile",
+          link: "/profile",
+        },
+        {
+          icon: "mdi-folder-plus-outline",
+          title: "Next App",
+          link: "/project/new",
+        },
+        {
+          icon: "mdi-github",
+          title: "Sign up",
+          link: "/signup",
+        },
+        {
+          icon: "mdi-github",
+          title: "Sign in",
+          link: "/signin",
+        },
+      ],
+      right: null,
+      sideNav: false,
+      userProfileData: null,
+    };
+  },
+  mounted() {
+    (() => {
+      axios
+        .get(
+          `https://v1.nocodeapi.com/bbass/airtable/OWBByjdlNVhiKRiR?tableName=Users&view=User%20Profiles`
+        )
+        .then(async (res) => {
+          this.userProfileData = await res.data.records;
+          console.log(this.userProfileData);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    })();
+  },
   computed: {
-    ...mapGetters(["user", "profile"]),
+    ...mapGetters(["user"]),
   },
   components: {
-    Navbar,
-    Drawer,
     // Home,
+    // Navbar,
   },
 };
 </script>
@@ -40,18 +157,17 @@ export default {
   color: white;
 }
 
-.logo {
-  width: 40%;
+/* .toolbar {
+  height: 100px;
+} */
+
+.title {
+  color: #fff;
+  font-family: monospace;
+  text-decoration: none;
 }
 
-.bottom-bar {
-  height: 40px;
-  position: fixed;
-  bottom: 0%;
-  width: 100%;
-  background-color: #393838;
-  opacity: 1;
-}
-/* .login-card {
+/* .btn-nav {
+  width: 160px;
 } */
 </style>

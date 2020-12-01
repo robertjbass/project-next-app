@@ -16,24 +16,8 @@
 import { mapGetters } from "vuex";
 export default {
   name: "Profile",
-  // props: {
-  //   profile: {
-  //     type: Object,
-  //   },
-  // },
-  // data() {
-  //   return {
-  //     key: "value",
-  //   };
-  // },
   computed: {
-    ...mapGetters(["user", "profile"]),
-    // signedInUser() {
-    //   return this.profile;
-    // },
-    // userProfile() {
-    //   return this.profile;
-    // },
+    ...mapGetters(["user"]),
   },
 };
 </script>
