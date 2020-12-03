@@ -34,7 +34,7 @@
                         <div>
                           <h4 class="card-title">{{ project.title }}</h4>
                           <h5 class="card-title-subtitle">
-                            {{ project.endDate }}
+                            {{ project.endDate | date }}
                           </h5>
                         </div>
                       </v-card-title>

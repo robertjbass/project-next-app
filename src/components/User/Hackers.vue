@@ -1,6 +1,9 @@
 <template>
   <div class="hackers">
-    <h1>Hackers</h1>
+    <v-container>
+      <h1>Hackers</h1>
+      <v-card dark height="1000"> </v-card>
+    </v-container>
   </div>
 </template>
 

@@ -1,8 +1,7 @@
-import { mapGetters } from 'vuex';
 <template>
   <div class="project">
     <v-container>
-      <v-card dark>
+      <v-card dark height="1000">
         <div class="card">
           <v-card-title>
             <div class="title-image">
@@ -17,7 +16,8 @@ import { mapGetters } from 'vuex';
             </div>
             <div class="project-info">
               <h4>
-                {{ loadedProject.startDate }} - {{ loadedProject.endDate }}
+                {{ loadedProject.startDate | date }} -
+                {{ loadedProject.endDate | date }}
               </h4>
               <h5>Technologies</h5>
               <v-chip
@@ -33,12 +33,13 @@ import { mapGetters } from 'vuex';
             <div>
               <v-card-actions>
                 <v-row>
-                  <v-col cols="12" offset="8" margin="auto">
+                  <v-col cols="12" margin="auto">
                     <div class="comment-btn-box" align="right">
                       <v-btn class="comment-btn">Comment</v-btn>
                     </div>
                   </v-col>
                 </v-row>
+                <v-spacer></v-spacer>
               </v-card-actions>
             </div>
           </v-card-title>
@@ -69,13 +70,14 @@ h5 {
 }
 .title-image {
   padding-right: 10px;
-  max-width: 400px;
+  max-width: 100%;
 }
 .card {
   background-color: #333;
   padding: 5px;
   width: 100%;
   padding: 20px;
+  height: 100%;
 }
 
 .card-text {

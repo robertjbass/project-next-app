@@ -1,7 +1,7 @@
 <template>
   <div dark id="app">
     <v-app>
-      <v-toolbar height="50" color="#393838" class="toolbar">
+      <v-toolbar height="50px" color="#393838" class="toolbar">
         <v-app-bar-nav-icon
           color="#fff"
           @click.native.stop="sideNav = !sideNav"
@@ -29,16 +29,14 @@
       </v-toolbar>
       <router-view />
       <!-- //? add temporary tag if drawer starts being open by default -->
-      <v-navigation-drawer
-        absolute
-        dark
-        v-model="sideNav"
-        height="100vh"
-        width="256"
-      >
+      <v-navigation-drawer absolute dark v-model="sideNav" width="256">
+        <!-- height="100vh" -->
         <v-list-item @click.native.stop="sideNav = !sideNav">
           <v-list-item-content>
             <v-list-item-title class="title">
+              <v-icon left color="warning" style="cursor: pointer"
+                >mdi-close</v-icon
+              >
               Project Next App
             </v-list-item-title>
             <v-list-item-subtitle>
@@ -159,9 +157,9 @@ export default {
   color: white;
 }
 
-/* .toolbar {
+.toolbar {
   height: 100px;
-} */
+}
 
 .title {
   color: #fff;

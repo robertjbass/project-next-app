@@ -23,8 +23,12 @@ export const store = new Vuex.Store({
             "Cloud Functions",
             "Vue.js",
         ],
+          githubRepo: "github.com/a/b",
+          productPage: "coda.io/@narro/abcdefg",
           startDate: '2021-01-20',
-          endDate: '2021-12-01'
+          endDate: '2021-12-01',
+          goals: 'Learn Stuff',
+          projectDuration: '7 Days'
         },
         {
           id: "2",
@@ -37,8 +41,12 @@ export const store = new Vuex.Store({
           description:
             "An app that generates interesting animal videos every 24 hours.",
           technologies: ["C++", "GPT-3", "Tensorflow"],
+          githubRepo: "github.com/a/b",
+          productPage: "coda.io/@narro/abcdefg",
           startDate: '2021-01-20',
-          endDate: '2021-12-02'
+          endDate: '2021-12-02',
+          goals: 'Learn Stuff',
+          projectDuration: '7 Days'
         },
         {
           id: "3",
@@ -50,8 +58,12 @@ export const store = new Vuex.Store({
           description:
             "An app that allows you to decorate an augmented reality pig while it runs around your living room.",
           technologies: ["WebGL", "MongoDB", "Java"],
+          githubRepo: "github.com/a/b",
+          productPage: "coda.io/@narro/abcdefg",
           startDate: '2021-01-20',
-          endDate: '2021-12-02'
+          endDate: '2021-12-02',
+          goals: 'Learn Stuff',
+          projectDuration: '7 Days'
         },
         {
           id: "4",
@@ -64,8 +76,12 @@ export const store = new Vuex.Store({
           description:
           "A marketplace for one of a kind dancing shoes inspired by the king of pop.",
           technologies: ["HTML", "CSS", "PHP"],
+          githubRepo: "github.com/a/b",
+          productPage: "coda.io/@narro/abcdefg",
           startDate: '2021-01-20',
-          endDate: '2021-12-02'
+          endDate: '2021-12-02',
+          goals: 'Learn Stuff',
+          projectDuration: '7 Days'
       }
     ],
     user: {
@@ -73,8 +89,31 @@ export const store = new Vuex.Store({
       projects: ['1','2']
     }
   },
-  mutations: {},
-  actions: {},
+  mutations: {
+    createProject(state, payload) {
+      state.loadedProjects.push(payload)
+    }
+  },  
+  actions: {
+    createProject({ commit }, payload) {
+      const project = {
+        id: this.state.loadedProjects.length + 1,
+        title: payload.projectName,
+        imageUrl: payload.imageUrl ? payload.imageUrl : `https://dummyimage.com/600x400/cf78cf/000.png&text=${payload.projectName}`,
+        description: payload.summary,
+        technologies: payload.anticipatedTechnologies,
+        username: "", //todo
+        githubRepo: payload.githubRepo,
+        productPage: payload.productPage,
+        emailAddress: "", //todo
+        created: payload.created,
+        goals: payload.goals,
+        projectDuration: payload.projectDuration,
+      }
+      // Reach out to firebase and store it, get id from firebase, add to project
+      commit('createProject', project)
+    }
+  },
   getters: {
     loadedProjects(state) {
       return state.loadedProjects.sort((projectA, projectB) => {

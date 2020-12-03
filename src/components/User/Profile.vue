@@ -1,6 +1,9 @@
 <template>
   <div class="profile">
-    <h1>The User Profile Page</h1>
+    <v-container>
+      <h1>The User Profile Page</h1>
+      <v-card dark height="1000"> </v-card>
+    </v-container>
   </div>
 </template>
 

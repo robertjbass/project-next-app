@@ -35,29 +35,48 @@
       </v-layout>
       <v-layout class="all-projects">
         <v-row>
-          <div
+          <v-col
+            cols="12"
+            sm="12"
+            md="6"
+            lg="4"
             v-for="project in loadedProjects"
             :key="project.id"
-            width="40%"
-            class="project-display"
           >
-            <h3>{{ project.title }} by {{ project.username }}</h3>
-            <br />
-            <div class="desc">
-              <p class="desc">{{ project.description }}</p>
-              <br />
-              <v-chip
-                ma-2
-                class="technologies"
-                v-for="technology in project.technologies"
-                :key="technology"
-                link
-                ><v-icon>{{ technology[0].concat(" ") }}</v-icon
-                >{{ technology.substr(1, technology.length - 1) }}</v-chip
-              >
+            <!--   -->
+            <div class="project-display">
+              <!-- height="600px" -->
+              <v-card dark>
+                <div class="projects">
+                  <h3
+                    class="heading"
+                    style="cursor: pointer"
+                    @click="onLoadProject(project.id)"
+                  >
+                    {{ project.title }} by {{ project.username }}
+                  </h3>
+                  <!-- <br /> -->
+                  <div class="desc">
+                    <img :src="project.imageUrl" width="100%" />
+                    <p>{{ project.description }}</p>
+                    <div>
+                      <v-chip
+                        class="technologies"
+                        v-for="technology in project.technologies"
+                        :key="technology"
+                        link
+                        ><v-icon>{{ technology[0].concat(" ") }}</v-icon
+                        >{{
+                          technology.substr(1, technology.length - 1)
+                        }}</v-chip
+                      >
+                    </div>
+                  </div>
+                  <!-- <br /> -->
+                </div>
+              </v-card>
             </div>
-            <br />
-          </div>
+          </v-col>
         </v-row>
       </v-layout>
     </v-container>
@@ -65,7 +84,6 @@
 </template>
 
 <script>
-// import Profile from "@/components/Profile.vue";
 import { mapGetters } from "vuex";
 // import axios from "axios";
 export default {
@@ -106,7 +124,7 @@ export default {
 }
 
 .carousel {
-  padding-bottom: 100px;
+  padding-bottom: 50px;
 }
 
 .title {
@@ -124,12 +142,20 @@ export default {
 .project-display {
   margin: auto;
   text-align: left;
-  height: 250px;
-  padding-bottom: 100px;
+}
+.projects {
+  background-color: #333;
+  border: solid;
+  border-width: 1px;
+  padding: 30px;
+  height: 600px;
+}
+.desc {
+  text-align: left;
 }
 
-.desc {
-  max-width: 300px;
-  text-align: left;
+.heading {
+  padding-bottom: 10px;
+  text-align: center;
 }
 </style>
