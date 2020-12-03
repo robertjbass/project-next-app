@@ -1,13 +1,14 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 // import { mapGetters } from 'vuex'
-import store from './store'
+// import store from './store'
 
 Vue.use(Router)
 
 import Home from '@/components/Home'
 import CreateProject from '@/components/Project/CreateProject'
 import Projects from '@/components/Project/Projects'
+import Project from '@/components/Project/Project';
 import Hackers from '@/components/User/Hackers'
 import Profile from '@/components/User/Profile'
 import Signin from '@/components/User/Signin'
@@ -17,30 +18,16 @@ import Signup from '@/components/User/Signup'
 
 
 const router = new Router({
-  data() {
-    return {
-      store
-    }
-  },
+  // data() {
+  //   return {
+  //     store
+  //   }
+  // },
   mode: 'history',
   base: process.env.BASE_URL,
   // scrollBehavior: () => ({ x: 0, y: 0 }),
   // ...mapGetters(["user","profile"]),
   routes: [
-    // {
-    //   path: '/',
-    //   name: 'Home',
-    //   component: Home
-    // },
-    // {
-    //   path: '/profile/:username',
-    //   name: 'Profile',
-    //   component: Home,
-    //   props: {
-    //     user: store.state.user,
-    //     profile: store.state.profile
-    //   }
-    // },
      {
       path: '/',
       name: 'Home',
@@ -50,6 +37,11 @@ const router = new Router({
       path: '/project/new',
       name: 'CreateProject',
       component: CreateProject
+    },
+    {
+      path: '/project/:id',
+      name: 'Project',
+      component: Project
     },
     {
       path: '/projects',

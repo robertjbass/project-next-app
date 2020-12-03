@@ -1,4 +1,3 @@
-<!-- https://www.youtube.com/watch?v=at6QjSwKOuA&list=PL55RiY5tL51qxUbODJG9cgrsVd7ZHbPrt&index=6 -->
 <template>
   <div dark id="app">
     <v-toolbar height="50" color="#393838" class="toolbar">
@@ -15,11 +14,11 @@
       <v-toolbar-items>
         <!-- //! flat has been removed from buttons -->
         <v-btn
+          elevation="0"
           v-for="item in menuItems"
           :key="item.title"
           class="btn-nav"
           dark
-          router
           :to="item.link"
           ><v-icon left>{{ item.icon }}</v-icon>
           <!-- {{ item.title }} -->
@@ -35,7 +34,7 @@
       height="100vh"
       width="256"
     >
-      <v-list-item>
+      <v-list-item @click.native.stop="sideNav = !sideNav">
         <v-list-item-content>
           <v-list-item-title class="title">
             Project Next App

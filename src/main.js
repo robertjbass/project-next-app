@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import { firestorePlugin } from 'vuefire'
 import router from './router'
-import store from './store'
+import { store } from './store'
 
 import vuetify from './plugins/vuetify';
 Vue.use(firestorePlugin)
