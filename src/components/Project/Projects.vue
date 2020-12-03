@@ -39,7 +39,7 @@
                         </div>
                       </v-card-title>
                       <v-card-actions
-                        ><v-btn elevation="0" to="/project/1">
+                        ><v-btn elevation="0" :to="'/project/' + project.id">
                           <v-icon left>mdi-arrow-right-bold</v-icon>
                           Project Details</v-btn
                         ></v-card-actions

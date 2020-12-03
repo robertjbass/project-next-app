@@ -73,7 +73,6 @@ export default {
   data() {
     return {
       model: 0,
-      colors: ["primary", "secondary", "yellow darken-2", "red", "orange"],
     };
   },
   methods: {

@@ -6,9 +6,10 @@
         @click.native.stop="sideNav = !sideNav"
       ></v-app-bar-nav-icon>
       <v-toolbar-title class="title">
-        <router-link to="/" tag="span" style="cursor: pointer" class="title"
-          >project(() => nextApp('💡'))</router-link
-        >
+        <router-link to="/" tag="span" style="cursor: pointer" class="title">
+          <!-- project(() => nextApp('💡')) -->
+          (() => nextApp('💡'))
+        </router-link>
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>

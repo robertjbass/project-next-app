@@ -51,15 +51,12 @@ import { mapGetters } from 'vuex';
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-
 export default {
   name: "Project",
+  props: ["id"],
   computed: {
-    // ...mapGetters(["loadedProjects", "loadedProject"]),
-    ...mapGetters(["loadedProjects"]),
     loadedProject() {
-      return this.loadedProjects[0];
+      return this.$store.getters.loadedProject(this.id);
     },
   },
 };
