@@ -8,7 +8,7 @@
             <v-btn large router to="/projects"> Explore Projects </v-btn>
           </v-col>
           <v-col>
-            <v-btn large router to="/projects/new"> Start a Project </v-btn>
+            <v-btn large router to="/project/new"> Start a Project </v-btn>
           </v-col>
         </v-row>
       </v-layout>

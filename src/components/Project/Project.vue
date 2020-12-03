@@ -33,8 +33,6 @@ import { mapGetters } from 'vuex';
             <div>
               <v-card-actions>
                 <v-row>
-                  <!-- <v-col cols="12"></v-col> -->
-                  <!-- <v-spacer></v-spacer> -->
                   <v-col cols="12" offset="8" margin="auto">
                     <div class="comment-btn-box" align="right">
                       <v-btn class="comment-btn">Comment</v-btn>

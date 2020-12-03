@@ -1,75 +1,77 @@
 <template>
   <div dark id="app">
-    <v-toolbar height="50" color="#393838" class="toolbar">
-      <v-app-bar-nav-icon
-        color="#fff"
-        @click.native.stop="sideNav = !sideNav"
-      ></v-app-bar-nav-icon>
-      <v-toolbar-title class="title">
-        <router-link to="/" tag="span" style="cursor: pointer" class="title">
-          <!-- project(() => nextApp('💡')) -->
-          (() => nextApp('💡'))
-        </router-link>
-      </v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-toolbar-items>
-        <!-- //! flat has been removed from buttons -->
-        <v-btn
-          elevation="0"
-          v-for="item in menuItems"
-          :key="item.title"
-          class="btn-nav"
-          dark
-          :to="item.link"
-          ><v-icon left>{{ item.icon }}</v-icon>
-          <!-- {{ item.title }} -->
-        </v-btn>
-      </v-toolbar-items>
-    </v-toolbar>
-    <router-view />
-    <!-- //? add temporary tag if drawer starts being open by default -->
-    <v-navigation-drawer
-      absolute
-      dark
-      v-model="sideNav"
-      height="100vh"
-      width="256"
-    >
-      <v-list-item @click.native.stop="sideNav = !sideNav">
-        <v-list-item-content>
-          <v-list-item-title class="title">
-            Project Next App
-          </v-list-item-title>
-          <v-list-item-subtitle>
-            Start something new... again
-          </v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
-
-      <v-divider></v-divider>
-
-      <v-list dense nav>
-        <v-list-item
-          v-for="item in this.menuItems"
-          :key="item.title"
-          router
-          :to="item.link"
-          link
-        >
-          <v-list-item-icon>
-            <v-icon left>{{ item.icon }}</v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>{{ item.title }}</v-list-item-content>
+    <v-app>
+      <v-toolbar height="50" color="#393838" class="toolbar">
+        <v-app-bar-nav-icon
+          color="#fff"
+          @click.native.stop="sideNav = !sideNav"
+        ></v-app-bar-nav-icon>
+        <v-toolbar-title class="title">
+          <router-link to="/" tag="span" style="cursor: pointer" class="title">
+            <!-- project(() => nextApp('💡')) -->
+            (() => nextApp('💡'))
+          </router-link>
+        </v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-toolbar-items>
+          <!-- //! flat has been removed from buttons -->
+          <v-btn
+            elevation="0"
+            v-for="item in menuItems"
+            :key="item.title"
+            class="btn-nav"
+            dark
+            :to="item.link"
+            ><v-icon left>{{ item.icon }}</v-icon>
+            <!-- {{ item.title }} -->
+          </v-btn>
+        </v-toolbar-items>
+      </v-toolbar>
+      <router-view />
+      <!-- //? add temporary tag if drawer starts being open by default -->
+      <v-navigation-drawer
+        absolute
+        dark
+        v-model="sideNav"
+        height="100vh"
+        width="256"
+      >
+        <v-list-item @click.native.stop="sideNav = !sideNav">
+          <v-list-item-content>
+            <v-list-item-title class="title">
+              Project Next App
+            </v-list-item-title>
+            <v-list-item-subtitle>
+              Start something new... again
+            </v-list-item-subtitle>
+          </v-list-item-content>
         </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
 
-    <!-- <Navbar /> -->
-    <!-- <v-card dark class="login-card"> </v-card> -->
-    <!-- <router-view /> -->
-    <!-- <div class="bottom-bar">
+        <v-divider></v-divider>
+
+        <v-list dense nav>
+          <v-list-item
+            v-for="item in this.menuItems"
+            :key="item.title"
+            router
+            :to="item.link"
+            link
+          >
+            <v-list-item-icon>
+              <v-icon left>{{ item.icon }}</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>{{ item.title }}</v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-navigation-drawer>
+
+      <!-- <Navbar /> -->
+      <!-- <v-card dark class="login-card"> </v-card> -->
+      <!-- <router-view /> -->
+      <!-- <div class="bottom-bar">
       <router-link to="./profile">Profile</router-link>
     </div> -->
+    </v-app>
   </div>
 </template>
 
