@@ -14,7 +14,6 @@
         </v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items>
-          <!-- //! flat has been removed from buttons -->
           <v-btn
             elevation="0"
             v-for="item in menuItems"
@@ -23,7 +22,6 @@
             dark
             :to="item.link"
             ><v-icon left>{{ item.icon }}</v-icon>
-            <!-- {{ item.title }} -->
           </v-btn>
         </v-toolbar-items>
       </v-toolbar>
@@ -60,67 +58,54 @@
             </v-list-item-icon>
             <v-list-item-content>{{ item.title }}</v-list-item-content>
           </v-list-item>
+          <v-list-item dense nav link>
+            <v-list-item-icon>
+              <v-icon left>mdi-logout-variant</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>Log Out</v-list-item-content>
+          </v-list-item>
         </v-list>
       </v-navigation-drawer>
-
-      <!-- <Navbar /> -->
-      <!-- <v-card dark class="login-card"> </v-card> -->
-      <!-- <router-view /> -->
-      <!-- <div class="bottom-bar">
-      <router-link to="./profile">Profile</router-link>
-    </div> -->
     </v-app>
   </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
-// import Home from "@/components/Home.vue";
-// import Navbar from "@/components/Navbar.vue";
+// todo - move to vuex
+// import firebase from "firebase/app";
+// import "firebase/auth";
+
 import axios from "axios";
+// import { auth } from "./firebase";
+// console.log(auth);
 
 export default {
   name: "App",
   data() {
     return {
+      // auth,
       loggedIn: false,
-      menuItems: [
-        {
-          icon: "mdi-head-lightbulb-outline",
-          title: "Hackers",
-          link: "/hackers",
-        },
-        {
-          icon: "mdi-code-tags",
-          title: "Projects",
-          link: "/projects",
-        },
-        {
-          icon: "mdi-github",
-          title: "Profile",
-          link: "/profile",
-        },
-        {
-          icon: "mdi-folder-plus-outline",
-          title: "Next App",
-          link: "/project/new",
-        },
-        {
-          icon: "mdi-github",
-          title: "Sign up",
-          link: "/signup",
-        },
-        {
-          icon: "mdi-github",
-          title: "Sign in",
-          link: "/signin",
-        },
-      ],
       right: null,
       sideNav: false,
       userProfileData: null,
     };
   },
+  // methods: {
+  // todo - move to vuex
+  // logout() {
+  //   firebase
+  //     .auth()
+  //     // auth
+  //     .signOut()
+  //     .then(() => {
+  //       console.log("Logged Out");
+  //     })
+  //     .catch((err) => {
+  //       console.error(err);
+  //     });
+  // },
+  // },
   mounted() {
     (() => {
       axios
@@ -138,10 +123,53 @@ export default {
   },
   computed: {
     ...mapGetters(["user"]),
-  },
-  components: {
-    // Home,
-    // Navbar,
+    userIsAuthenticated() {
+      return this.user !== null && this.user !== undefined;
+    },
+    menuItems() {
+      if (this.userIsAuthenticated) {
+        return [
+          {
+            icon: "mdi-head-lightbulb-outline",
+            title: "Hackers",
+            link: "/hackers",
+          },
+          {
+            icon: "mdi-code-tags",
+            title: "Projects",
+            link: "/projects",
+          },
+          {
+            icon: "mdi-github",
+            title: "Profile",
+            link: "/profile",
+          },
+          {
+            icon: "mdi-folder-plus-outline",
+            title: "Next App",
+            link: "/project/new",
+          },
+          // {
+          //   icon: "mdi-logout-variant",
+          //   title: "Log Out",
+          //   link: "/logout",
+          // },
+        ];
+      } else {
+        return [
+          {
+            icon: "mdi-github",
+            title: "Sign up",
+            link: "/signup",
+          },
+          {
+            icon: "mdi-github",
+            title: "Sign in",
+            link: "/signin",
+          },
+        ];
+      }
+    },
   },
 };
 </script>

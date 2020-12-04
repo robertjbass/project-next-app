@@ -1,5 +1,5 @@
-<template>
-  <div class="profile">
+<!-- template>
+  <!-- <div class="profile">
     <div>🔑Logged in as {{ this.user.data.email }}</div>
     <div class="bio">
       <div class="bio-pic">
@@ -9,30 +9,29 @@
         <h4>{{ this.profile.profile.ProfileSummary }}</h4>
       </div>
     </div>
-  </div>
-</template>
+  </div> -->
+<!-- /template>
 
 <script>
-import { mapGetters } from "vuex";
-export default {
-  name: "Profile",
-  computed: {
-    ...mapGetters(["user"]),
-  },
-};
+// import { mapGetters } from "vuex";
+// export default {
+//   name: "Profile",
+//   computed: {
+//     ...mapGetters(["user"]),
+//   },
+// };
 </script>
 
 <style scoped>
-.bio {
+/* .bio {
   margin: auto;
   display: flex;
   padding: 20px 10%;
 }
 .bio-summary {
   padding: 0 20px;
-  /* margin: auto; */
 }
 .headshot {
   width: 150px;
-}
+} */
 </style>

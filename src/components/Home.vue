@@ -8,7 +8,14 @@
             <v-btn large router to="/projects"> Explore Projects </v-btn>
           </v-col>
           <v-col>
-            <v-btn large router to="/project/new"> Start a Project </v-btn>
+            <v-btn
+              :disabled="!userIsAuthenticated"
+              large
+              router
+              to="/project/new"
+            >
+              Start a Project
+            </v-btn>
           </v-col>
         </v-row>
       </v-layout>
@@ -61,6 +68,8 @@
                     <p>{{ project.description }}</p>
                     <div>
                       <v-chip
+                        dark
+                        color="accentRed--lighten"
                         class="technologies"
                         v-for="technology in project.technologies"
                         :key="technology"
@@ -99,10 +108,18 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["featuredProjects", "loadedProject", "loadedProjects"]),
+    ...mapGetters([
+      "featuredProjects",
+      "loadedProject",
+      "loadedProjects",
+      "user",
+    ]),
     projects() {
       return this.featuredProjects;
       // return this.$store.getters.featuredProjects;
+    },
+    userIsAuthenticated() {
+      return this.user !== null && this.user !== undefined;
     },
     images() {
       return `https://dummyimage.com/2:2x1080/${

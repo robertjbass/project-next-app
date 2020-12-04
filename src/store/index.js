@@ -1,6 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
+import firebase from "firebase/app";
+import "firebase/auth";
+
+
+const provider = new firebase.auth.GithubAuthProvider();
+
 Vue.use(Vuex)
 
 export const store = new Vuex.Store({
@@ -9,9 +15,9 @@ export const store = new Vuex.Store({
       {
           id: "1",
           title: "UberTeleport",
-          bgColor: "55",
-          fontColor: "fff",
-          imageUrl: `https://dummyimage.com/600x400/5cf/000.png&text=UberTeleport`,
+          bgColor: "00f4f4",
+          fontColor: "000",
+          imageUrl: `https://dummyimage.com/600x400/00f4f4/000.png&text=UberTeleport`,
           username: "716green",
           description:
             "A teleporter sharing service where the owner of the teleporter beams you to your destination for ratings in the mobile app",
@@ -85,16 +91,43 @@ export const store = new Vuex.Store({
       }
     ],
     user: {
-      id: 'abc123',
-      projects: ['1','2']
+      id: null,
+      projects: []
     }
   },
   mutations: {
     createProject(state, payload) {
       state.loadedProjects.push(payload)
+    },
+    setUser(state, payload) {
+      state.user = payload
     }
   },  
   actions: {
+    signUserUp({commit}) {
+      firebase.auth().signInWithPopup(provider)
+      .then((ghUser) => {
+        console.log({ghUser})
+        const user = ghUser.user
+        const operationType = ghUser.operationType
+        const credential = ghUser.credential
+        const additionalUserInfo = ghUser.additionalUserInfo
+        const { isNewUser, profile, providerId, username } = additionalUserInfo
+        const { avatar_url, bio, blog, company, created_at, email, events_url, followers, followers_url, following, following_url, gists_url, gravitar_id, hireable, html_url, id, location, login, name, node_id, organization_url, public_gists, public_repos, received_events_url, repos_url, site_admin, starred_url, subscriptions_url, twitter_username, type, updated_at, url } = profile
+        const { uid, displayName, emailVerified, isAnonymous, phoneNumber, photoURL } = user
+        const userEmail = user.email
+        console.log(operationType, credential, userEmail, isNewUser, profile, providerId, username, avatar_url, bio, blog, company, created_at, email, events_url, followers, followers_url, following, following_url, gists_url, gravitar_id, hireable, html_url, id, location, login, name, node_id, organization_url, public_gists, public_repos, received_events_url, repos_url, site_admin, starred_url, subscriptions_url, twitter_username, type, updated_at, url, uid, displayName, email, emailVerified, isAnonymous, phoneNumber, photoURL )
+        const newUser = {
+            id: uid,
+            projects: []
+          }
+          commit('setUser', newUser)
+        }).catch(
+          error => {
+            console.log(error)
+        }
+      )
+    },
     createProject({ commit }, payload) {
       const project = {
         id: this.state.loadedProjects.length + 1,
@@ -129,6 +162,9 @@ export const store = new Vuex.Store({
           return project.id === projectId
         })
       }
+    },
+    user(state) {
+      return state.user
     }
   }
 })

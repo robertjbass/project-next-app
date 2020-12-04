@@ -1,7 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// import { mapGetters } from 'vuex'
-// import store from './store'
 
 Vue.use(Router)
 
@@ -18,15 +16,9 @@ import Signup from '@/components/User/Signup'
 
 
 const router = new Router({
-  // data() {
-  //   return {
-  //     store
-  //   }
-  // },
   mode: 'history',
   base: process.env.BASE_URL,
   // scrollBehavior: () => ({ x: 0, y: 0 }),
-  // ...mapGetters(["user","profile"]),
   routes: [
      {
       path: '/',
@@ -78,21 +70,5 @@ const router = new Router({
 
 
 
-// //! this is probably wrong
-// router.beforeEach((to, from, next) => {
-//   // store.dispatch('fetchProfile');
-//   if (to.fullPath === '/users') {
-//     console.table({to: to, to_fullPath: to.fullPath, from: from, next: next, storeLoggedIn: store.state.user.loggedIn})
-//     if (!store.state.user.loggedIn) {
-//       next('/login');
-//     }
-//   }
-//   if (to.fullPath === '/login') {
-//     if (store.state.user.loggedIn) {
-//       next('/profile');
-//     }
-//   }
-//   next();
-// })
 
 export default router
