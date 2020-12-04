@@ -5,16 +5,25 @@
       <v-layout>
         <v-row justify="space-between">
           <v-col>
-            <v-btn large router to="/projects"> Explore Projects </v-btn>
+            <!-- color="accentRed" -->
+            <v-btn class="page-btn" large router to="/projects">
+              Explore Projects
+            </v-btn>
           </v-col>
           <v-col>
+            <!-- color="accentBlue" -->
             <v-btn
-              :disabled="!userIsAuthenticated"
+              class="page-btn"
+              v-if="userIsAuthenticated"
               large
               router
               to="/project/new"
             >
               Start a Project
+            </v-btn>
+            <!-- color="accentBlue" -->
+            <v-btn class="page-btn" v-else large router to="/signup">
+              Start
             </v-btn>
           </v-col>
         </v-row>
@@ -175,4 +184,12 @@ export default {
   padding-bottom: 10px;
   text-align: center;
 }
+
+.page-btn {
+  width: "400px";
+}
+
+/* .page-btn {
+  color: white;
+} */
 </style>

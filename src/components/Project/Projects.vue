@@ -1,6 +1,6 @@
 <template>
   <div class="projects">
-    <v-container>
+    <v-container class="top-spacing">
       <v-layout>
         <v-row>
           <v-card
@@ -77,5 +77,9 @@ h5 {
   padding: 5px;
   width: 100%;
   padding: 20px;
+  margin-bottom: 40px;
+}
+.top-spacing {
+  margin-top: 40px;
 }
 </style>

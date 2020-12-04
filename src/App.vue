@@ -58,12 +58,28 @@
             </v-list-item-icon>
             <v-list-item-content>{{ item.title }}</v-list-item-content>
           </v-list-item>
-          <v-list-item dense nav link>
+          <v-list-item
+            v-show="this.userIsAuthenticated"
+            dense
+            nav
+            link
+            @click="signOut"
+          >
             <v-list-item-icon>
               <v-icon left>mdi-logout-variant</v-icon>
             </v-list-item-icon>
             <v-list-item-content>Log Out</v-list-item-content>
           </v-list-item>
+          <!--  -->
+          <v-list-item dense nav link>
+            <v-list-item-icon>
+              <v-icon left>mdi-logout-variant</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>{{
+              this.userIsAuthenticated ? "Signed In" : "Not Signed In"
+            }}</v-list-item-content>
+          </v-list-item>
+          <!--  -->
         </v-list>
       </v-navigation-drawer>
     </v-app>
@@ -84,28 +100,17 @@ export default {
   name: "App",
   data() {
     return {
-      // auth,
       loggedIn: false,
       right: null,
       sideNav: false,
       userProfileData: null,
     };
   },
-  // methods: {
-  // todo - move to vuex
-  // logout() {
-  //   firebase
-  //     .auth()
-  //     // auth
-  //     .signOut()
-  //     .then(() => {
-  //       console.log("Logged Out");
-  //     })
-  //     .catch((err) => {
-  //       console.error(err);
-  //     });
-  // },
-  // },
+  methods: {
+    signOut() {
+      this.$store.dispatch("signOut");
+    },
+  },
   mounted() {
     (() => {
       axios

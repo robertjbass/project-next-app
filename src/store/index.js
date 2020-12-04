@@ -1,8 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-
 import firebase from "firebase/app";
 import "firebase/auth";
+
+import { auth } from '../firebase'
 
 
 const provider = new firebase.auth.GithubAuthProvider();
@@ -105,7 +106,7 @@ export const store = new Vuex.Store({
   },  
   actions: {
     signUserUp({commit}) {
-      firebase.auth().signInWithPopup(provider)
+      auth.signInWithPopup(provider)
       .then((ghUser) => {
         console.log({ghUser})
         const user = ghUser.user
@@ -127,6 +128,14 @@ export const store = new Vuex.Store({
             console.log(error)
         }
       )
+    },
+    signOut({ commit }) {
+      auth.signOut().then(() => {
+        commit('setUser', null)
+        console.log("signed out")
+      }).catch((error) => {
+        console.error(error)
+      })
     },
     createProject({ commit }, payload) {
       const project = {
