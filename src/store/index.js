@@ -105,6 +105,7 @@ export const store = new Vuex.Store({
     }
   },  
   actions: {
+    // Works for signup and signin
     signUserUp({commit}) {
       auth.signInWithPopup(provider)
       .then((ghUser) => {

@@ -1,6 +1,6 @@
 <template>
   <div class="createProject">
-    <v-container>
+    <v-container class="top-spacing">
       <v-form @submit.prevent="onCreateProject" :lazy-validation="true">
         <v-layout>
           <v-row justify="center">
@@ -286,5 +286,8 @@ export default {
 <style scoped>
 .card-background {
   background-color: #333;
+}
+.top-spacing {
+  margin-top: 40px;
 }
 </style>

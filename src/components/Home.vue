@@ -50,12 +50,17 @@
         </v-carousel>
       </v-layout>
       <v-layout class="all-projects">
-        <v-row>
+        <v-row align="center">
           <v-col
             cols="12"
-            sm="12"
+            sm="9"
+            offset-sm="2"
+            offset-md="0"
+            offset-lg="0"
+            offset-xl="0"
             md="6"
             lg="4"
+            xl="4"
             v-for="project in loadedProjects"
             :key="project.id"
           >

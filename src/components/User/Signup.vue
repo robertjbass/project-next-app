@@ -26,15 +26,10 @@
         </v-layout>
       </v-form>
     </v-container>
-
-    <!-- <v-container>
-      <v-card dark > </v-card>
-    </v-container> -->
   </div>
 </template>
 
 <script>
-// import mapGetters from "vuex";
 export default {
   name: "Signup",
   methods: {
@@ -43,7 +38,6 @@ export default {
     },
   },
   computed: {
-    // ...mapGetters(["user"]),
     user() {
       return this.$store.getters.user;
     },
