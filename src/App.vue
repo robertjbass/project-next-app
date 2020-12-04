@@ -21,14 +21,13 @@
             class="btn-nav"
             dark
             :to="item.link"
-            ><v-icon left>{{ item.icon }}</v-icon>
+            ><v-icon>{{ item.icon }}</v-icon>
           </v-btn>
         </v-toolbar-items>
       </v-toolbar>
       <router-view />
       <!-- //? add temporary tag if drawer starts being open by default -->
       <v-navigation-drawer absolute dark v-model="sideNav" width="256">
-        <!-- height="100vh" -->
         <v-list-item @click.native.stop="sideNav = !sideNav">
           <v-list-item-content>
             <v-list-item-title class="title">
@@ -70,7 +69,7 @@
             </v-list-item-icon>
             <v-list-item-content>Log Out</v-list-item-content>
           </v-list-item>
-          <!--  -->
+
           <v-list-item dense nav link>
             <v-list-item-icon>
               <v-icon left>mdi-logout-variant</v-icon>
@@ -79,7 +78,6 @@
               this.userIsAuthenticated ? "Signed In" : "Not Signed In"
             }}</v-list-item-content>
           </v-list-item>
-          <!--  -->
         </v-list>
       </v-navigation-drawer>
     </v-app>

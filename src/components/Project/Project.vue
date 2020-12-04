@@ -69,7 +69,7 @@ h5 {
   align-self: left;
 }
 .title-image {
-  padding-right: 10px;
+  padding: 100px;
   max-width: 100%;
 }
 .card {

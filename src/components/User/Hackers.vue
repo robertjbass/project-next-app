@@ -4,9 +4,7 @@
       <h1>Hackers</h1>
       <v-layout>
         <v-row justify="center">
-          <!-- The projects page should match this layout including mx-auto-->
           <v-col cols="10" sm="8" md="8" lg="6">
-            <!--  -->
             <v-card
               v-for="hacker in hackers"
               :key="hacker.id"
@@ -14,10 +12,9 @@
               color="#333"
               dark
             >
-              <!-- max-width="400" -->
               <v-card-title>
                 <v-icon large left> mdi-bookmark-outline </v-icon>
-                <v-icon large left> mdi-bookmark </v-icon>
+                <!-- <v-icon large left> mdi-bookmark </v-icon> -->
                 <span class="title font-weight-light">{{
                   hacker.username
                 }}</span>
@@ -44,14 +41,6 @@
                 </v-list-item>
               </v-card-actions>
             </v-card>
-            <!-- <v-card
-              dark
-              class="card"
-              v-for="hacker in hackers"
-              :key="hacker.id"
-            >
-              <div class="card"></div>
-            </v-card> -->
           </v-col>
         </v-row>
       </v-layout>

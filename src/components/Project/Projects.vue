@@ -2,6 +2,7 @@
   <div class="projects">
     <v-container class="top-spacing">
       <v-layout>
+        <!-- Best project layout so far -->
         <v-row justify="center">
           <v-col cols="10" sm="8" md="8" lg="6">
             <v-card
@@ -34,8 +35,6 @@
                     </v-img>
 
                     <p class="description">{{ project.description }}</p>
-                  </v-col>
-                  <v-col>
                     <v-chip
                       dark
                       color="accentRed--lighten"
@@ -46,8 +45,12 @@
                       ><v-icon>{{ technology[0].concat(" ") }}</v-icon
                       >{{ technology.substr(1, technology.length - 1) }}</v-chip
                     >
-                    <v-card-actions>
-                      <v-btn elevation="0" :to="'/project/' + project.id">
+                    <v-card-actions class="actions">
+                      <v-btn
+                        class="btn-project"
+                        elevation="0"
+                        :to="'/project/' + project.id"
+                      >
                         <v-icon left>mdi-arrow-right-bold</v-icon>
                         Project Details</v-btn
                       >
@@ -88,13 +91,19 @@ h5 {
   padding: 0;
   /* margin: 0; */
 }
-/* .card-image {
-} */
+.card-image {
+  margin: 20px;
+}
 .top-spacing {
   margin-top: 40px;
 }
 
 .description {
   padding: 10px;
+}
+
+.actions {
+  padding-top: 20px;
+  justify-content: center;
 }
 </style>

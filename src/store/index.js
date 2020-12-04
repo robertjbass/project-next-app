@@ -91,10 +91,13 @@ export const store = new Vuex.Store({
           projectDuration: '7 Days'
       }
     ],
+    // try just using user:null
     user: {
       id: null,
       projects: []
-    }
+    },
+    loading: false,
+    error: null
   },
   mutations: {
     createProject(state, payload) {
@@ -102,13 +105,25 @@ export const store = new Vuex.Store({
     },
     setUser(state, payload) {
       state.user = payload
+    },
+    setLoading(state, payload) {
+      state.loading = payload
+    },
+    setError(state, payload) {
+      state.error = payload
+    },
+    clearError(state) {
+      state.error = null
     }
   },  
   actions: {
     // Works for signup and signin
-    signUserUp({commit}) {
+    signUserUp({ commit }) {
+      commit('setLoading', true)
       auth.signInWithPopup(provider)
-      .then((ghUser) => {
+        .then((ghUser) => {
+        commit('setLoading', false)
+        commit('clearError')
         console.log({ghUser})
         const user = ghUser.user
         const operationType = ghUser.operationType
@@ -126,6 +141,8 @@ export const store = new Vuex.Store({
           commit('setUser', newUser)
         }).catch(
           error => {
+            commit('setLoading', false)
+            commit('setError', error)
             console.log(error)
         }
       )
@@ -155,6 +172,9 @@ export const store = new Vuex.Store({
       }
       // Reach out to firebase and store it, get id from firebase, add to project
       commit('createProject', project)
+    },
+    clearError({ commit }) {
+      commit('clearError')
     }
   },
   getters: {
@@ -175,6 +195,12 @@ export const store = new Vuex.Store({
     },
     user(state) {
       return state.user
+    },
+    loading(state) {
+      return state.loading
+    },
+    error(state) {
+      return state.error
     }
   }
 })

@@ -6,13 +6,14 @@ Vue.use(Router)
 import Home from '@/components/Home'
 import CreateProject from '@/components/Project/CreateProject'
 import Projects from '@/components/Project/Projects'
-import Project from '@/components/Project/Project';
+import Project from '@/components/Project/Project'
 import Hackers from '@/components/User/Hackers'
 import Profile from '@/components/User/Profile'
-import Signin from '@/components/User/Signin'
+// import Signin from '@/components/User/Signin'
 import Signup from '@/components/User/Signup'
+import AlertCmp from './components/Shared/Alert'
 
-
+Vue.component('app-alert', AlertCmp)
 
 
 const router = new Router({
@@ -51,20 +52,20 @@ const router = new Router({
       name: 'Profile',
       component: Profile
     },
-    {
-      path: '/signin',
-      name: 'Signin',
-      component: Signin
-    },
+    // {
+    //   path: '/signin',
+    //   name: 'Signin',
+    //   component: Signin
+    // },
     {
       path: '/signup',
       name: 'Signup',
       component: Signup
-    }
-    // {
-    //   path: '*',
-    //   component: Home,
-    // },
+    },
+    {
+      path: '*',
+      component: Home,
+    },
   ] 
 })
 
