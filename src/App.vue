@@ -8,8 +8,8 @@
         ></v-app-bar-nav-icon>
         <v-toolbar-title class="title">
           <router-link to="/" tag="span" style="cursor: pointer" class="title">
-            <!-- project(() => nextApp('💡')) -->
-            (() => nextApp('💡'))
+            project(() => nextApp('💡'))
+            <!-- (() => nextApp('💡')) -->
           </router-link>
         </v-toolbar-title>
         <v-spacer></v-spacer>
@@ -26,6 +26,7 @@
         </v-toolbar-items>
       </v-toolbar>
       <router-view />
+      <!-- <DataStore class="temp" /> -->
       <!-- //? add temporary tag if drawer starts being open by default -->
       <v-navigation-drawer absolute dark v-model="sideNav" width="256">
         <v-list-item @click.native.stop="sideNav = !sideNav">
@@ -37,7 +38,7 @@
               Project Next App
             </v-list-item-title>
             <v-list-item-subtitle>
-              Start something new... again
+              {{ this.userIsAuthenticated ? "Signed In" : "Not Signed In" }}
             </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
@@ -70,14 +71,14 @@
             <v-list-item-content>Log Out</v-list-item-content>
           </v-list-item>
 
-          <v-list-item dense nav link>
+          <!-- <v-list-item dense>
             <v-list-item-icon>
               <v-icon left>mdi-logout-variant</v-icon>
             </v-list-item-icon>
             <v-list-item-content>{{
               this.userIsAuthenticated ? "Signed In" : "Not Signed In"
             }}</v-list-item-content>
-          </v-list-item>
+          </v-list-item> -->
         </v-list>
       </v-navigation-drawer>
     </v-app>
@@ -86,7 +87,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-// todo - move to vuex
+// import DataStore from "@/components/Shared/DataStore.vue";
 // import firebase from "firebase/app";
 // import "firebase/auth";
 
@@ -96,6 +97,9 @@ import axios from "axios";
 
 export default {
   name: "App",
+  // components: {
+  //   DataStore,
+  // },
   data() {
     return {
       loggedIn: false,
@@ -107,6 +111,10 @@ export default {
   methods: {
     signOut() {
       this.$store.dispatch("signOut");
+      if (this.$route.path !== "/") {
+        this.$router.push("/");
+      }
+      this.sideNav = false;
     },
   },
   mounted() {
@@ -123,6 +131,13 @@ export default {
           console.error(err);
         });
     })();
+  },
+  watch: {
+    userIsAuthenticated() {
+      if (!this.userIsAuthenticated) {
+        this.$router.push("/");
+      }
+    },
   },
   computed: {
     ...mapGetters(["user"]),
@@ -143,14 +158,15 @@ export default {
             link: "/projects",
           },
           {
+            // icon: "mdi-folder-plus-outline",
+            icon: "mdi-plus",
+            title: "Next App",
+            link: "/project/new",
+          },
+          {
             icon: "mdi-github",
             title: "Profile",
             link: "/profile",
-          },
-          {
-            icon: "mdi-folder-plus-outline",
-            title: "Next App",
-            link: "/project/new",
           },
           // {
           //   icon: "mdi-logout-variant",
@@ -162,14 +178,14 @@ export default {
         return [
           {
             icon: "mdi-github",
-            title: "Sign up",
+            title: "Sign in",
             link: "/signup",
           },
-          {
-            icon: "mdi-github",
-            title: "Sign in",
-            link: "/signin",
-          },
+          // {
+          //   icon: "mdi-github",
+          //   title: "Sign in",
+          //   link: "/signin",
+          // },
         ];
       }
     },

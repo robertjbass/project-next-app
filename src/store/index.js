@@ -1,7 +1,10 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import firebase from "firebase/app";
+// import vuefire from 'vuefire'
 import "firebase/auth";
+import axios from 'axios'
+const db = firebase.firestore();
 
 import { auth } from '../firebase'
 
@@ -12,96 +15,25 @@ Vue.use(Vuex)
 
 export const store = new Vuex.Store({
   state: {
-    loadedProjects: [
-      {
-          id: "1",
-          title: "UberTeleport",
-          bgColor: "00f4f4",
-          fontColor: "000",
-          imageUrl: `https://dummyimage.com/600x400/00f4f4/000.png&text=UberTeleport`,
-          username: "716green",
-          description:
-            "A teleporter sharing service where the owner of the teleporter beams you to your destination for ratings in the mobile app",
-          technologies: [
-            "JavaScript",
-            "MariaDB",
-            "Firebase",
-            "Nginx",
-            "Cloud Functions",
-            "Vue.js",
-        ],
-          githubRepo: "github.com/a/b",
-          productPage: "coda.io/@narro/abcdefg",
-          startDate: '2021-01-20',
-          endDate: '2021-12-01',
-          goals: 'Learn Stuff',
-          projectDuration: '7 Days'
-        },
-        {
-          id: "2",
-          title: "TierZooDaily",
-          bgColor: "cc87fc",
-          fontColor: "000",
-          imageUrl:
-            "https://dummyimage.com/600x400/cf78cf/000.png&text=TierZooDaily",
-          username: "PotatoBug111",
-          description:
-            "An app that generates interesting animal videos every 24 hours.",
-          technologies: ["C++", "GPT-3", "Tensorflow"],
-          githubRepo: "github.com/a/b",
-          productPage: "coda.io/@narro/abcdefg",
-          startDate: '2021-01-20',
-          endDate: '2021-12-02',
-          goals: 'Learn Stuff',
-          projectDuration: '7 Days'
-        },
-        {
-          id: "3",
-          title: "Pigma",
-          bgColor: "5cf",
-          fontColor: "fff",
-          imageUrl: `https://dummyimage.com/600x400/5cf/fff.png&text=Pigma`,
-          username: "WebMaster2021",
-          description:
-            "An app that allows you to decorate an augmented reality pig while it runs around your living room.",
-          technologies: ["WebGL", "MongoDB", "Java"],
-          githubRepo: "github.com/a/b",
-          productPage: "coda.io/@narro/abcdefg",
-          startDate: '2021-01-20',
-          endDate: '2021-12-02',
-          goals: 'Learn Stuff',
-          projectDuration: '7 Days'
-        },
-        {
-          id: "4",
-          title: "Moonwalk Shoes",
-          bgColor: "cc87fc",
-          fontColor: "f1c",
-          imageUrl:
-          "https://dummyimage.com/600x400/cf78cf/fff.png&text=MoonwalkShoes",
-          username: "Jackson5",
-          description:
-          "A marketplace for one of a kind dancing shoes inspired by the king of pop.",
-          technologies: ["HTML", "CSS", "PHP"],
-          githubRepo: "github.com/a/b",
-          productPage: "coda.io/@narro/abcdefg",
-          startDate: '2021-01-20',
-          endDate: '2021-12-02',
-          goals: 'Learn Stuff',
-          projectDuration: '7 Days'
-      }
-    ],
-    // try just using user:null
-    user: {
-      id: null,
-      projects: []
-    },
+    loadedProjects: [],
+    hackers: [],
+    user: null,
     loading: false,
-    error: null
+    error: null,
+    technologies: null
   },
+
+  /*************************
+  #2 - MUTATIONS
+  ************************** */
   mutations: {
     createProject(state, payload) {
-      state.loadedProjects.push(payload)
+      // state.loadedProjects.push(payload) //older
+      //! error index.js?4360:179 TypeError: Invalid attempt to spread non-iterable instance
+      let newPayload = ({...payload}) //works2
+      state.loadedProjects.push(...newPayload) //works2
+      // let newPayload = {...payload} //works1
+      // state.loadedProjects.push(...newPayload) //works1
     },
     setUser(state, payload) {
       state.user = payload
@@ -114,36 +46,80 @@ export const store = new Vuex.Store({
     },
     clearError(state) {
       state.error = null
+    },
+    setTechnologies(state, payload) {
+      state.technologies = payload
+    },
+    setLoadedProjects(state, payload) {
+      // state.loadedProjects = []
+      console.log('state', state.loadedProjects)
+      console.log('payload',payload)
+      state.loadedProjects = payload
+    },
+    setHackers(state, payload) {
+      state.hackers = payload
     }
-  },  
+  },
+
+
+  /*************************
+  #3 - ACTIONS
+  ************************** */
+
   actions: {
-    // Works for signup and signin
+
+    //* USERS (HACKERS)
+    //! LOAD HACKERS
+    loadHackers({ commit }) {
+      const hackersRef = db.collection('users')
+      const query = hackersRef.where('email', '!=', null)
+
+    query.onSnapshot(hacker => {
+      const hackers = []
+      hacker.forEach(doc => {
+        console.log('doc',doc.id)
+        hacker = {id: doc.id, ...doc.data()}
+        hackers.push(hacker)
+      })
+      console.log(...hackers)
+        commit('setHackers', hackers)
+      })
+    },
+
+    //! SIGN USER UP
     signUserUp({ commit }) {
       commit('setLoading', true)
       auth.signInWithPopup(provider)
         .then((ghUser) => {
         commit('setLoading', false)
         commit('clearError')
-        console.log({ghUser})
+        // console.log({ghUser})
         const user = ghUser.user
         const operationType = ghUser.operationType
-        const credential = ghUser.credential
+        const signInMethod = ghUser.credential.signInMethod
         const additionalUserInfo = ghUser.additionalUserInfo
         const { isNewUser, profile, providerId, username } = additionalUserInfo
-        const { avatar_url, bio, blog, company, created_at, email, events_url, followers, followers_url, following, following_url, gists_url, gravitar_id, hireable, html_url, id, location, login, name, node_id, organization_url, public_gists, public_repos, received_events_url, repos_url, site_admin, starred_url, subscriptions_url, twitter_username, type, updated_at, url } = profile
+        const { avatar_url, bio, blog, company, created_at, email, events_url, followers, followers_url, following, following_url, gists_url, gravatar_id, hireable, html_url, id, location, login, name, node_id, organizations_url, public_gists, public_repos, received_events_url, repos_url, site_admin, starred_url, subscriptions_url, twitter_username, type, updated_at, url } = profile
         const { uid, displayName, emailVerified, isAnonymous, phoneNumber, photoURL } = user
         const userEmail = user.email
-        console.log(operationType, credential, userEmail, isNewUser, profile, providerId, username, avatar_url, bio, blog, company, created_at, email, events_url, followers, followers_url, following, following_url, gists_url, gravitar_id, hireable, html_url, id, location, login, name, node_id, organization_url, public_gists, public_repos, received_events_url, repos_url, site_admin, starred_url, subscriptions_url, twitter_username, type, updated_at, url, uid, displayName, email, emailVerified, isAnonymous, phoneNumber, photoURL )
         const newUser = {
-            id: uid,
-            projects: []
+          id: uid, githubId: id, projects: [], userEmail, isNewUser, operationType,
+          displayName, emailVerified, isAnonymous, phoneNumber, photoURL, avatar_url, bio, blog, company, created_at, email, events_url, followers, followers_url, following, following_url, gists_url, gravatar_id, hireable, html_url, location, login, name, node_id, organizations_url, public_gists, public_repos, received_events_url, repos_url, site_admin, starred_url, subscriptions_url, twitter_username, type, updated_at, url, providerId, username, signInMethod, 
+        }
+        commit('setUser', newUser)
+        if (isNewUser) {
+          db.collection('users').add(newUser)
+            .then((data) => {
+              console.log(data.id)
+            }).catch((error) => {
+              console.error(error)
+            })
           }
-          commit('setUser', newUser)
         }).catch(
           error => {
-            commit('setLoading', false)
-            commit('setError', error)
-            console.log(error)
+          commit('setLoading', false)
+          commit('setError', error)
+          console.error(error)
         }
       )
     },
@@ -155,32 +131,91 @@ export const store = new Vuex.Store({
         console.error(error)
       })
     },
+
+    //* PROJECTS
+    //! LOAD PROJECTS
+    loadProjects({ commit }) {
+      commit('setLoading', true)
+      // commit('setLoadedProjects', [])
+      const projectsRef = db.collection('projects')
+      const query = projectsRef.where('title', '!=', null)
+      query.onSnapshot(project => {
+        const projects = []
+        project.forEach(doc => {
+          // console.log({...doc.data(), id: doc.id})
+          projects.push({...doc.data(), id: doc.id})
+        })
+        commit('setLoadedProjects', projects)
+        commit('setLoading', false)
+      })
+    },
+
+    //! CREATE PROJECT
     createProject({ commit }, payload) {
-      const project = {
-        id: this.state.loadedProjects.length + 1,
+      let project = {
         title: payload.projectName,
         imageUrl: payload.imageUrl ? payload.imageUrl : `https://dummyimage.com/600x400/cf78cf/000.png&text=${payload.projectName}`,
         description: payload.summary,
         technologies: payload.anticipatedTechnologies,
-        username: "", //todo
         githubRepo: payload.githubRepo,
         productPage: payload.productPage,
-        emailAddress: "", //todo
         created: payload.created,
         goals: payload.goals,
         projectDuration: payload.projectDuration,
+        userId: this.state.user.id,
+        name: this.state.user.name,
+        username: this.state.user.login,
+        emailAddress: this.state.user.email,
+        // id: ""
       }
-      // Reach out to firebase and store it, get id from firebase, add to project
-      commit('createProject', project)
+      // let projects = []
+      db.collection('projects').add(project)
+        .then((data) => {
+        // console.log(data)
+          const key = data.id
+          let newProject = {...project, id: key}
+          commit('createProject', newProject) 
+          // commit('createProject', ...newProject) //Good
+          // commit('createProject', ...{...project, id: key})
+          // commit('createProject', {...project, id: key})
+        })
+        .catch((error) => {
+        console.error(error)
+      })
     },
+
+
+    //! MISC
     clearError({ commit }) {
       commit('clearError')
-    }
+    },
+    setTechnologies({ commit }) {
+      let technologies = []
+      let technologyUrl = `https://v1.nocodeapi.com/bbass/airtable/OWBByjdlNVhiKRiR?tableName=Technologies&view=All&perPage=500&sortBy=Technology`;
+      axios
+        .get(technologyUrl)
+        .then((res) => {
+          this.technologies = [];
+          commit("setTechnologies", technologies);
+          res.data.records.forEach((techObject) => {
+            technologies.push(techObject.fields.Technology);
+          });
+          commit('setTechnologies', technologies)
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+      }
   },
+
+  /*************************
+  #4 - GETTERS
+  ************************** */
   getters: {
     loadedProjects(state) {
       return state.loadedProjects.sort((projectA, projectB) => {
         return projectA.endDate > projectB.endDate
+      // return state.loadedProjects
       })
     },
     featuredProjects(state, getters) {
@@ -201,6 +236,12 @@ export const store = new Vuex.Store({
     },
     error(state) {
       return state.error
+    },
+    technologies(state) {
+      return state.technologies
+    },
+    hackers(state) {
+      return state.hackers
     }
   }
 })

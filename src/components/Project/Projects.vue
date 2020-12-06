@@ -67,13 +67,26 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+// import { mapGetters } from "vuex";
 
 export default {
   name: "Projects",
+  // data() {
+  //   return {
+  //     loadedProjects: null,
+  //   };
+  // },
+  // mounted() {
+  //   this.loadedProjects = this.$store.state.loadedProjects;
+  // },
   computed: {
-    ...mapGetters(["loadedProjects", "loadedProject"]),
+    loadedProjects() {
+      return this.$store.getters.loadedProjects;
+    },
   },
+  // computed: {
+  //   ...mapGetters(["loadedProjects", "loadedProject"]),
+  // },
 };
 </script>
 

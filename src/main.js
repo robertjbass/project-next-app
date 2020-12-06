@@ -5,8 +5,6 @@ import { firestorePlugin } from 'vuefire'
 import router from './router'
 import { store } from './store'
 import DateFilter from './filters/date'
-// import firebase from 'firebase/app'
-// import 'firebase/auth'
 
 Vue.use(firestorePlugin)
 
@@ -19,6 +17,8 @@ new Vue({
   store,
   vuetify,
   render: h => h(App),
-  // created() {
-  // }
+  created() {
+    this.$store.dispatch('loadProjects')
+    this.$store.dispatch('loadHackers')
+  }
 }).$mount('#app')

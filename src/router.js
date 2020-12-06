@@ -12,8 +12,11 @@ import Profile from '@/components/User/Profile'
 // import Signin from '@/components/User/Signin'
 import Signup from '@/components/User/Signup'
 import AlertCmp from './components/Shared/Alert'
+// import axios from 'axios'
 
 Vue.component('app-alert', AlertCmp)
+
+
 
 
 const router = new Router({
@@ -29,6 +32,8 @@ const router = new Router({
     {
       path: '/project/new',
       name: 'CreateProject',
+      // props: true,
+      // props: {technologies},
       component: CreateProject
     },
     {

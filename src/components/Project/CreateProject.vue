@@ -1,7 +1,7 @@
 <template>
   <div class="createProject">
     <v-container class="top-spacing">
-      <v-form @submit.prevent="onCreateProject" :lazy-validation="true">
+      <v-form @submit.prevent="onCreateProject">
         <v-layout>
           <v-row justify="center">
             <v-col cols="12" sm="10" md="8" lg="6">
@@ -9,7 +9,7 @@
                 <div class="card-background">
                   <v-card-text>
                     <h1>Create Next App</h1>
-                    Sumbission Date: {{ dateCreated }}
+                    Sumbission Date: {{ dateCreated | date }}
                     <v-text-field
                       id="projectName"
                       ref="projectName"
@@ -142,18 +142,6 @@ export default {
       selectedDuration: "1 Week",
       projectDurations: ["1 Week", "2 Weeks", "1 Month", "Long Term"],
       selectedItems: [],
-      items: [
-        "HTML",
-        "CSS",
-        "JavaScript",
-        "Angular",
-        "Vue.js",
-        "React.js",
-        "Preact",
-        "SQL",
-        "MongoDB",
-        "Azure",
-      ],
       errorMessages: "",
       projectName: null,
       formHasErrors: false,
@@ -168,6 +156,12 @@ export default {
   },
 
   computed: {
+    user() {
+      return this.$store.getters.user;
+    },
+    items() {
+      return this.$store.getters.technologies;
+    },
     submitEnabled() {
       return (
         this.projectName &&
@@ -184,7 +178,7 @@ export default {
         anticipatedTechnologies: this.selectedItems,
         githubRepo: this.githubRepo,
         productPage: this.productPage,
-        emailAddress: "", //todo - add,
+        emailAddress: this.user.email,
         created: this.dateCreated,
         goals: this.goals,
         imageUrl: this.imageUrl,
@@ -234,6 +228,11 @@ export default {
   },
 
   watch: {
+    user() {
+      if (this.user === null || this.user === undefined) {
+        this.$router.push("/");
+      }
+    },
     projectName() {
       this.errorMessages = "";
     },
@@ -246,8 +245,11 @@ export default {
 
   methods: {
     onCreateProject() {
-      // const projectData = this.form;
       this.$store.dispatch("createProject", this.form);
+      console.log(this.form);
+      // setTimeout(() => {
+      this.$router.push("/projects/");
+      // }, 1000);
     },
     summaryCheck() {
       this.errorMessages =
@@ -259,7 +261,6 @@ export default {
       this.errorMessages = [];
       this.formHasErrors = false;
       this.selectedItems = [];
-
       this.errorMessages = "";
       this.projectName = null;
       this.formHasErrors = false;
@@ -273,9 +274,7 @@ export default {
     },
     submit() {
       this.formHasErrors = false;
-      if (this.submitEnabled) {
-        console.log(this.form);
-      } else {
+      if (!this.submitEnabled) {
         alert("Please verify all errors are corrected");
       }
     },

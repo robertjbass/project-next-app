@@ -17,13 +17,13 @@
               v-if="userIsAuthenticated"
               large
               router
-              to="/project/new"
+              @click="toNextApp()"
             >
               Start a Project
             </v-btn>
             <!-- color="accentBlue" -->
             <v-btn class="page-btn" v-else large router to="/signup">
-              Start
+              Get Started
             </v-btn>
           </v-col>
         </v-row>
@@ -37,10 +37,15 @@
           class="carousel"
           height="400"
         >
+          <v-progress-circular
+            v-if="loading"
+            indeterminate
+            color="purple"
+          ></v-progress-circular>
           <v-carousel-item
             v-for="project in featuredProjects"
             :key="project.id"
-            :src="images"
+            :src="project.imageUrl"
             @click="onLoadProject(project.id)"
             hide-on-leave
           >
@@ -53,20 +58,18 @@
         <v-row align="center">
           <v-col
             cols="12"
-            sm="9"
+            sm="8"
+            md="6"
+            lg="4"
+            xl="4"
             offset-sm="2"
             offset-md="0"
             offset-lg="0"
             offset-xl="0"
-            md="6"
-            lg="4"
-            xl="4"
             v-for="project in loadedProjects"
             :key="project.id"
           >
-            <!--   -->
             <div class="project-display">
-              <!-- height="600px" -->
               <v-card dark>
                 <div class="projects">
                   <h3
@@ -76,10 +79,9 @@
                   >
                     {{ project.title }} by {{ project.username }}
                   </h3>
-                  <!-- <br /> -->
                   <div class="desc">
-                    <img :src="project.imageUrl" width="100%" />
-                    <p>{{ project.description }}</p>
+                    <img class="image" :src="project.imageUrl" />
+                    <p class="description">{{ project.description }}</p>
                     <div>
                       <v-chip
                         dark
@@ -95,7 +97,6 @@
                       >
                     </div>
                   </div>
-                  <!-- <br /> -->
                 </div>
               </v-card>
             </div>
@@ -120,6 +121,9 @@ export default {
     onLoadProject(id) {
       this.$router.push("/project/" + id);
     },
+    toNextApp() {
+      this.$router.push("/project/new/");
+    },
   },
   computed: {
     ...mapGetters([
@@ -127,10 +131,10 @@ export default {
       "loadedProject",
       "loadedProjects",
       "user",
+      "loading",
     ]),
     projects() {
       return this.featuredProjects;
-      // return this.$store.getters.featuredProjects;
     },
     userIsAuthenticated() {
       return this.user !== null && this.user !== undefined;
@@ -173,16 +177,26 @@ export default {
 .project-display {
   margin: auto;
   text-align: left;
+  /* display: flex; */
+  /* flex-grow: 1; */
+  justify-content: space-evenly;
+  /* width: 400px; */
 }
+
 .projects {
   background-color: #333;
   border: solid;
   border-width: 1px;
   padding: 30px;
+  /* padding: 30px; */
   height: 600px;
 }
 .desc {
   text-align: left;
+}
+
+.description {
+  padding: 10px;
 }
 
 .heading {
@@ -191,7 +205,15 @@ export default {
 }
 
 .page-btn {
-  width: "400px";
+  width: 400px;
+}
+
+.image {
+  max-width: 300px;
+  min-width: 100px;
+  display: flex;
+  margin: auto;
+  max-height: 200px;
 }
 
 /* .page-btn {

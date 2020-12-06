@@ -33,14 +33,24 @@
 </template>
 
 <script>
+// import axios from "axios";
 export default {
   name: "Signup",
+  data() {
+    return {
+      technologies: [],
+    };
+  },
   methods: {
     onSignupWithGH() {
+      this.setTechnologies();
       this.$store.dispatch("signUserUp");
     },
     onDismissed() {
       this.$store.dispatch("clearError");
+    },
+    setTechnologies() {
+      this.$store.dispatch("setTechnologies");
     },
   },
   computed: {
