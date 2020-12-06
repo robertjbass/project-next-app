@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <img src="../assets/images/project-next-app-banner-3.png" />
+    <img src="../assets/images/project-next-app-banner-3.png" width="100%" />
     <v-container>
       <v-layout>
         <v-row justify="space-between">
@@ -54,9 +54,25 @@
           </v-carousel-item>
         </v-carousel>
       </v-layout>
-      <v-layout class="all-projects">
-        <v-row align="center">
-          <v-col
+      <!-- <div
+        v-for="project in featuredProjects"
+        :key="project.id"
+        class="projectsToDisplay"
+      >
+        <ProjectCard :project="project" :rt="`./project/${project.id}`" />
+      </div> -->
+    </v-container>
+
+    <v-layout class="all-projects">
+      <!-- <v-row align="center"> -->
+      <v-row>
+        <v-col
+          cols="12"
+          md="6"
+          v-for="project in loadedProjects"
+          :key="project.id"
+        >
+          <!-- <v-col
             cols="12"
             sm="8"
             md="6"
@@ -68,8 +84,9 @@
             offset-xl="0"
             v-for="project in loadedProjects"
             :key="project.id"
-          >
-            <div class="project-display">
+          > -->
+          <ProjectCard :project="project" :rt="`./project/${project.id}`" />
+          <!-- <div class="project-display">
               <v-card dark>
                 <div class="projects">
                   <h3
@@ -99,16 +116,17 @@
                   </div>
                 </div>
               </v-card>
-            </div>
-          </v-col>
-        </v-row>
-      </v-layout>
-    </v-container>
+            </div> -->
+        </v-col>
+      </v-row>
+    </v-layout>
+    <!-- </v-container> -->
   </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
+import ProjectCard from "@/components/Shared/ProjectCard.vue";
 // import axios from "axios";
 export default {
   name: "Home",
@@ -124,6 +142,9 @@ export default {
     toNextApp() {
       this.$router.push("/project/new/");
     },
+  },
+  components: {
+    ProjectCard,
   },
   computed: {
     ...mapGetters([
@@ -170,36 +191,33 @@ export default {
 }
 
 .all-projects {
-  margin: 0 5%;
-  display: flex;
-}
-
-.project-display {
-  margin: auto;
-  text-align: left;
+  margin: 0 2.5%;
   /* display: flex; */
   /* flex-grow: 1; */
-  justify-content: space-evenly;
-  /* width: 400px; */
+  /* margin: auto; */
+  align-items: stretch;
+  /* height: 100%; */
 }
 
-.projects {
+/* .project-display {
+  width: 100%;
+} */
+
+/* .projects {
   background-color: #333;
   border: solid;
   border-width: 1px;
   padding: 30px;
-  /* padding: 30px; */
-  height: 600px;
-}
-.desc {
+} */
+/* .desc {
   text-align: left;
 }
 
 .description {
   padding: 10px;
-}
+} */
 
-.heading {
+/* .heading {
   padding-bottom: 10px;
   text-align: center;
 }
@@ -214,7 +232,7 @@ export default {
   display: flex;
   margin: auto;
   max-height: 200px;
-}
+} */
 
 /* .page-btn {
   color: white;

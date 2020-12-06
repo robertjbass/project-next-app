@@ -204,6 +204,10 @@ export default {
   color: white;
 }
 
+a {
+  color: white;
+}
+
 .toolbar {
   height: 100px;
 }
@@ -213,8 +217,4 @@ export default {
   font-family: monospace;
   text-decoration: none;
 }
-
-/* .btn-nav {
-  width: 160px;
-} */
 </style>
