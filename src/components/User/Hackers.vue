@@ -16,39 +16,16 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+// import { mapGetters } from "vuex";
 import HackerCard from "@/components/Shared/HackerCard.vue";
 
 export default {
   name: "Hackers",
-  data() {
-    return {
-      //     hackers: [
-      //       {
-      //         id: "4",
-      //         imageUrl:
-      //           "https://dummyimage.com/600x400/cf78cf/fff.png&text=MoonwalkShoes",
-      //         username: "Jackson5",
-      //         name: "Tammy Trout",
-      //         description: "A developer...",
-      //         technologies: ["HTML", "CSS", "PHP"],
-      //         githubRepo: "github.com/a/b",
-      //         productPage: "coda.io/@narro/abcdefg",
-      //         startDate: "2021-01-20",
-      //         endDate: "2021-12-02",
-      //         goals: "Learn Stuff",
-      //         projectDuration: "7 Days",
-      //         likeCount: 22,
-      //       },
-      //     ],
-    };
-  },
   computed: {
-    ...mapGetters(["hackers"]),
-    // hackers() {
-    //   return this.$store.hackers;
-    //   // return this.$store.getUsers
-    // },
+    // ...mapGetters(["hackers"]),
+    hackers() {
+      return this.$store.getters.hackers;
+    },
     avatarUrl() {
       return "https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortFlat&accessoriesType=Blank&hairColor=BrownDark&facialHairType=Blank&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light";
     },

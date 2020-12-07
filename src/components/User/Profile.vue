@@ -37,7 +37,14 @@
           <v-btn @click="editProfile" color="secondary"
             ><v-icon left>mdi-pencil</v-icon>Edit</v-btn
           ><br /><br />
-          Projects: {{ userData.projects }}<br />
+          <!-- Projects: {{ userData.projects }}<br /> -->
+          Projects:
+          <div v-for="project in projectsByUser" :key="project.id">
+            <router-link :to="`./project/${project.id}`">{{
+              project.title
+            }}</router-link>
+          </div>
+          <br />
         </div>
 
         <!-- <div class="userInfo" v-for="(data, i) in userData" :key="i">
@@ -61,6 +68,14 @@ export default {
   computed: {
     userData() {
       return this.$store.getters.user;
+    },
+    userProjects() {
+      return this.$store.getters.loadedProjects;
+    },
+    projectsByUser() {
+      return this.userProjects.filter(
+        (userProject) => userProject.creatorId == this.userData.id
+      );
     },
   },
 };

@@ -4,15 +4,17 @@
       <Alert v-show="error" :text="error" />
       <v-card dark class="card">
         <div class="heading">
-          <h4 align="center">{{ project.title }} by {{ project.name }}</h4>
-          <div class="stars">
+          <h4 v-if="project.title" align="center">
+            {{ project.title }} by {{ project.name }}
+          </h4>
+          <div class="stars" v-if="repoData">
             <v-icon color="accentRed">mdi-star</v-icon
-            >{{ repoData.stargazers_count }}
+            >{{ repoData.stargazers_count || "" }}
           </div>
         </div>
         <div class="subtitle">
           <v-icon large class="gh-icon" dark>mdi-github</v-icon>
-          <div class="username">{{ project.username }}</div>
+          <div class="username">{{ project.username || "" }}</div>
         </div>
         <h4>
           {{ project.created | date }} -
@@ -39,8 +41,8 @@
         >
         <br />
         <br />
-        <div class="repoData">
-          <h5>Primary Repo Language: {{ repoData.language }}</h5>
+        <div class="repoData" v-if="repoData">
+          <h5>Primary Repo Language: {{ repoData.language || "" }}</h5>
           <br />
         </div>
 
@@ -56,7 +58,7 @@
               >Project URL</a
             >
           </div>
-          <div v-show="project.githubRepo" class="gh-link">
+          <div v-if="project.githubRepo" class="gh-link">
             <v-icon dark>mdi-github</v-icon
             ><a :href="project.githubRepo" class="light-blue--text"
               >GitHub Repo</a
@@ -64,7 +66,7 @@
             <br /><br />
           </div>
         </div>
-        <div>
+        <div v-if="repoData">
           <!-- {{ project.githubRepo }} -->
           <!-- <pre align="left">
           {{ repoData }}
@@ -112,11 +114,10 @@ export default {
         .join("")
         .split("github.com/")
         .join("");
-      // .split("");
-      console.log(ghUsername);
+      // console.log(ghUsername);
       repo = repo.split("/")[1];
       repo = repo.split(" ")[0];
-      console.log(repo);
+      // console.log(repo);
       console.log(ghUsername);
 
       axios

@@ -55,32 +55,6 @@ export default {
       type: Object,
     },
   },
-  data() {
-    return {
-      // hacker: {
-      //   id: "1",
-      //   imageUrl: `https://dummyimage.com/600x400/00f4f4/000.png&text=UberTeleport`,
-      //   username: "716green",
-      //   name: "Bob Bass",
-      //   description: "A developer...",
-      //   technologies: [
-      //     "JavaScript",
-      //     "MariaDB",
-      //     "Firebase",
-      //     "Nginx",
-      //     "Cloud Functions",
-      //     "Vue.js",
-      //   ],
-      //   githubRepo: "github.com/a/b",
-      //   productPage: "coda.io/@narro/abcdefg",
-      //   startDate: "2021-01-20",
-      //   endDate: "2021-12-01",
-      //   goals: "Learn Stuff",
-      //   projectDuration: "7 Days",
-      //   likeCount: 30,
-      // },
-    };
-  },
   computed: {
     avatarUrl() {
       return "https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortFlat&accessoriesType=Blank&hairColor=BrownDark&facialHairType=Blank&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light";

@@ -74,12 +74,12 @@ export const store = new Vuex.Store({
     query.onSnapshot(hacker => {
       const hackers = []
       hacker.forEach(doc => {
-        // console.log('doc',doc.id)
-        hacker = {id: doc.id, ...doc.data()}
+        hacker = { id: doc.id, ...doc.data() }
+        // console.log({ id: doc.id, ...doc.data() })
         hackers.push(hacker)
       })
       // console.log(...hackers)
-        commit('setHackers', hackers)
+        commit('setHackers', {...hackers})
       })
     },
 
@@ -129,13 +129,13 @@ export const store = new Vuex.Store({
       )
     },
     autoSignIn({ commit }, payload) {
-      console.log(payload.uid)
+      // console.log(payload.uid)
       let usersRef = db.collection('users')
       usersRef.get().then((doc) => {
         doc.forEach(user => {
-          console.log(user.data().id)
+          // console.log(user.data().id)
           if (user.data().id == payload.uid) {
-            console.log({...user.data(), projects: [] })
+            // console.log({...user.data(), projects: [] })
             commit('setUser', { ...user.data(), projects: [] })
           }
           })
@@ -169,7 +169,7 @@ export const store = new Vuex.Store({
     },
 
     //! CREATE PROJECT
-    createProject({ commit }, payload) {
+    createProject({ commit, getters }, payload) {
       let project = {
         title: payload.projectName,
         imageUrl: payload.imageUrl ? payload.imageUrl : `https://dummyimage.com/600x400/cf78cf/000.png&text=${payload.projectName}`,
@@ -184,6 +184,7 @@ export const store = new Vuex.Store({
         name: this.state.user.name,
         username: this.state.user.login,
         emailAddress: this.state.user.email,
+        creatorId: getters.user.id
       }
       db.collection('projects').add(project)
         .then((data) => {
