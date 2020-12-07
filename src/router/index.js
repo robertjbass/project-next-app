@@ -11,12 +11,11 @@ import Hackers from '@/components/User/Hackers'
 import Profile from '@/components/User/Profile'
 // import Signin from '@/components/User/Signin'
 import Signup from '@/components/User/Signup'
-import AlertCmp from './components/Shared/Alert'
+import AlertCmp from '@/components/Shared/Alert'
 // import axios from 'axios'
+import { AuthGuard } from './auth-guard'
 
 Vue.component('app-alert', AlertCmp)
-
-
 
 
 const router = new Router({
@@ -25,16 +24,15 @@ const router = new Router({
   // scrollBehavior: () => ({ x: 0, y: 0 }),
   routes: [
      {
-      path: '/',
+      path: '/', 
       name: 'Home',
       component: Home
     },
     {
       path: '/project/new',
       name: 'CreateProject',
-      // props: true,
-      // props: {technologies},
-      component: CreateProject
+      component: CreateProject,
+      beforeEnter: AuthGuard
     },
     {
       path: '/project/:id',
@@ -55,13 +53,9 @@ const router = new Router({
     {
       path: '/profile',
       name: 'Profile',
-      component: Profile
+      component: Profile,
+      beforeEnter: AuthGuard
     },
-    // {
-    //   path: '/signin',
-    //   name: 'Signin',
-    //   component: Signin
-    // },
     {
       path: '/signup',
       name: 'Signup',

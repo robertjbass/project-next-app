@@ -51,9 +51,6 @@ export const store = new Vuex.Store({
       state.technologies = payload
     },
     setLoadedProjects(state, payload) {
-      // state.loadedProjects = []
-      console.log('state', state.loadedProjects)
-      console.log('payload',payload)
       state.loadedProjects = payload
     },
     setHackers(state, payload) {
@@ -77,11 +74,11 @@ export const store = new Vuex.Store({
     query.onSnapshot(hacker => {
       const hackers = []
       hacker.forEach(doc => {
-        console.log('doc',doc.id)
+        // console.log('doc',doc.id)
         hacker = {id: doc.id, ...doc.data()}
         hackers.push(hacker)
       })
-      console.log(...hackers)
+      // console.log(...hackers)
         commit('setHackers', hackers)
       })
     },
@@ -102,13 +99,21 @@ export const store = new Vuex.Store({
         const { avatar_url, bio, blog, company, created_at, email, events_url, followers, followers_url, following, following_url, gists_url, gravatar_id, hireable, html_url, id, location, login, name, node_id, organizations_url, public_gists, public_repos, received_events_url, repos_url, site_admin, starred_url, subscriptions_url, twitter_username, type, updated_at, url } = profile
         const { uid, displayName, emailVerified, isAnonymous, phoneNumber, photoURL } = user
         const userEmail = user.email
-        const newUser = {
+        const userData = {
           id: uid, githubId: id, projects: [], userEmail, isNewUser, operationType,
           displayName, emailVerified, isAnonymous, phoneNumber, photoURL, avatar_url, bio, blog, company, created_at, email, events_url, followers, followers_url, following, following_url, gists_url, gravatar_id, hireable, html_url, location, login, name, node_id, organizations_url, public_gists, public_repos, received_events_url, repos_url, site_admin, starred_url, subscriptions_url, twitter_username, type, updated_at, url, providerId, username, signInMethod, 
         }
-        commit('setUser', newUser)
-        if (isNewUser) {
-          db.collection('users').add(newUser)
+        commit('setUser', userData)
+          if (isNewUser) {
+            let url = "https://hooks.zapier.com/hooks/catch/6992427/oegd4e1"
+          axios.post(url,userEmail)
+          .then(res => {
+            console.log(res)
+          })
+          .catch(err => {
+            console.error(err); 
+          })
+          db.collection('users').add(userData)
             .then((data) => {
               console.log(data.id)
             }).catch((error) => {
@@ -123,10 +128,23 @@ export const store = new Vuex.Store({
         }
       )
     },
+    autoSignIn({ commit }, payload) {
+      console.log(payload.uid)
+      let usersRef = db.collection('users')
+      usersRef.get().then((doc) => {
+        doc.forEach(user => {
+          console.log(user.data().id)
+          if (user.data().id == payload.uid) {
+            console.log({...user.data(), projects: [] })
+            commit('setUser', { ...user.data(), projects: [] })
+          }
+          })
+      })
+    },
     signOut({ commit }) {
       auth.signOut().then(() => {
         commit('setUser', null)
-        console.log("signed out")
+        // console.log("signed out")
       }).catch((error) => {
         console.error(error)
       })
@@ -166,18 +184,12 @@ export const store = new Vuex.Store({
         name: this.state.user.name,
         username: this.state.user.login,
         emailAddress: this.state.user.email,
-        // id: ""
       }
-      // let projects = []
       db.collection('projects').add(project)
         .then((data) => {
-        // console.log(data)
           const key = data.id
           let newProject = {...project, id: key}
           commit('createProject', newProject) 
-          // commit('createProject', ...newProject) //Good
-          // commit('createProject', ...{...project, id: key})
-          // commit('createProject', {...project, id: key})
         })
         .catch((error) => {
         console.error(error)
@@ -195,8 +207,8 @@ export const store = new Vuex.Store({
       axios
         .get(technologyUrl)
         .then((res) => {
-          this.technologies = [];
-          commit("setTechnologies", technologies);
+          technologies = [];
+          // commit("setTechnologies", technologies);
           res.data.records.forEach((techObject) => {
             technologies.push(techObject.fields.Technology);
           });

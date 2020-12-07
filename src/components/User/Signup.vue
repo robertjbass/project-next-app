@@ -67,8 +67,12 @@ export default {
   watch: {
     user(value) {
       if (value !== null && value !== undefined) {
-        console.log(value, "routerPush");
-        this.$router.push("/");
+        // console.log(value, "routerPush");
+        this.$router.push("/").catch((error) => {
+          if (error.name != "NavigationDuplicated") {
+            throw error;
+          }
+        });
       }
     },
   },

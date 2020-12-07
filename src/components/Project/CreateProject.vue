@@ -242,6 +242,11 @@ export default {
       }
     },
   },
+  mounted() {
+    // if (this.items == null) {
+    //   this.$store.dispatch("setTechnologies");
+    // }
+  },
 
   methods: {
     onCreateProject() {

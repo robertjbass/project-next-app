@@ -111,8 +111,12 @@ export default {
   methods: {
     signOut() {
       this.$store.dispatch("signOut");
-      if (this.$route.path !== "/") {
-        this.$router.push("/");
+      if (this.$route.name != "Home") {
+        this.$router.push("/signup").catch((error) => {
+          if (error.name == "NavigationDuplicated") {
+            throw error;
+          }
+        });
       }
       this.sideNav = false;
     },
@@ -125,7 +129,7 @@ export default {
         )
         .then(async (res) => {
           this.userProfileData = await res.data.records;
-          console.log(this.userProfileData);
+          // console.log(this.userProfileData);
         })
         .catch((err) => {
           console.error(err);
@@ -134,7 +138,7 @@ export default {
   },
   watch: {
     userIsAuthenticated() {
-      if (!this.userIsAuthenticated) {
+      if (!this.userIsAuthenticated && this.$route.path != "/") {
         this.$router.push("/");
       }
     },
