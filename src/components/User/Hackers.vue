@@ -3,7 +3,7 @@
     <v-container class="top-spacing">
       <h1>Hackers</h1>
       <v-row justify="center">
-        <v-col cols="10" sm="8" md="8" lg="6">
+        <v-col cols="12" sm="10" md="9" lg="7">
           <HackerCard
             v-for="hacker in hackers"
             :key="hacker.id"
@@ -43,8 +43,9 @@ h5 {
 }
 .card {
   background-color: #333;
-  padding: 5px;
-  padding: 20px;
+  /* padding: 5px;
+  padding: 20px; */
+  /* padding: 5%; */
   margin-bottom: 40px;
 }
 .top-spacing {

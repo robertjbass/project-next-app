@@ -27,9 +27,18 @@ export const store = new Vuex.Store({
   #2 - MUTATIONS
   ************************** */
   mutations: {
+
+    updateProject(state, payload) {
+      let projectUpdateObject = payload
+      console.log(projectUpdateObject)
+      state.loadedProjects.forEach((project) => {
+        if (project.id == state.loadedProjects.id) {
+          console.log(project.projectId)
+        }
+      })
+    },
     createProject(state, payload) {
       // state.loadedProjects.push(payload) //older
-      //! error index.js?4360:179 TypeError: Invalid attempt to spread non-iterable instance
       let newPayload = ({...payload}) //works2
       state.loadedProjects.push(...newPayload) //works2
       // let newPayload = {...payload} //works1
@@ -69,7 +78,8 @@ export const store = new Vuex.Store({
     //! LOAD HACKERS
     loadHackers({ commit }) {
       const hackersRef = db.collection('users')
-      const query = hackersRef.where('email', '!=', null)
+      const query = hackersRef //.where('userEmail', '!=', null)
+      // const query = hackersRef.where('userEmail', '!=', null)
 
     query.onSnapshot(hacker => {
       const hackers = []
@@ -78,7 +88,7 @@ export const store = new Vuex.Store({
         // console.log({ id: doc.id, ...doc.data() })
         hackers.push(hacker)
       })
-      // console.log(...hackers)
+      console.log(...hackers)
         commit('setHackers', {...hackers})
       })
     },
@@ -195,6 +205,40 @@ export const store = new Vuex.Store({
         .catch((error) => {
         console.error(error)
       })
+    },
+
+
+    updateProject({ commit }, payload) {
+      let { projectId, updatedProject, userId } = payload
+      let { description,
+        githubRepo,
+        goals,
+        imageUrl,
+        productPage,
+        projectDuration,
+        technologies,
+        title } = updatedProject
+
+      let project = {
+        description,
+        githubRepo,
+        goals,
+        imageUrl,
+        productPage,
+        projectDuration,
+        technologies,
+        title
+      }
+      let updateProjectRef = db.collection('projects').doc(projectId)
+      return updateProjectRef.update({...project, id:userId})
+        .then((data) => {
+          console.log({data})
+          commit('updateProject', { ...project, projectId })
+          commit('loadProjects')
+        })
+        .catch((error) => {
+          console.error(error)
+        })
     },
 
 

@@ -1,8 +1,9 @@
 <template>
   <div class="projectCard">
     <div class="heading">
-      <router-link class="white--text title" :to="rt"
-        >{{ project.title }} by {{ project.name }}</router-link
+      <router-link class="light-blue--text title" :to="rt"
+        >{{ project.title }} by
+        {{ project.name || project.username }}</router-link
       >
       <div class="subtitle">
         <v-icon large class="gh-icon" dark>mdi-github</v-icon>
@@ -23,7 +24,7 @@
             small
             v-for="technology in project.technologies"
             :key="technology"
-            >{{ technology }}</v-chip
+            >{{ technology.substr(0, 10).trim() }}</v-chip
           >
         </div>
         <div class="dates">
@@ -134,8 +135,8 @@ a {
   position: relative;
   flex: wrap;
   color: #ffffff;
-  width: 110px;
-  font-size: 1.1rem;
+  width: 115px;
+  font-size: 1rem;
   justify-content: center;
   margin: 5px;
 }

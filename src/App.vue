@@ -1,7 +1,7 @@
 <template>
   <div dark id="app">
     <v-app>
-      <v-toolbar height="50px" color="#393838" class="toolbar">
+      <v-toolbar max-height="64px" color="#393838" class="toolbar">
         <v-app-bar-nav-icon
           color="#fff"
           @click.native.stop="sideNav = !sideNav"
@@ -206,6 +206,12 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: white;
+}
+
+@import url("https://fonts.googleapis.com/css2?family=Fira+Code&display=swap");
+
+* {
+  font-family: "Fira Code", monospace;
 }
 
 a {

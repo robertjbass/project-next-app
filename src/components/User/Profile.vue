@@ -13,7 +13,8 @@
           Name: {{ userData.name }}<br />
           <div :show="userData.company">Company: {{ userData.company }}</div>
           Username: {{ userData.username }}<br />
-          Email: {{ userData.email }}<br />
+          Email: {{ userData.userEmail }}<br />
+          <!-- Email: {{ userData.email }}<br /> -->
           Location: {{ userData.location }}<br /><br />
           Bio: {{ userData.bio }}<br />
           <br />

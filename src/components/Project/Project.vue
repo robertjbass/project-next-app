@@ -1,7 +1,9 @@
 <template>
   <div class="project">
     <v-container>
+      <!-- <UpdateForm :editDialog="editDialog" /> -->
       <Alert v-show="error" :text="error" />
+
       <v-card dark class="card">
         <div class="heading">
           <h4 v-if="project.title" align="center">
@@ -66,6 +68,28 @@
             <br /><br />
           </div>
         </div>
+        <div class="projectBelongsToLoggedInUser" v-if="projectBelongsToLoggedInUser">
+          <div class="edit">
+            <EditButtons
+            :thisUser="projectBelongsToLoggedInUser"
+              :project="project"
+              :user="user"
+              v-on:edit="onEditClicked"
+              v-on:reportUpdate="newUpdate"
+              >{{ editDialog ? "Close Edit" : "Edit" }}</EditButtons
+            >
+            <div class="updateForm">
+              <UpdateForm
+              :thisUser="projectBelongsToLoggedInUser"
+                :id="this.id"
+                v-show="editDialog"
+                :project="project"
+                v-on:updateProject="this.updateProject"
+              />
+            </div>
+          </div>
+        </div>
+        <br /><br />
         <div v-if="repoData">
           <!-- {{ project.githubRepo }} -->
           <!-- <pre align="left">
@@ -93,10 +117,13 @@
 <script>
 import axios from "axios";
 import Alert from "@/components/Shared/Alert.vue";
+import EditButtons from "@/components/Shared/EditButtons.vue";
+import UpdateForm from "@/components/Project/UpdateForm.vue";
 export default {
   name: "Project",
   data() {
     return {
+      editDialog: false,
       error: null,
       repoData: null,
       readme: null,
@@ -104,6 +131,17 @@ export default {
   },
   props: ["id"],
   methods: {
+    updateProject() {
+      // console.log("Update Project");
+      console.log("UPDATE SUBMISSION MADE");
+    },
+    onEditClicked() {
+      // alert("Edit Clicked");
+      this.editDialog = !this.editDialog;
+    },
+    newUpdate() {
+      alert("Report New Update");
+    },
     getGitHubInfo() {
       let ghUsername = this.project.username;
       let repo = this.project.githubRepo;
@@ -114,10 +152,8 @@ export default {
         .join("")
         .split("github.com/")
         .join("");
-      // console.log(ghUsername);
       repo = repo.split("/")[1];
       repo = repo.split(" ")[0];
-      // console.log(repo);
       console.log(ghUsername);
 
       axios
@@ -146,7 +182,7 @@ export default {
         )
         .then((res) => {
           this.readme = res.data;
-          this.renderMD();
+          // this.renderMD();
         })
         .catch((err) => {
           console.error(err);
@@ -176,12 +212,20 @@ export default {
     this.getGitHubInfo();
   },
   computed: {
+    projectBelongsToLoggedInUser() {
+      return this.project.creatorId == this.user.id
+    },
     project() {
       return this.$store.getters.loadedProject(this.id);
+    },
+    user() {
+      return this.$store.getters.user;
     },
   },
   components: {
     Alert,
+    EditButtons,
+    UpdateForm,
   },
 };
 </script>
@@ -253,8 +297,10 @@ a {
 .readme {
   contain: content;
   display: flex;
-  flex: wrap;
+  /* flex: wrap; */
   white-space: wrap;
+  background-color: #fbe5e150;
+  /* width: 100%; */
   /* word-wrap: break-word; */
   /* margin: auto; */
 }
@@ -295,8 +341,8 @@ a {
   position: relative;
   flex: wrap;
   color: #ffffff;
-  width: 110px;
-  font-size: 1.1rem;
+  width: 115px;
+  font-size: 1rem;
   justify-content: center;
   margin: 5px;
 }
