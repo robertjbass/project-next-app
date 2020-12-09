@@ -92,26 +92,27 @@
                     <h3 v-if="this.imageUrl">Project Banner Image</h3>
                     <img :src="imageUrl" width="400px" />
                     <v-combobox
-                      label="Starting Duration (1 week default)"
+                      label="Starting Duration"
                       id="projectDuration"
                       ref="projectDuration"
                       clearable
                       hide-selected
                       persistent-hint
                       small-chips
+                      hint="We recommend 2 weeks - 1 week to plan, 1 week to execute and evolve. You can update this if your plans change."
                       :items="projectDurations"
                       v-model="selectedDuration"
                     ></v-combobox>
                   </v-card-text>
                   <v-divider class="mt-12"></v-divider>
                   <v-card-actions>
-                    <v-btn elevation="0" text color="warning">
-                      <v-icon>mdi-arrow-left</v-icon>
+                    <v-btn to="/" elevation="0" text color="warning">
+                      <v-icon left>mdi-arrow-left</v-icon>
                       Cancel
                     </v-btn>
                     <v-spacer></v-spacer>
                     <v-btn elevation="0" color="info" text @click="resetForm">
-                      <v-icon>mdi-refresh</v-icon>
+                      <v-icon left>mdi-refresh</v-icon>
                       Clear
                     </v-btn>
                     <v-spacer></v-spacer>
@@ -120,7 +121,7 @@
                       elevation="0"
                       @click="submit"
                       :disabled="!submitEnabled"
-                      ><v-icon>mdi-check-bold</v-icon>
+                      ><v-icon left>mdi-check-bold</v-icon>
                       Submit
                     </v-btn>
                   </v-card-actions>
@@ -139,7 +140,7 @@ export default {
   name: "CreateProject",
   data() {
     return {
-      selectedDuration: "1 Week",
+      selectedDuration: "2 Weeks",
       projectDurations: ["1 Week", "2 Weeks", "1 Month", "Long Term"],
       selectedItems: [],
       errorMessages: "",

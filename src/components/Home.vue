@@ -52,19 +52,44 @@
         </v-carousel>
       </v-layout>
     </v-container>
-
+<h2>Recent Projects</h2>
     <v-layout class="all-projects">
       <v-row>
         <v-col
           cols="12"
+          xs="12"
+          sm="10"
+          md="10"
+          lg="8"
+          offset-sm="1"
+          offset-md="1"
+          offset-lg="2"
+          offset-xl="2"
+        >
+      <v-row>
+        <v-col
+          cols="12"
+          xs="12"
+          sm="12"
           md="6"
+          lg="6"
+          xl="6"
+          offset-lg="0"
+          offset-xl="0"
           v-for="project in loadedProjects"
           :key="project.id"
         >
           <ProjectCard :project="project" :rt="`./project/${project.id}`" />
         </v-col>
       </v-row>
+        </v-col>
+      </v-row>
     </v-layout>
+        <v-row>
+          <v-col>
+      <router-link style="text-decoration: none" to="/projects" align="center"><v-btn>See More...</v-btn></router-link>
+          </v-col>
+        </v-row>
   </div>
 </template>
 
@@ -116,6 +141,7 @@ export default {
 </script>
 
 <style scoped>
+
 .user {
   background-color: rgba(0, 0, 0, 0.5);
   color: white;
@@ -135,7 +161,9 @@ export default {
 }
 
 .all-projects {
-  margin: 0 2.5%;
+  margin: 0 2.5% 20px 2.5%;
+  padding: 0 0 20px 0;
   align-items: stretch;
+  /* margin: 5%; */
 }
 </style>

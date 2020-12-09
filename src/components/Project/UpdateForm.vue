@@ -1,16 +1,16 @@
 <template>
-  <div class="UpdateForu">
+  <div class="updateForm">
     <v-container class="top-spacing">
       <v-form @submit.prevent="onEditProject">
         <v-layout>
           <v-row justify="center">
-            <v-col cols="12" sm="10" md="8" lg="6">
-              <v-card ref="form" dark min-width="400px">
+            <v-col cols="12" sm="12" md="8" lg="6">
+              <!-- <v-card ref="form" dark min-width="400px"> -->
                 <div class="card-background">
-                  <v-card-text>
+                  <!-- <v-card-text> -->
                     <h1>Create Next App</h1>
                     Sumbission Date: {{ dateCreated | date }}
-                    <v-text-field
+                    <v-text-field class="section"
                       id="projectName"
                       ref="projectName"
                       :value="project.title"
@@ -20,7 +20,7 @@
                       label="Project Name"
                       required
                     ></v-text-field>
-                    <v-textarea
+                    <v-textarea  class="section"
                       id="summary"
                       ref="summary"
                       v-model="projectUpdate.updatedProject.description"
@@ -38,7 +38,7 @@
                       label="Project Summary"
                       required
                     ></v-textarea>
-                    <v-combobox
+                    <v-combobox  class="section"
                       id="anticipatedTechnologies"
                       ref="anticipatedTechnologies"
                       v-model="projectUpdate.updatedProject.technologies"
@@ -54,7 +54,7 @@
                       clearable
                       required
                     ></v-combobox>
-                    <v-text-field
+                    <v-text-field  class="section"
                       id="githubRepo"
                       v-model="projectUpdate.updatedProject.githubRepo"
                       label="GitHub Repo (Optional)"
@@ -63,7 +63,7 @@
                       :required="false"
                       hint="This can be added/modified later."
                     ></v-text-field>
-                    <v-text-field
+                    <v-text-field  class="section"
                       id="productPage"
                       ref="productPage"
                       v-model="projectUpdate.updatedProject.productPage"
@@ -73,7 +73,7 @@
                       clearable
                       :required="false"
                     ></v-text-field>
-                    <v-textarea
+                    <v-textarea  class="section"
                       id="goals"
                       ref="goals"
                       v-model="projectUpdate.updatedProject.goals"
@@ -89,7 +89,7 @@
                       label="Project Goals"
                       required
                     ></v-textarea>
-                    <v-text-field
+                    <v-text-field  class="section"
                       v-model="projectUpdate.updatedProject.imageUrl"
                       name="imageUrl"
                       label="Image URL"
@@ -98,11 +98,11 @@
                     >
                     </v-text-field>
                     <h3 v-if="this.imageUrl">Project Banner Image</h3>
-                    <img
+                    <img  class="section"
                       :src="projectUpdate.updatedProject.imageUrl"
                       width="400px"
                     />
-                    <v-combobox
+                    <v-combobox  class="section"
                       label="Duration"
                       :value="project.projectDuration"
                       id="projectDuration"
@@ -114,16 +114,16 @@
                       :items="projectDurations"
                       v-model="projectUpdate.updatedProject.projectDuration"
                     ></v-combobox>
-                  </v-card-text>
+                  <!-- </v-card-text> -->
                   <v-divider class="mt-12"></v-divider>
                   <v-card-actions>
                     <v-btn elevation="0" text color="warning">
-                      <v-icon>mdi-arrow-left</v-icon>
+                      <v-icon left>mdi-arrow-left</v-icon>
                       Cancel
                     </v-btn>
                     <v-spacer></v-spacer>
                     <v-btn elevation="0" color="info" text @click="resetForm">
-                      <v-icon>mdi-refresh</v-icon>
+                      <v-icon left>mdi-refresh</v-icon>
                       Clear
                     </v-btn>
                     <v-spacer></v-spacer>
@@ -131,15 +131,15 @@
                       elevation="0"
                       @click="submit"
                       :disabled="submitDisabled"
-                      ><v-icon>mdi-check-bold</v-icon>
+                      ><v-icon left>mdi-check-bold</v-icon>
                       Submit
                     </v-btn>
                   </v-card-actions>
-                  {{ submitDisabled }}
+                  <!-- {{ submitDisabled }} -->
                   <!-- PROJECT: {{ this.project }} <br /><br />
                   UPDATED PROJECT: {{ this.updatedProject }} -->
                 </div>
-              </v-card>
+              <!-- </v-card> -->
             </v-col>
           </v-row>
         </v-layout>
@@ -320,10 +320,25 @@ export default {
 </script>
 
 <style scoped>
-.card-background {
+* {
+  /* margin-top: 20px; */
+padding: 0;
+background-color: #444
+
+}
+.updateForm {
+margin: 0;
+padding: 20px
+}
+
+.section {
+  padding-top: 15px;
+  margin-top: 15px
+}
+/* .card-background {
   background-color: #333;
-}
-.top-spacing {
+} */
+/* .top-spacing {
   margin-top: 40px;
-}
+} */
 </style>

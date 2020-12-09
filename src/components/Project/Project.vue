@@ -78,7 +78,7 @@
               v-on:reportUpdate="newUpdate"
               >{{ editDialog ? "Close Edit" : "Edit" }}</EditButtons
             >
-            <div class="updateForm">
+            <div class="update-form">
               <UpdateForm
               :thisUser="projectBelongsToLoggedInUser"
                 :id="this.id"
@@ -249,6 +249,12 @@ h5 {
 /* .banner-image {
   width: 100%;
 } */
+
+.update-form {
+  padding: 0;
+  margin: 0;
+  justify-content: center;
+}
 
 .repoData {
   text-align: left;
