@@ -8,7 +8,10 @@
         ></v-app-bar-nav-icon>
         <v-toolbar-title class="title">
           <router-link to="/" tag="span" style="cursor: pointer" class="title">
-            project(() => nextApp('💡'))
+            <div class="logo-box">
+              <img class="logo" src="../src/assets/images/nextAppLogo.png" />
+            </div>
+            <!-- project(() => nextApp('💡')) -->
             <!-- (() => nextApp('💡')) -->
           </router-link>
         </v-toolbar-title>
@@ -216,6 +219,16 @@ export default {
 
 a {
   color: white;
+}
+
+.logo-box {
+  margin: auto;
+  display: flex;
+}
+
+.logo {
+  height: 50px;
+  align-self: center;
 }
 
 .toolbar {

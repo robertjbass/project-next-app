@@ -20,7 +20,14 @@ export const store = new Vuex.Store({
     user: null,
     loading: false,
     error: null,
-    technologies: null
+    technologies: null,
+    countdownInfo: {
+      date: new Date(),
+      // mondayNextIfToday: this.date.setDate(this.date.getDate() + (7-this.date.getDay())%7+1),
+      // mondayTodayIfToday: this.date.setDate(this.date.getDate() + ((7 - this.date.getDay()) % 7 + 1) % 7),
+      // todayIsMonday: this.date.getDay == "Wednesday"
+
+    }
   },
 
   /*************************
@@ -269,14 +276,18 @@ export const store = new Vuex.Store({
   #4 - GETTERS
   ************************** */
   getters: {
+
     loadedProjects(state) {
       return state.loadedProjects.sort((projectA, projectB) => {
         return projectA.endDate > projectB.endDate
       // return state.loadedProjects
       })
     },
-    featuredProjects(state, getters) {
+    featuredProjects(getters) {
       return getters.loadedProjects.slice(0,3)
+    },
+    featuredExtended(getters) {
+      return getters.loadedProjects.slice(0,6)
     },
     loadedProject(state) {
       return (projectId) => {

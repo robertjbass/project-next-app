@@ -25,6 +25,7 @@
           </v-col>
         </v-row>
       </v-layout>
+      <InfoBanner />
       <h1>Featured Projects</h1>
       <v-layout class="carousel" style="cursor: pointer">
         <v-carousel
@@ -52,7 +53,7 @@
         </v-carousel>
       </v-layout>
     </v-container>
-<h2>Recent Projects</h2>
+    <h2>Recent Projects</h2>
     <v-layout class="all-projects">
       <v-row>
         <v-col
@@ -66,36 +67,39 @@
           offset-lg="2"
           offset-xl="2"
         >
-      <v-row>
-        <v-col
-          cols="12"
-          xs="12"
-          sm="12"
-          md="6"
-          lg="6"
-          xl="6"
-          offset-lg="0"
-          offset-xl="0"
-          v-for="project in loadedProjects"
-          :key="project.id"
-        >
-          <ProjectCard :project="project" :rt="`./project/${project.id}`" />
-        </v-col>
-      </v-row>
+          <v-row>
+            <v-col
+              cols="12"
+              xs="12"
+              sm="12"
+              md="6"
+              lg="6"
+              xl="6"
+              offset-lg="0"
+              offset-xl="0"
+              v-for="project in featuredExtended"
+              :key="project.id"
+            >
+              <ProjectCard :project="project" :rt="`./project/${project.id}`" />
+            </v-col>
+          </v-row>
         </v-col>
       </v-row>
     </v-layout>
-        <v-row>
-          <v-col>
-      <router-link style="text-decoration: none" to="/projects" align="center"><v-btn>See More...</v-btn></router-link>
-          </v-col>
-        </v-row>
+    <v-row>
+      <v-col>
+        <router-link style="text-decoration: none" to="/projects" align="center"
+          ><v-btn>See More...</v-btn></router-link
+        >
+      </v-col>
+    </v-row>
   </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
 import ProjectCard from "@/components/Shared/ProjectCard.vue";
+import InfoBanner from "@/components/About/InfoBanner.vue";
 
 export default {
   name: "Home",
@@ -114,6 +118,7 @@ export default {
   },
   components: {
     ProjectCard,
+    InfoBanner,
   },
   computed: {
     ...mapGetters([
@@ -122,6 +127,7 @@ export default {
       "loadedProjects",
       "user",
       "loading",
+      "featuredExtended",
     ]),
     projects() {
       return this.featuredProjects;
@@ -141,7 +147,6 @@ export default {
 </script>
 
 <style scoped>
-
 .user {
   background-color: rgba(0, 0, 0, 0.5);
   color: white;

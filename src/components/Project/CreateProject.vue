@@ -81,6 +81,22 @@
                       label="Project Goals"
                       required
                     ></v-textarea>
+                    <!-- // todo - 
+                    https://vuetifyjs.com/en/components/file-inputs/#show-size 
+                    https://www.youtube.com/watch?v=J2Wp4_XRsWc&list=PL55RiY5tL51qxUbODJG9cgrsVd7ZHbPrt&index=19
+                    -->
+                    <!-- <v-file-input
+                      :rules="[
+                        (value) =>
+                          !value ||
+                          value.size < 2000000 ||
+                          'Image size should be less than 2 MB!',
+                      ]"
+                      accept="image/png, image/jpeg, image/bmp"
+                      prepend-icon="mdi-paperclip"
+                      label="Project Banner Image"
+                    ></v-file-input> -->
+                    <!-- placeholder="Select a banner image" -->
                     <v-text-field
                       v-model="imageUrl"
                       name="imageUrl"
