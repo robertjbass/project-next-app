@@ -5,12 +5,14 @@ import { firestorePlugin } from 'vuefire'
 import router from './router'
 import { store } from './store'
 import DateFilter from './filters/date'
+import markdown from './directives/markdown';
 import firebase from 'firebase/app'
 import 'firebase/auth'
 
 Vue.use(firestorePlugin)
 
 Vue.filter('date', DateFilter)
+Vue.directive('markdown', markdown)
 
 
 

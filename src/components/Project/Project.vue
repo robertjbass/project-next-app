@@ -68,10 +68,13 @@
             <br /><br />
           </div>
         </div>
-        <div class="projectBelongsToLoggedInUser" v-if="projectBelongsToLoggedInUser">
+        <div
+          class="projectBelongsToLoggedInUser"
+          v-if="projectBelongsToLoggedInUser"
+        >
           <div class="edit">
             <EditButtons
-            :thisUser="projectBelongsToLoggedInUser"
+              :thisUser="projectBelongsToLoggedInUser"
               :project="project"
               :user="user"
               v-on:edit="onEditClicked"
@@ -80,12 +83,17 @@
             >
             <div class="update-form">
               <UpdateForm
-              :thisUser="projectBelongsToLoggedInUser"
+                :thisUser="projectBelongsToLoggedInUser"
                 :id="this.id"
                 v-show="editDialog"
                 :project="project"
                 v-on:updateProject="this.updateProject"
               />
+              <br />
+              <h3>Update Log</h3>
+              <div class="update-log">
+                {{ project.created | date }}: Project Created
+              </div>
             </div>
           </div>
         </div>
@@ -95,14 +103,35 @@
           <!-- <pre align="left">
           {{ repoData }}
           </pre> -->
-          <h3 align="left">README.md</h3>
-          <hr />
-          <div>
-            <pre class="readme" align="left">
-            <code>{{ this.readme }}
-            </code>
-            </pre>
-          </div>
+          <v-row v-if="readme" class="md-area">
+            <v-col cols="12" xl="6" lg="6" md="6" xs="12">
+              <h3 class="md-title" align="center">README.md</h3>
+              <hr />
+              <div class="readme-render-box">
+                <pre class="readme white--text" align="left" width="100%"
+                  >{{ readme }}
+            </pre
+                >
+                <!-- <textarea
+                  class="readme white--text"
+                  align="left"
+                  width="100%"
+                  v-model="readme"
+                /> -->
+              </div>
+            </v-col>
+            <v-col cols="12" xl="6" lg="6" md="6" xs="12">
+              <h3 class="md-title" align="center">README</h3>
+              <hr />
+              <div class="readme-render-box">
+                <div class="readme-render white--text" v-markdown>
+                  {{ readme }}
+                </div>
+              </div>
+            </v-col>
+          </v-row>
+          <v-row v-else><h3>No README.md file available</h3></v-row>
+          <br />
           <hr />
           <br />
           <div class="comment-btn-box" align="right">
@@ -117,7 +146,7 @@
 <script>
 import axios from "axios";
 import Alert from "@/components/Shared/Alert.vue";
-import EditButtons from "@/components/Shared/EditButtons.vue";
+import EditButtons from "@/components/Project/EditButtons.vue";
 import UpdateForm from "@/components/Project/UpdateForm.vue";
 export default {
   name: "Project",
@@ -181,8 +210,7 @@ export default {
           `https://raw.githubusercontent.com/${this.repoData.full_name}/${this.repoData.default_branch}/README.md`
         )
         .then((res) => {
-          this.readme = res.data;
-          // this.renderMD();
+          this.readme = res.data.trim();
         })
         .catch((err) => {
           console.error(err);
@@ -193,27 +221,13 @@ export default {
         "We know you're excited to comment - but we didn't finish that feature yet. Try Slack instead!"
       );
     },
-    // renderMD() {
-    //   let params = {
-    //     text: this.readme,
-    //     mode: "markdown",
-    //   };
-    //   axios
-    //     .post(`https://api.github.com/markdown/raw`, { params })
-    //     .then((res) => {
-    //       console.log(res);
-    //     })
-    //     .catch((err) => {
-    //       console.error(err);
-    //     });
-    // },
   },
   mounted() {
     this.getGitHubInfo();
   },
   computed: {
     projectBelongsToLoggedInUser() {
-      return this.project.creatorId == this.user.id
+      return this.project.creatorId == this.user.id;
     },
     project() {
       return this.$store.getters.loadedProject(this.id);
@@ -233,7 +247,7 @@ export default {
 <style scoped>
 a {
   text-decoration: none;
-  color: accent-blue;
+  color: white;
 }
 
 h4,
@@ -242,13 +256,11 @@ h5 {
   display: flex;
   align-self: left;
 }
-/* .title-image {
-  max-width: 100%;
-} */
 
-/* .banner-image {
-  width: 100%;
-} */
+a {
+  text-decoration: none;
+  color: white;
+}
 
 .update-form {
   padding: 0;
@@ -273,7 +285,7 @@ h5 {
 }
 
 .project-info {
-  padding-left: "10";
+  padding-left: 10px;
 }
 
 .comment-btn-box {
@@ -281,15 +293,6 @@ h5 {
   margin: auto;
   padding: 0;
 }
-
-a {
-  text-decoration: none;
-  color: white;
-}
-
-/* .debug {
-  text-align: left;
-} */
 
 .projectCard {
   border: white solid 2px;
@@ -299,16 +302,39 @@ a {
   height: 100%;
 }
 
+.md-area {
+  min-height: 600px;
+}
+
 /* // todo this word wrap isn't working so I cut it off instead  */
 .readme {
+  padding: 5px 20px;
   contain: content;
   display: flex;
-  /* flex: wrap; */
-  white-space: wrap;
-  background-color: #fbe5e150;
-  /* width: 100%; */
-  /* word-wrap: break-word; */
-  /* margin: auto; */
+  resize: auto;
+  background-color: #000;
+  height: 100%;
+  border: 1px white dashed;
+}
+
+.readme-render-box {
+  width: 100%;
+  height: 100%;
+  min-height: 620px;
+  padding-bottom: 50px;
+}
+
+.readme-render {
+  text-align: left;
+  padding: 5px 20px;
+  resize: none;
+  background-color: #000;
+  width: 100%;
+  overflow: auto;
+  min-height: 100%;
+  border: 1px white dashed;
+  text-decoration: none white;
+  color: white;
 }
 
 .transparent {

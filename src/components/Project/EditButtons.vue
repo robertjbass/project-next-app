@@ -1,10 +1,10 @@
 <template>
   <div class="editButtons">
-    Project matches logged in user:
-    <code>{{ this.thisUser }}</code> <br /><br />
+    <!-- <h5>This project belongs to you</h5> -->
+    <!-- <code>{{ this.thisUser }}</code> <br /><br /> -->
     <!-- {{ this.project.creatorId }} -->
     <div class="buttons">
-      <v-btn class="btn" @click="edit('reportUpdate')">Report Update</v-btn>
+      <v-btn class="btn" @click="edit('reportUpdate')">Document Update</v-btn>
       <v-btn class="btn" @click="edit('edit')"><slot></slot></v-btn>
       <!-- <v-btn class="btn" @click="edit('edit')">Edit</v-btn> -->
     </div>
