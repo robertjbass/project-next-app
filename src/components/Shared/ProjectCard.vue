@@ -1,7 +1,7 @@
 <template>
   <div class="projectCard">
     <div class="heading">
-      <router-link class="light-blue--text title" :to="rt"
+      <router-link class="light-blue--text title" :to="`../project/${rt}`"
         >{{ project.title }} by
         {{ project.name || project.username }}</router-link
       >
@@ -45,7 +45,10 @@
         ><a :href="project.githubRepo" class="light-blue--text">GitHub Repo</a>
       </div>
     </div>
-    <div class="goals"><strong>Goals: </strong>{{ project.goals }}</div>
+    <div class="goals">
+      <strong>Goals: </strong>{{ project.goals.substr(0, 150)
+      }}{{ project.goals.length > 150 ? "..." : "" }}
+    </div>
     <!-- <div class="debug">
       <pre class="json">
         {{ project }}

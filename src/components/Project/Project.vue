@@ -92,7 +92,36 @@
               <br />
               <h3>Update Log</h3>
               <div class="update-log">
-                {{ project.created | date }}: Project Created
+                <v-row>
+                  <v-col cols="8" offset="2" align="center">
+                    <v-simple-table>
+                      <thead>
+                        <tr>
+                          <th><v-icon left>mdi-note-text</v-icon>Update Log</th>
+                          <th class="text-left">Date</th>
+                          <th class="text-left">Update</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>{{ project.projectDuration }} Project Created</td>
+                          <td class="text-left">
+                            {{ project.created | date }}
+                          </td>
+                          <td class="text-left">Project Created</td>
+                        </tr>
+                        <tr v-for="(update, i) in updates" :key="update.note">
+                          <td>Update {{ i + 1 }}</td>
+                          <td>{{ update.date | date }}</td>
+                          <td>
+                            {{ update.goal ? "✅ " : "" }}{{ update.note }}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </v-simple-table>
+                  </v-col>
+                </v-row>
+                <!-- {{ project.created | date }}: Project Created -->
               </div>
             </div>
           </div>
@@ -156,6 +185,18 @@ export default {
       error: null,
       repoData: null,
       readme: null,
+      updates: [
+        {
+          date: "2020-12-21",
+          note: "sample update 1",
+          goal: false,
+        },
+        {
+          date: "2020-12-22",
+          note: "sample update 2",
+          goal: true,
+        },
+      ],
     };
   },
   props: ["id"],

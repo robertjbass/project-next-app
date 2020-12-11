@@ -80,7 +80,7 @@
               v-for="project in featuredExtended"
               :key="project.id"
             >
-              <ProjectCard :project="project" :rt="`./project/${project.id}`" />
+              <ProjectCard :project="project" :rt="project.id" />
             </v-col>
           </v-row>
         </v-col>

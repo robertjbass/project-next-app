@@ -9,6 +9,7 @@ const firebaseConfig = {
   databaseURL: "https://project-next-app.firebaseio.com",
   projectId: "project-next-app",
   storageBucket: "project-next-app.appspot.com",
+  // storageBucket: "gs://project-next-app.appspot.com",
   messagingSenderId: "272078008397",
   appId: "1:272078008397:web:0f380f73021cfd031eec04",
   measurementId: "G-6VHPREYJES"

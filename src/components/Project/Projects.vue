@@ -1,7 +1,7 @@
 <template>
   <div class="projects">
     <v-layout class="all-projects">
-       <v-row>
+      <v-row>
         <v-col
           cols="12"
           xs="12"
@@ -13,16 +13,16 @@
           offset-lg="2"
           offset-xl="2"
         >
-      <v-row>
-        <v-col
-          cols="12"
-          md="6"
-          v-for="project in loadedProjects"
-          :key="project.id"
-        >
-          <ProjectCard :project="project" :rt="`./project/${project.id}`" />
-        </v-col>
-      </v-row>
+          <v-row>
+            <v-col
+              cols="12"
+              md="6"
+              v-for="project in loadedProjects"
+              :key="project.id"
+            >
+              <ProjectCard :project="project" :rt="project.id" />
+            </v-col>
+          </v-row>
         </v-col>
       </v-row>
     </v-layout>
