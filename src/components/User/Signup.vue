@@ -11,9 +11,11 @@
     <v-container>
       <v-form @submit.prevent="onSignupWithGH" :lazy-validation="true">
         <v-row justify="center">
-          <v-card ref="form" dark height="1000">
-            <h1>Sign in with GitHub</h1>
+          <!-- <v-card ref="form" dark height="1000"> -->
+          <div class="car">
+            <h1 align="center">Sign in with GitHub</h1>
             <v-btn
+              dark
               large
               class="gh-button white--text"
               type="submit"
@@ -25,7 +27,8 @@
                 <v-icon>mdi-cached</v-icon>
               </span>
             </v-btn>
-          </v-card>
+          </div>
+          <!-- </v-card> -->
         </v-row>
       </v-form>
     </v-container>
