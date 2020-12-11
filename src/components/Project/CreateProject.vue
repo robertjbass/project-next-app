@@ -196,37 +196,17 @@ export default {
     };
   },
   methods: {
-    // async addImage() {
-    //   let uid = uuidv4();
-
-    //   this.loading = true;
-
-    //   const storageRef = storage
-    //     .ref("projects")
-    //     .child(uid + this.imageRaw.split(".")[1]);
-
-    //   await storageRef.put(this.imageRaw);
-
-    //   this.imageUrl = await storageRef.getDownloadURL();
-    //   console.log(this.imageUrl);
-    // },
     onCreateProject() {
       if (!this.imageRaw) {
         // todo - add something here
         console.log("Placeholder image will be used");
       }
-
       this.$store.dispatch("createProject", this.form);
       console.log(this.form);
-      // setTimeout(() => {
       this.$router.push("/projects/");
-      // }, 1000);
     },
     onFilePicked() {
-      // this.$refs.fileInput.click
-      // alert("test");
       const files = event.target.files;
-      // console.log(files);
       let filename = files[0].name;
       console.log(filename);
       if (filename.lastIndexOf(".") <= 0) {
@@ -261,7 +241,6 @@ export default {
       this.imageUrl = null;
     },
     submit() {
-      this.formHasErrors = false;
       if (!this.submitEnabled) {
         alert("Please verify all errors are corrected");
       }
@@ -280,7 +259,8 @@ export default {
         this.summary &&
         this.selectedItems &&
         this.goals &&
-        this.selectedDuration
+        this.selectedDuration &&
+        this.imageRaw
       );
     },
     form() {
@@ -303,10 +283,8 @@ export default {
         month = "" + (d.getMonth() + 1),
         day = "" + d.getDate(),
         year = d.getFullYear();
-
       if (month.length < 2) month = "0" + month;
       if (day.length < 2) day = "0" + day;
-
       return [year, month, day].join("-");
     },
     numberOfTechnologies() {
