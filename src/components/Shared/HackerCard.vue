@@ -2,7 +2,14 @@
   <div class="hackerCard">
     <v-card class="card" color="#333" dark>
       <v-icon left> mdi-bookmark-outline </v-icon>
-      <span class="title font-weight-light">{{ hacker.username }}</span>
+      <!-- <span class="title font-weight-light">{{ hacker.username }}</span> -->
+
+      <router-link
+        :to="'/profile/' + hacker.id"
+        style="cursor: pointer"
+        class="title font-weight-light light-blue--text"
+        >{{ hacker.username }}</router-link
+      >
 
       <v-card-text align="left" class="headline font-weight-bold">
         {{ hacker.description }}
@@ -16,9 +23,9 @@
           ><h3>{{ hacker.name }}</h3></v-row
         >
       </v-list-item>
-      <v-row align="left"
+      <v-row
         ><v-icon left>mdi-bio</v-icon>
-        <p style="margin: 0; padding: 0; align: left" align="left">
+        <p style="margin: 0; padding: 0; text-align: left">
           {{ hacker.bio }}
         </p></v-row
       >
@@ -33,7 +40,7 @@
       >
       <v-row v-if="hacker.blog"
         ><v-icon left>mdi-link-box-outline</v-icon
-        ><a class="light-blue--text" :href="hacker.blog">{{
+        ><a class="light-blue--text" :href="blogUrl">{{
           hacker.blog.split("https://www.").join("")
         }}</a></v-row
       >
@@ -75,6 +82,22 @@ export default {
     },
   },
   computed: {
+    blogUrl() {
+      return "https://".concat(
+        this.hacker.blog
+          .split("https://www.")
+          .join("")
+          .split("http://www.")
+          .join("")
+          .split("https://")
+          .join("")
+          .split("http://")
+          .join("")
+          .split("www.")
+          .join("")
+      );
+    },
+
     avatarUrl() {
       return "https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortFlat&accessoriesType=Blank&hairColor=BrownDark&facialHairType=Blank&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light";
     },

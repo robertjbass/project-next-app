@@ -38,11 +38,15 @@
     <div class="links">
       <div v-show="project.productPage" class="product-link">
         <v-icon dark>mdi-link</v-icon
-        ><a :href="project.productPage" class="light-blue--text">Project URL</a>
+        ><a :href="project.productPage" target="_blank" class="light-blue--text"
+          >Project URL</a
+        >
       </div>
-      <div v-show="project.githubRepo" class="gh-link">
+      <div v-show="project.githubRepo" target="_blank" class="gh-link">
         <v-icon dark>mdi-github</v-icon
-        ><a :href="project.githubRepo" class="light-blue--text">GitHub Repo</a>
+        ><a :href="project.githubRepo" target="_blank" class="light-blue--text"
+          >GitHub Repo</a
+        >
       </div>
     </div>
     <div class="goals">

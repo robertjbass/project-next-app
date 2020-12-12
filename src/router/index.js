@@ -8,7 +8,8 @@ import CreateProject from '@/components/Project/CreateProject'
 import Projects from '@/components/Project/Projects'
 import Project from '@/components/Project/Project'
 import Hackers from '@/components/User/Hackers'
-import Profile from '@/components/User/Profile'
+// import Profile from '@/components/User/Profile'
+import HackerProfile from '@/components/User/HackerProfile';
 // import Signin from '@/components/User/Signin'
 import Signup from '@/components/User/Signup'
 import AlertCmp from '@/components/Shared/Alert'
@@ -54,11 +55,18 @@ const router = new Router({
       component: Hackers
     },
     {
-      path: '/profile',
-      name: 'Profile',
-      component: Profile,
+      path: '/profile/:id',
+      name: 'HackerProfile',
+      props: true,
+      component: HackerProfile,
       beforeEnter: AuthGuard
     },
+    // {
+    //   path: '/profile',
+    //   name: 'Profile',
+    //   component: Profile,
+    //   beforeEnter: AuthGuard
+    // },
     {
       path: '/signup',
       name: 'Signup',

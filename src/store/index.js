@@ -18,6 +18,7 @@ export const store = new Vuex.Store({
   state: {
     loadedProjects: [],
     hackers: [],
+    // hackerProfile: null,
     user: null,
     loading: false,
     error: null,
@@ -71,6 +72,9 @@ export const store = new Vuex.Store({
     setHackers(state, payload) {
       state.hackers = payload;
     },
+    // setHackerProfile(state, payload) {
+    //   state.hackerProfile = payload
+    // }
   },
 
   /*************************
@@ -93,7 +97,7 @@ export const store = new Vuex.Store({
           hackers.push(hacker);
         });
         console.log(...hackers);
-        commit("setHackers", { ...hackers });
+        commit("setHackers",  hackers );
       });
     },
 
@@ -290,7 +294,7 @@ export const store = new Vuex.Store({
         .then((data) => {
           console.log({ data });
           commit("updateProject", { ...project, projectId });
-          commit("loadProjects");
+          // commit("loadProjects");
         })
         .catch((error) => {
           console.error(error);
@@ -318,6 +322,14 @@ export const store = new Vuex.Store({
           console.error(err);
         });
     },
+    // setHackerProfile({ commit, getters }, payload) {
+    //   getters.hackerProfile.forEach(hacker => {
+    //     if (hacker.id == payload.id) {
+    //       commit("setHackerProfile", hacker)
+    //       // commit(console.log(hacker))
+    //     }
+    //   })
+    // }
   },
 
   /*************************
@@ -342,6 +354,7 @@ export const store = new Vuex.Store({
           return project.id === projectId;
         });
       };
+  
     },
     user(state) {
       return state.user;
@@ -358,5 +371,8 @@ export const store = new Vuex.Store({
     hackers(state) {
       return state.hackers;
     },
+    // hackerProfile(state) {
+    //   return state.hackerProfile;
+    // }
   },
 });

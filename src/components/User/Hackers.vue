@@ -16,13 +16,12 @@
 </template>
 
 <script>
-// import { mapGetters } from "vuex";
 import HackerCard from "@/components/Shared/HackerCard.vue";
 
 export default {
   name: "Hackers",
+
   computed: {
-    // ...mapGetters(["hackers"]),
     hackers() {
       return this.$store.getters.hackers;
     },

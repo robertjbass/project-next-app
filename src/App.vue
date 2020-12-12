@@ -11,8 +11,6 @@
             <div class="logo-box">
               <img class="logo" src="../src/assets/images/nextAppLogo.png" />
             </div>
-            <!-- project(() => nextApp('💡')) -->
-            <!-- (() => nextApp('💡')) -->
           </router-link>
         </v-toolbar-title>
         <v-spacer></v-spacer>
@@ -173,7 +171,7 @@ export default {
           {
             icon: "mdi-github",
             title: "Profile",
-            link: "/profile",
+            link: "/profile/" + this.user.id,
           },
           // {
           //   icon: "mdi-logout-variant",

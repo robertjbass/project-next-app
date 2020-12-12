@@ -6,139 +6,148 @@
           <v-row justify="center">
             <v-col cols="12" sm="12" md="8" lg="6">
               <!-- <v-card ref="form" dark min-width="400px"> -->
-                <div class="card-background">
-                  <!-- <v-card-text> -->
-                    <h1>Create Next App</h1>
-                    Sumbission Date: {{ dateCreated | date }}
-                    <v-text-field class="section"
-                      id="projectName"
-                      ref="projectName"
-                      :value="project.title"
-                      v-model="projectUpdate.updatedProject.title"
-                      :rules="[() => !!projectName || 'This field is required']"
-                      :error-messages="errorMessages"
-                      label="Project Name"
-                      required
-                    ></v-text-field>
-                    <v-textarea  class="section"
-                      id="summary"
-                      ref="summary"
-                      v-model="projectUpdate.updatedProject.description"
-                      :rules="[
-                        () =>
-                          !!projectUpdate.updatedProject.description ||
-                          'This field is required',
-                        () =>
-                          (!!projectUpdate.updatedProject.description &&
-                            projectUpdate.updatedProject.description.length >=
-                              15) ||
-                          'Just a little bit more info',
-                        summaryCheck,
-                      ]"
-                      label="Project Summary"
-                      required
-                    ></v-textarea>
-                    <v-combobox  class="section"
-                      id="anticipatedTechnologies"
-                      ref="anticipatedTechnologies"
-                      v-model="projectUpdate.updatedProject.technologies"
-                      :items="items"
-                      label="Anticipated Technologies"
-                      :rules="[
-                        () =>
-                          !!numberOfTechnologies ||
-                          'Please select at least 1 technology',
-                      ]"
-                      multiple
-                      chips
-                      clearable
-                      required
-                    ></v-combobox>
-                    <v-text-field  class="section"
-                      id="githubRepo"
-                      v-model="projectUpdate.updatedProject.githubRepo"
-                      label="GitHub Repo (Optional)"
-                      :rules="githubRules"
-                      clearable
-                      :required="false"
-                      hint="This can be added/modified later."
-                    ></v-text-field>
-                    <v-text-field  class="section"
-                      id="productPage"
-                      ref="productPage"
-                      v-model="projectUpdate.updatedProject.productPage"
-                      label="Product Page (Optional)"
-                      :rules="productPageRules"
-                      hint="This can anything you see fit such as a landing page, YouTube video, temporary url, document from Coda, Slite, Notion, Google Docs, Figma, etc. This can be added/modified later."
-                      clearable
-                      :required="false"
-                    ></v-text-field>
-                    <v-textarea  class="section"
-                      id="goals"
-                      ref="goals"
-                      v-model="projectUpdate.updatedProject.goals"
-                      :rules="[
-                        () =>
-                          !!projectUpdate.updatedProject.goals ||
-                          'This field is required',
-                        () =>
-                          (!!projectUpdate.updatedProject.goals &&
-                            projectUpdate.updatedProject.goals.length >= 15) ||
-                          'Just a little bit more information',
-                      ]"
-                      label="Project Goals"
-                      required
-                    ></v-textarea>
-                    <v-text-field  class="section"
-                      v-model="projectUpdate.updatedProject.imageUrl"
-                      name="imageUrl"
-                      label="Image URL"
-                      id="imageUrl"
-                      ref="imageUrl"
-                    >
-                    </v-text-field>
-                    <h3 v-if="this.imageUrl">Project Banner Image</h3>
-                    <img  class="section"
-                      :src="projectUpdate.updatedProject.imageUrl"
-                      width="400px"
-                    />
-                    <v-combobox  class="section"
-                      label="Duration"
-                      :value="project.projectDuration"
-                      id="projectDuration"
-                      ref="projectDuration"
-                      clearable
-                      hide-selected
-                      persistent-hint
-                      small-chips
-                      :items="projectDurations"
-                      v-model="projectUpdate.updatedProject.projectDuration"
-                    ></v-combobox>
-                  <!-- </v-card-text> -->
-                  <v-divider class="mt-12"></v-divider>
-                  <v-card-actions>
-                    <v-btn elevation="0" text color="warning">
-                      <v-icon left>mdi-arrow-left</v-icon>
-                      Cancel
-                    </v-btn>
-                    <v-spacer></v-spacer>
-                    <v-btn elevation="0" color="info" text @click="resetForm">
-                      <v-icon left>mdi-refresh</v-icon>
-                      Clear
-                    </v-btn>
-                    <v-spacer></v-spacer>
-                    <v-btn
-                      elevation="0"
-                      @click="submit"
-                      :disabled="submitDisabled"
-                      ><v-icon left>mdi-check-bold</v-icon>
-                      Submit
-                    </v-btn>
-                  </v-card-actions>
-                  <!-- {{ submitDisabled }} -->
-                  <!-- PROJECT: {{ this.project }} <br /><br />
+              <div class="card-background">
+                <!-- <v-card-text> -->
+                <h1>Create Next App</h1>
+                Sumbission Date: {{ dateCreated | date }}
+                <v-text-field
+                  class="section"
+                  id="projectName"
+                  ref="projectName"
+                  :value="project.title"
+                  v-model="projectUpdate.updatedProject.title"
+                  :rules="[() => !!projectName || 'This field is required']"
+                  :error-messages="errorMessages"
+                  label="Project Name"
+                  required
+                ></v-text-field>
+                <v-textarea
+                  class="section"
+                  id="summary"
+                  ref="summary"
+                  v-model="projectUpdate.updatedProject.description"
+                  :rules="[
+                    () =>
+                      !!projectUpdate.updatedProject.description ||
+                      'This field is required',
+                    () =>
+                      (!!projectUpdate.updatedProject.description &&
+                        projectUpdate.updatedProject.description.length >=
+                          15) ||
+                      'Just a little bit more info',
+                    summaryCheck,
+                  ]"
+                  label="Project Summary"
+                  required
+                ></v-textarea>
+                <v-combobox
+                  class="section"
+                  id="anticipatedTechnologies"
+                  ref="anticipatedTechnologies"
+                  v-model="projectUpdate.updatedProject.technologies"
+                  :items="items"
+                  label="Anticipated Technologies"
+                  :rules="[
+                    () =>
+                      !!numberOfTechnologies ||
+                      'Please select at least 1 technology',
+                  ]"
+                  multiple
+                  chips
+                  clearable
+                  required
+                ></v-combobox>
+                <v-text-field
+                  class="section"
+                  id="githubRepo"
+                  v-model="projectUpdate.updatedProject.githubRepo"
+                  label="GitHub Repo (Optional)"
+                  :rules="githubRules"
+                  clearable
+                  :required="false"
+                  hint="This can be added/modified later."
+                ></v-text-field>
+                <v-text-field
+                  class="section"
+                  id="productPage"
+                  ref="productPage"
+                  v-model="projectUpdate.updatedProject.productPage"
+                  label="Product Page (Optional)"
+                  :rules="productPageRules"
+                  hint="This can anything you see fit such as a landing page, YouTube video, temporary url, document from Coda, Slite, Notion, Google Docs, Figma, etc. This can be added/modified later."
+                  clearable
+                  :required="false"
+                ></v-text-field>
+                <v-textarea
+                  class="section"
+                  id="goals"
+                  ref="goals"
+                  v-model="projectUpdate.updatedProject.goals"
+                  :rules="[
+                    () =>
+                      !!projectUpdate.updatedProject.goals ||
+                      'This field is required',
+                    () =>
+                      (!!projectUpdate.updatedProject.goals &&
+                        projectUpdate.updatedProject.goals.length >= 15) ||
+                      'Just a little bit more information',
+                  ]"
+                  label="Project Goals"
+                  required
+                ></v-textarea>
+                <v-text-field
+                  class="section"
+                  v-model="projectUpdate.updatedProject.imageUrl"
+                  name="imageUrl"
+                  label="Image URL"
+                  id="imageUrl"
+                  ref="imageUrl"
+                >
+                </v-text-field>
+                <h3 v-if="this.imageUrl">Project Banner Image</h3>
+                <img
+                  class="section"
+                  :src="projectUpdate.updatedProject.imageUrl"
+                  width="400px"
+                />
+                <v-combobox
+                  class="section"
+                  label="Duration"
+                  :value="project.projectDuration"
+                  id="projectDuration"
+                  ref="projectDuration"
+                  clearable
+                  hide-selected
+                  persistent-hint
+                  small-chips
+                  :items="projectDurations"
+                  v-model="projectUpdate.updatedProject.projectDuration"
+                ></v-combobox>
+                <!-- </v-card-text> -->
+                <v-divider class="mt-12"></v-divider>
+                <v-card-actions>
+                  <v-btn elevation="0" text color="warning">
+                    <v-icon left>mdi-arrow-left</v-icon>
+                    Cancel
+                  </v-btn>
+                  <v-spacer></v-spacer>
+                  <v-btn elevation="0" color="info" text @click="resetForm">
+                    <v-icon left>mdi-refresh</v-icon>
+                    Clear
+                  </v-btn>
+                  <v-spacer></v-spacer>
+                  <v-btn
+                    elevation="0"
+                    @click="submit"
+                    :disabled="submitDisabled"
+                    ><v-icon left>mdi-check-bold</v-icon>
+                    Submit
+                  </v-btn>
+                </v-card-actions>
+                <!-- {{ submitDisabled }} -->
+                <!-- PROJECT: {{ this.project }} <br /><br />
                   UPDATED PROJECT: {{ this.updatedProject }} -->
-                </div>
+              </div>
               <!-- </v-card> -->
             </v-col>
           </v-row>
@@ -306,13 +315,14 @@ export default {
     submit() {
       if (this.submitDisabled) {
         alert("Please verify all errors are corrected");
-      } else if (this.thisUser) {
-        // Nobody should ever be able to do this... but just in case someone screws with the source code - we'll let them know that we know what they're upto
-        alert("This project isn't yours to edit! Nice try!")
+        // } else if (this.thisUser == false) {
+        //   // Nobody should ever be able to do this... but just in case someone screws with the source code - we'll let them know that we know what they're upto
+        //   alert("This project isn't yours to edit! Nice try!")
       } else {
         this.projectUpdate.userId = this.user.id;
         console.log(this.projectUpdate);
         this.$store.dispatch("updateProject", this.projectUpdate);
+        this.$emit("closeForm");
       }
     },
   },
@@ -322,18 +332,17 @@ export default {
 <style scoped>
 * {
   /* margin-top: 20px; */
-padding: 0;
-background-color: #444
-
+  padding: 0;
+  background-color: #444;
 }
 .updateForm {
-margin: 0;
-padding: 20px
+  margin: 0;
+  padding: 20px;
 }
 
 .section {
   padding-top: 15px;
-  margin-top: 15px
+  margin-top: 15px;
 }
 /* .card-background {
   background-color: #333;

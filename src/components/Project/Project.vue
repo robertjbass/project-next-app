@@ -56,13 +56,19 @@
         <div class="links">
           <div v-show="project.productPage" class="product-link">
             <v-icon dark>mdi-link</v-icon
-            ><a :href="project.productPage" class="light-blue--text"
+            ><a
+              :href="project.productPage"
+              target="_blank"
+              class="light-blue--text"
               >Project URL</a
             >
           </div>
           <div v-if="project.githubRepo" class="gh-link">
             <v-icon dark>mdi-github</v-icon
-            ><a :href="project.githubRepo" class="light-blue--text"
+            ><a
+              :href="project.githubRepo"
+              target="_blank"
+              class="light-blue--text"
               >GitHub Repo</a
             >
             <br /><br />
@@ -88,6 +94,7 @@
                 v-show="editDialog"
                 :project="project"
                 v-on:updateProject="this.updateProject"
+                v-on:closeForm="onSubmitClicked"
               />
               <br />
               <h3>Update Log</h3>
@@ -201,12 +208,16 @@ export default {
   },
   props: ["id"],
   methods: {
+    onSubmitClicked() {
+      // alert("Submit Clicked");
+      this.editDialog = !this.editDialog;
+    },
     updateProject() {
       // console.log("Update Project");
       console.log("UPDATE SUBMISSION MADE");
+      this.$router.go();
     },
     onEditClicked() {
-      // alert("Edit Clicked");
       this.editDialog = !this.editDialog;
     },
     newUpdate() {
