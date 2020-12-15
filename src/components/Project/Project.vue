@@ -74,6 +74,12 @@
             <br /><br />
           </div>
         </div>
+        <!-- <FollowProject :project="project" /> -->
+        <v-row class="follow-dialog">
+          <v-col align="right">
+            <app-project-follow-dialog :project="project" />
+          </v-col>
+        </v-row>
         <div
           class="projectBelongsToLoggedInUser"
           v-if="projectBelongsToLoggedInUser"
@@ -128,6 +134,7 @@
                     </v-simple-table>
                   </v-col>
                 </v-row>
+
                 <!-- {{ project.created | date }}: Project Created -->
               </div>
             </div>
@@ -184,6 +191,8 @@ import axios from "axios";
 import Alert from "@/components/Shared/Alert.vue";
 import EditButtons from "@/components/Project/EditButtons.vue";
 import UpdateForm from "@/components/Project/UpdateForm.vue";
+// import FollowProject from "@/components/Project/Follow/FollowProject.vue";
+
 export default {
   name: "Project",
   data() {
@@ -226,22 +235,24 @@ export default {
     getGitHubInfo() {
       let ghUsername = this.project.username;
       let repo = this.project.githubRepo;
-      repo = repo
-        .split("https://www.github.com/")
-        .join("")
-        .split("https://github.com/")
-        .join("")
-        .split("github.com/")
-        .join("");
-      repo = repo.split("/")[1];
-      repo = repo.split(" ")[0];
+      if (repo) {
+        repo = repo
+          .split("https://www.github.com/")
+          .join("")
+          .split("https://github.com/")
+          .join("")
+          .split("github.com/")
+          .join("");
+        repo = repo.split("/")[1];
+        repo = repo.split(" ")[0];
+      }
       console.log(ghUsername);
 
       axios
         .get(`https://api.github.com/repos/${this.project.username}/${repo}`)
         .then((results) => {
           try {
-            console.log(results.data);
+            // console.log(results.data);
             this.repoData = results.data;
             this.getReadme();
           } catch {
@@ -292,6 +303,7 @@ export default {
     Alert,
     EditButtons,
     UpdateForm,
+    // FollowProject,
   },
 };
 </script>
@@ -314,10 +326,8 @@ a {
   color: white;
 }
 
-.update-form {
-  padding: 0;
-  margin: 0;
-  justify-content: center;
+.follow-dialog {
+  align-content: right;
 }
 
 .repoData {

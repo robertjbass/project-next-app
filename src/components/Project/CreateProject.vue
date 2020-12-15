@@ -33,6 +33,7 @@
                       label="Project Summary"
                       required
                     ></v-textarea>
+                    <br />
                     <v-combobox
                       id="anticipatedTechnologies"
                       v-model="selectedItems"
@@ -47,6 +48,7 @@
                       chips
                       clearable
                       required
+                      dense
                     ></v-combobox>
                     <v-text-field
                       id="githubRepo"
@@ -95,6 +97,9 @@
                       prepend-icon="mdi-paperclip"
                       label="Project Banner Image"
                       @change="onFilePicked"
+                      required
+                      hint="Please select any image. It can be a screenshot, a gradient, a theme, or anything else that you'd like. Take a look at unsplash.com if you need help."
+                      :persistent-hint="true"
                     ></v-file-input>
                     <!-- placeholder="Select a banner image" -->
                     <!-- <v-text-field
@@ -319,6 +324,16 @@ export default {
   },
 
   watch: {
+    // Only gets rid of whitespace
+    selectedItems() {
+      let mostRecentEntry = this.selectedItems[this.selectedItems.length - 1];
+      if (mostRecentEntry.split(" ").join("").length == 0) {
+        this.selectedItems.pop(
+          this.selectedItems[this.selectedItems.length - 1]
+        );
+      }
+    },
+
     user() {
       if (this.user === null || this.user === undefined) {
         this.$router.push("/");

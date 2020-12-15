@@ -115,10 +115,9 @@ a {
 .banner-image {
   width: 100%;
   position: static;
-  height: 250px;
+  min-height: 250px;
   background-size: cover;
-  background-size: 100%;
-  background-position: right 0px bottom 50%;
+  background-position: center;
 }
 
 .dates {

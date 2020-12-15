@@ -64,7 +64,7 @@
             <div v-for="project in projectsByUser" :key="project.id">
               <router-link
                 class="light-blue--text"
-                :to="`./project/${project.id}`"
+                :to="`../project/${project.id}`"
                 >{{ project.title }}</router-link
               >
             </div>

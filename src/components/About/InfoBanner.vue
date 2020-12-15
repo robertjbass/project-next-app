@@ -54,8 +54,8 @@
             <v-card dark class="right-card card">
               <h3>{{ todayIsMonday ? "🎉Presenting Today🎉" : "" }}</h3>
               <br v-if="todayIsMonday" />
-              Next Presentation Date:
-              <h3>Monday {{ mondayNextWeek | date }}</h3>
+              Next Weekly Meeting Date:
+              <h3>📅 Monday {{ mondayNextWeek | date }}</h3>
             </v-card>
             <v-card dark class="card-bottom card"
               ><h3>How does it work?</h3>
@@ -105,6 +105,18 @@
             <h3>FAQs</h3>
             <h4 class="q-and-a q"><strong>Q:</strong> Is it free?</h4>
             <h4 class="q-and-a a"><strong>A:</strong> Yes!</h4>
+
+            <h4 class="q-and-a q">
+              <strong>Q:</strong> Should I wait for the next 'cycle'?
+            </h4>
+            <h4 class="q-and-a a">
+              <strong>A:</strong> Meetings will take place every week. If you
+              miss a cycle, there will be another one. You can always update
+              your project duration. The goal is to help you build your project
+              and learn new technologies. You work with whichever cycle you feel
+              comfortable with. There are no penalties and no deadlines, just
+              community motivation.
+            </h4>
 
             <h4 class="q-and-a q">
               <strong>Q:</strong> This looks brand new. Is it functional?

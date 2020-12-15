@@ -1,13 +1,9 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import firebase from "firebase/app";
-// import vuefire from 'vuefire'
 import "firebase/auth";
 import axios from "axios";
 const db = firebase.firestore();
-// const storage = firebase.storage();
-
-// import { auth, storage } from '../firebase'
 import { auth } from "../firebase";
 
 const provider = new firebase.auth.GithubAuthProvider();
@@ -18,16 +14,12 @@ export const store = new Vuex.Store({
   state: {
     loadedProjects: [],
     hackers: [],
-    // hackerProfile: null,
     user: null,
     loading: false,
     error: null,
     technologies: null,
     countdownInfo: {
-      date: new Date(),
-      // mondayNextIfToday: this.date.setDate(this.date.getDate() + (7-this.date.getDay())%7+1),
-      // mondayTodayIfToday: this.date.setDate(this.date.getDate() + ((7 - this.date.getDay()) % 7 + 1) % 7),
-      // todayIsMonday: this.date.getDay == "Wednesday"
+      date: new Date()
     },
   },
 
@@ -45,11 +37,8 @@ export const store = new Vuex.Store({
       });
     },
     createProject(state, payload) {
-      // state.loadedProjects.push(payload) //older
-      let newPayload = { ...payload }; //works2
-      state.loadedProjects.push(...newPayload); //works2
-      // let newPayload = {...payload} //works1
-      // state.loadedProjects.push(...newPayload) //works1
+      let newPayload = { ...payload };
+      state.loadedProjects.push(...newPayload);
     },
     setUser(state, payload) {
       state.user = payload;
@@ -72,9 +61,6 @@ export const store = new Vuex.Store({
     setHackers(state, payload) {
       state.hackers = payload;
     },
-    // setHackerProfile(state, payload) {
-    //   state.hackerProfile = payload
-    // }
   },
 
   /*************************
@@ -86,18 +72,16 @@ export const store = new Vuex.Store({
     //! LOAD HACKERS
     loadHackers({ commit }) {
       const hackersRef = db.collection("users");
-      const query = hackersRef; //.where('userEmail', '!=', null)
-      // const query = hackersRef.where('userEmail', '!=', null)
+      const query = hackersRef;
 
       query.onSnapshot((hacker) => {
         const hackers = [];
         hacker.forEach((doc) => {
           hacker = { id: doc.id, ...doc.data() };
-          // console.log({ id: doc.id, ...doc.data() })
           hackers.push(hacker);
         });
         console.log(...hackers);
-        commit("setHackers",  hackers );
+        commit("setHackers", hackers);
       });
     },
 
@@ -109,7 +93,6 @@ export const store = new Vuex.Store({
         .then((ghUser) => {
           commit("setLoading", false);
           commit("clearError");
-          // console.log({ghUser})
           const user = ghUser.user;
           const operationType = ghUser.operationType;
           const signInMethod = ghUser.credential.signInMethod;
@@ -121,14 +104,94 @@ export const store = new Vuex.Store({
             username,
           } = additionalUserInfo;
           const {
-            avatar_url, bio, blog, company, created_at, email, events_url, followers, followers_url, following, following_url, gists_url, gravatar_id, hireable, html_url, id, location, login, name, node_id, organizations_url, public_gists, public_repos, received_events_url, repos_url, site_admin, starred_url, subscriptions_url, twitter_username, type, updated_at, url,
+            avatar_url,
+            bio,
+            blog,
+            company,
+            created_at,
+            email,
+            events_url,
+            followers,
+            followers_url,
+            following,
+            following_url,
+            gists_url,
+            gravatar_id,
+            hireable,
+            html_url,
+            id,
+            location,
+            login,
+            name,
+            node_id,
+            organizations_url,
+            public_gists,
+            public_repos,
+            received_events_url,
+            repos_url,
+            site_admin,
+            starred_url,
+            subscriptions_url,
+            twitter_username,
+            type,
+            updated_at,
+            url,
           } = profile;
           const {
-            uid, displayName, emailVerified, isAnonymous, phoneNumber, photoURL,
+            uid,
+            displayName,
+            emailVerified,
+            isAnonymous,
+            phoneNumber,
+            photoURL,
           } = user;
           const userEmail = user.email;
           const userData = {
-            id: uid, githubId: id, projects: [], userEmail, isNewUser, operationType, displayName, emailVerified, isAnonymous, phoneNumber, photoURL, avatar_url, bio, blog, company, created_at, email, events_url, followers, followers_url, following, following_url, gists_url, gravatar_id, hireable, html_url, location, login, name, node_id, organizations_url, public_gists, public_repos, received_events_url, repos_url, site_admin, starred_url, subscriptions_url, twitter_username, type, updated_at, url, providerId, username, signInMethod,
+            id: uid,
+            githubId: id,
+            projects: [],
+            userEmail,
+            isNewUser,
+            operationType,
+            displayName,
+            emailVerified,
+            isAnonymous,
+            phoneNumber,
+            photoURL,
+            avatar_url,
+            bio,
+            blog,
+            company,
+            created_at,
+            email,
+            events_url,
+            followers,
+            followers_url,
+            following,
+            following_url,
+            gists_url,
+            gravatar_id,
+            hireable,
+            html_url,
+            location,
+            login,
+            name,
+            node_id,
+            organizations_url,
+            public_gists,
+            public_repos,
+            received_events_url,
+            repos_url,
+            site_admin,
+            starred_url,
+            subscriptions_url,
+            twitter_username,
+            type,
+            updated_at,
+            url,
+            providerId,
+            username,
+            signInMethod,
           };
           commit("setUser", userData);
           if (isNewUser) {
@@ -158,13 +221,11 @@ export const store = new Vuex.Store({
         });
     },
     autoSignIn({ commit }, payload) {
-      // console.log(payload.uid)
       let usersRef = db.collection("users");
       usersRef.get().then((doc) => {
         doc.forEach((user) => {
-          // console.log(user.data().id)
           if (user.data().id == payload.uid) {
-            // console.log({...user.data(), projects: [] })
+            // todo - add projects
             commit("setUser", { ...user.data(), projects: [] });
           }
         });
@@ -175,7 +236,6 @@ export const store = new Vuex.Store({
         .signOut()
         .then(() => {
           commit("setUser", null);
-          // console.log("signed out")
         })
         .catch((error) => {
           console.error(error);
@@ -202,7 +262,6 @@ export const store = new Vuex.Store({
     createProject({ commit, getters }, payload) {
       let project = {
         title: payload.projectName,
-        // imageUrl: payload.imageUrl ? payload.imageUrl : `https://dummyimage.com/600x400/cf78cf/000.png&text=${payload.projectName}`,
         imageUrl: "",
         description: payload.summary,
         technologies: payload.anticipatedTechnologies,
@@ -211,15 +270,12 @@ export const store = new Vuex.Store({
         created: payload.created,
         goals: payload.goals,
         projectDuration: payload.projectDuration,
-        // image: payload.image, //?
         userId: this.state.user.id,
         name: this.state.user.name,
         username: this.state.user.login,
         emailAddress: this.state.user.email,
         creatorId: getters.user.id,
       };
-      console.log({ payload });
-      // let imageUrl = 'https://firebasestorage.googleapis.com/v0/b/project-next-app.appspot.com/o/bannerPlaceholder.png?alt=media&token=b28d0acb-a43e-41d9-86d6-c569b2f75714';
       let key;
       let ext;
       let filename;
@@ -233,7 +289,7 @@ export const store = new Vuex.Store({
           return key;
         })
         .then((key) => {
-          filename = payload.image.name
+          filename = payload.image.name;
           ext = filename.split(".")[filename.split(".").length - 1];
           storageRef = storage.ref(`projects/${key}.${ext}`).put(payload.image);
           console.log({ storageRef });
@@ -244,7 +300,7 @@ export const store = new Vuex.Store({
           let path = imageRef.fullPath;
           let urlRef = storage.refFromURL(
             `gs://project-next-app.appspot.com/${path}`
-            );
+          );
           console.log({ projectsRef, imageRef, path });
           storageRef.on(
             "state changed",
@@ -282,11 +338,25 @@ export const store = new Vuex.Store({
     updateProject({ commit }, payload) {
       let { projectId, updatedProject, userId } = payload;
       let {
-        description, githubRepo, goals, imageUrl, productPage, projectDuration, technologies, title,
+        description,
+        githubRepo,
+        goals,
+        imageUrl,
+        productPage,
+        projectDuration,
+        technologies,
+        title,
       } = updatedProject;
 
       let project = {
-        description, githubRepo, goals, imageUrl, productPage, projectDuration, technologies, title,
+        description,
+        githubRepo,
+        goals,
+        imageUrl,
+        productPage,
+        projectDuration,
+        technologies,
+        title,
       };
       let updateProjectRef = db.collection("projects").doc(projectId);
       return updateProjectRef
@@ -294,11 +364,80 @@ export const store = new Vuex.Store({
         .then((data) => {
           console.log({ data });
           commit("updateProject", { ...project, projectId });
-          // commit("loadProjects");
         })
         .catch((error) => {
           console.error(error);
         });
+    },
+
+    updateProjectWithImage({ commit }, payload) {
+      if (payload.imageUpdated) {
+        console.log("new image provided");
+      }
+      let ext;
+      let filename;
+      let storage = firebase.storage();
+      let storageRef;
+      let { updatedProject, projectId } = payload;
+      let key = projectId;
+      let {
+        title,
+        description,
+        technologies,
+        githubRepo,
+        productPage,
+        goals,
+        imageRaw,
+        projectDuration,
+      } = updatedProject;
+      filename = imageRaw.name;
+      ext = filename.split(".")[filename.split(".").length - 1];
+      storageRef = storage.ref(`projects/${key}.${ext}`).put(imageRaw);
+      let project = {
+        title: title,
+        imageUrl: "", // todo - "",
+        description: description,
+        technologies: technologies,
+        githubRepo: githubRepo,
+        productPage: productPage,
+        goals: goals,
+        projectDuration: projectDuration,
+      };
+      let projectsRef = storage.ref("projects");
+      let imageRef = projectsRef.child(`${key}.${ext}`);
+      let path = imageRef.fullPath;
+      let urlRef = storage.refFromURL(
+        `gs://project-next-app.appspot.com/${path}`
+      );
+      storageRef.on(
+        "state changed",
+        function progress(snapshot) {
+          let percentage =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log(percentage);
+        },
+
+        function error(err) {
+          console.error(err);
+        },
+
+        async function complete() {
+          console.log("complete");
+          let imageUrl = urlRef.getDownloadURL();
+          project.imageUrl = await imageUrl;
+          db.collection("projects")
+            .doc(key)
+            .update(project)
+            .then(() => {
+              commit("updateProject", {
+                project,
+              });
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+        }
+      );
     },
 
     //! MISC
@@ -322,14 +461,6 @@ export const store = new Vuex.Store({
           console.error(err);
         });
     },
-    // setHackerProfile({ commit, getters }, payload) {
-    //   getters.hackerProfile.forEach(hacker => {
-    //     if (hacker.id == payload.id) {
-    //       commit("setHackerProfile", hacker)
-    //       // commit(console.log(hacker))
-    //     }
-    //   })
-    // }
   },
 
   /*************************
@@ -354,7 +485,6 @@ export const store = new Vuex.Store({
           return project.id === projectId;
         });
       };
-  
     },
     user(state) {
       return state.user;
@@ -371,8 +501,5 @@ export const store = new Vuex.Store({
     hackers(state) {
       return state.hackers;
     },
-    // hackerProfile(state) {
-    //   return state.hackerProfile;
-    // }
   },
 });

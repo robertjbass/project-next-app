@@ -5,9 +5,7 @@
         <v-layout>
           <v-row justify="center">
             <v-col cols="12" sm="12" md="8" lg="6">
-              <!-- <v-card ref="form" dark min-width="400px"> -->
               <div class="card-background">
-                <!-- <v-card-text> -->
                 <h1>Create Next App</h1>
                 Sumbission Date: {{ dateCreated | date }}
                 <v-text-field
@@ -95,7 +93,7 @@
                   label="Project Goals"
                   required
                 ></v-textarea>
-                <v-text-field
+                <!-- <v-text-field
                   class="section"
                   v-model="projectUpdate.updatedProject.imageUrl"
                   name="imageUrl"
@@ -103,13 +101,32 @@
                   id="imageUrl"
                   ref="imageUrl"
                 >
-                </v-text-field>
+                </v-text-field> -->
+                <v-file-input
+                  v-model="projectUpdate.updatedProject.imageRaw"
+                  name="imageUrl"
+                  id="imageUrl"
+                  ref="imageUrl"
+                  accept="image/png, image/jpeg, image/bmp"
+                  :rules="[
+                    (value) =>
+                      !value ||
+                      value.size < 2000000 ||
+                      'Image size should be less than 2 MB!',
+                  ]"
+                  prepend-icon="mdi-paperclip"
+                  label="Project Banner Image"
+                  @change="onFilePicked"
+                >
+                  <!--  -->
+                </v-file-input>
                 <h3 v-if="this.imageUrl">Project Banner Image</h3>
                 <img
+                  :src="this.projectUpdate.updatedProject.imageUrl"
                   class="section"
-                  :src="projectUpdate.updatedProject.imageUrl"
                   width="400px"
                 />
+                <!-- :src="projectUpdate.updatedProject.imageUrl" -->
                 <v-combobox
                   class="section"
                   label="Duration"
@@ -123,7 +140,6 @@
                   :items="projectDurations"
                   v-model="projectUpdate.updatedProject.projectDuration"
                 ></v-combobox>
-                <!-- </v-card-text> -->
                 <v-divider class="mt-12"></v-divider>
                 <v-card-actions>
                   <v-btn elevation="0" text color="warning">
@@ -144,11 +160,7 @@
                     Submit
                   </v-btn>
                 </v-card-actions>
-                <!-- {{ submitDisabled }} -->
-                <!-- PROJECT: {{ this.project }} <br /><br />
-                  UPDATED PROJECT: {{ this.updatedProject }} -->
               </div>
-              <!-- </v-card> -->
             </v-col>
           </v-row>
         </v-layout>
@@ -179,6 +191,7 @@ export default {
       projectUpdate: {
         projectId: this.id,
         userId: "",
+        imageUpdated: false,
         updatedProject: {
           title: this.project.title,
           description: this.project.description,
@@ -188,10 +201,74 @@ export default {
           goals: this.project.goals,
           imageUrl: this.project.imageUrl,
           projectDuration: this.project.projectDuration,
+          imageRaw: this.project.imageUrl,
         },
       },
     };
   },
+  methods: {
+    onFilePicked() {
+      const files = event.target.files;
+      let filename = files[0].name;
+      console.log(filename);
+      if (filename.lastIndexOf(".") <= 0) {
+        return alert("Please add a valid file with a file type");
+      }
+      const fileReader = new FileReader();
+      fileReader.addEventListener("load", () => {
+        this.projectUpdate.updatedProject.imageUrl = fileReader.result;
+      });
+      fileReader.readAsDataURL(files[0]);
+      this.projectUpdate.updatedProject.imageRaw = files[0];
+      this.projectUpdate.imageUpdated = true;
+    },
+
+    summaryCheck() {
+      this.errorMessages =
+        this.projectUpdate.updatedProject.summary &&
+        !this.projectUpdate.updatedProject.projectName
+          ? `Hey! I'm required`
+          : "";
+      return true;
+    },
+
+    resetForm() {
+      this.errorMessages = [];
+      this.formHasErrors = false;
+      this.selectedItems = [];
+      this.errorMessages = "";
+      this.projectName = null;
+      this.formHasErrors = false;
+      this.summary = null;
+      this.search = null;
+      this.githubRepo = "";
+      this.productPage = "";
+      this.goals = null;
+      this.image = null;
+      this.imageUrl = null;
+    },
+
+    submit() {
+      if (this.submitDisabled) {
+        alert("Please verify all errors are corrected");
+      } else {
+        this.projectUpdate.userId = this.user.id;
+        console.log(this.projectUpdate);
+
+        if (this.projectUpdate.imageUpdated) {
+          this.$store.dispatch("updateProjectWithImage", this.projectUpdate);
+          console.log("new image provided");
+        } else if (!this.projectUpdate.imageUpdated) {
+          console.log("image not updated");
+          this.$store.dispatch("updateProject", this.projectUpdate);
+        } else {
+          console.error("unknown state path");
+        }
+        this.$emit("closeForm");
+      }
+    },
+  },
+
   computed: {
     submitDisabled() {
       return (
@@ -210,26 +287,15 @@ export default {
           this.project.projectDuration
       );
     },
+
     user() {
       return this.$store.getters.user;
     },
+
     items() {
       return this.$store.getters.technologies;
     },
-    // form() {
-    //   return {
-    //     projectName: this.projectName,
-    //     summary: this.summary,
-    //     anticipatedTechnologies: this.selectedItems,
-    //     githubRepo: this.githubRepo,
-    //     productPage: this.productPage,
-    //     emailAddress: this.user.email,
-    //     created: this.dateCreated,
-    //     goals: this.goals,
-    //     imageUrl: this.imageUrl,
-    //     projectDuration: this.selectedDuration,
-    //   };
-    // },
+
     dateCreated() {
       let d = new Date(),
         month = "" + (d.getMonth() + 1),
@@ -241,9 +307,11 @@ export default {
 
       return [year, month, day].join("-");
     },
+
     numberOfTechnologies() {
       return this.selectedItems.length;
     },
+
     githubRules() {
       if (this.githubRepo == null || this.githubRepo == "") {
         return [() => this.githubRepo == null || ""];
@@ -260,6 +328,7 @@ export default {
         ];
       }
     },
+
     productPageRules() {
       if (this.productPage == null || this.productPage == "") {
         return [() => this.productPage == null || ""];
@@ -278,51 +347,14 @@ export default {
         this.$router.push("/");
       }
     },
+
     projectName() {
       this.errorMessages = "";
     },
+
     model(val) {
       if (val.length > 5) {
         this.$nextTick(() => this.model.pop());
-      }
-    },
-  },
-  methods: {
-    summaryCheck() {
-      this.errorMessages =
-        this.projectUpdate.updatedProject.summary &&
-        !this.projectUpdate.updatedProject.projectName
-          ? `Hey! I'm required`
-          : "";
-
-      return true;
-    },
-    resetForm() {
-      this.errorMessages = [];
-      this.formHasErrors = false;
-      this.selectedItems = [];
-      this.errorMessages = "";
-      this.projectName = null;
-      this.formHasErrors = false;
-      this.summary = null;
-      this.search = null;
-      this.githubRepo = "";
-      this.productPage = "";
-      this.goals = null;
-      this.image = null;
-      this.imageUrl = null;
-    },
-    submit() {
-      if (this.submitDisabled) {
-        alert("Please verify all errors are corrected");
-        // } else if (this.thisUser == false) {
-        //   // Nobody should ever be able to do this... but just in case someone screws with the source code - we'll let them know that we know what they're upto
-        //   alert("This project isn't yours to edit! Nice try!")
-      } else {
-        this.projectUpdate.userId = this.user.id;
-        console.log(this.projectUpdate);
-        this.$store.dispatch("updateProject", this.projectUpdate);
-        this.$emit("closeForm");
       }
     },
   },
