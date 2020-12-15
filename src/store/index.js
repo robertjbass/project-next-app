@@ -11,7 +11,11 @@ const provider = new firebase.auth.GithubAuthProvider();
 Vue.use(Vuex);
 
 export const store = new Vuex.Store({
+  /*************************
+  //* #1 - STATE
+  ************************** */
   state: {
+
     loadedProjects: [],
     hackers: [],
     user: null,
@@ -24,9 +28,11 @@ export const store = new Vuex.Store({
   },
 
   /*************************
-  #2 - MUTATIONS
+  //* #2 - MUTATIONS
   ************************** */
   mutations: {
+
+    //? MUTATION - Update Project
     updateProject(state, payload) {
       let projectUpdateObject = payload;
       console.log(projectUpdateObject);
@@ -36,40 +42,55 @@ export const store = new Vuex.Store({
         }
       });
     },
+
+    //? MUTATION - Create Project (New Project)
     createProject(state, payload) {
       let newPayload = { ...payload };
       state.loadedProjects.push(...newPayload);
     },
+
+    //? MUTATION - Set User (Logged In User)
     setUser(state, payload) {
       state.user = payload;
     },
+
+    //? MUTATION - Set Loading State
     setLoading(state, payload) {
       state.loading = payload;
     },
+
+    //? MUTATION - Set Error (Open Modal)
     setError(state, payload) {
       state.error = payload;
     },
+
+    //? MUTATION - Clear Error (Close Modal)
     clearError(state) {
       state.error = null;
     },
+
+    //? MUTATION - Set Available Technologies
     setTechnologies(state, payload) {
       state.technologies = payload;
     },
+
+    //? MUTATION - Set Loaded Projects
     setLoadedProjects(state, payload) {
       state.loadedProjects = payload;
     },
+
+    //? MUTATION - Set Hackers
     setHackers(state, payload) {
       state.hackers = payload;
     },
   },
 
   /*************************
-  #3 - ACTIONS
+  //* #3 - ACTIONS
   ************************** */
-
   actions: {
-    //* USERS (HACKERS)
-    //! LOAD HACKERS
+
+    //? ACTION - Load Hackers
     loadHackers({ commit }) {
       const hackersRef = db.collection("users");
       const query = hackersRef;
@@ -85,7 +106,7 @@ export const store = new Vuex.Store({
       });
     },
 
-    //! SIGN USER UP
+    //? ACTION - SIGN USER UP
     signUserUp({ commit }) {
       commit("setLoading", true);
       auth
@@ -220,6 +241,8 @@ export const store = new Vuex.Store({
           console.error(error);
         });
     },
+
+    //? ACTION - AUTO SIGN IN
     autoSignIn({ commit }, payload) {
       let usersRef = db.collection("users");
       usersRef.get().then((doc) => {
@@ -242,8 +265,8 @@ export const store = new Vuex.Store({
         });
     },
 
-    //* PROJECTS
-    //! LOAD PROJECTS
+
+    //? ACTION - LOAD PROJECTS
     loadProjects({ commit }) {
       commit("setLoading", true);
       const projectsRef = db.collection("projects");
@@ -258,7 +281,7 @@ export const store = new Vuex.Store({
       });
     },
 
-    //! CREATE PROJECT
+    //? ACTION - CREATE PROJECTS
     createProject({ commit, getters }, payload) {
       let project = {
         title: payload.projectName,
@@ -335,6 +358,7 @@ export const store = new Vuex.Store({
         });
     },
 
+    //? ACTION - UPDATE PROJECT
     updateProject({ commit }, payload) {
       let { projectId, updatedProject, userId } = payload;
       let {
@@ -370,6 +394,7 @@ export const store = new Vuex.Store({
         });
     },
 
+    //? ACTION - UPDATE PROJECT (WITH IMAGE)
     updateProjectWithImage({ commit }, payload) {
       if (payload.imageUpdated) {
         console.log("new image provided");
@@ -440,10 +465,12 @@ export const store = new Vuex.Store({
       );
     },
 
-    //! MISC
+    //? ACTION - CLEAR ERROR
     clearError({ commit }) {
       commit("clearError");
     },
+
+    //? ACTION - SET TECHNOLOGIES
     setTechnologies({ commit }) {
       let technologies = [];
       let technologyUrl = `https://v1.nocodeapi.com/bbass/airtable/OWBByjdlNVhiKRiR?tableName=Technologies&view=All&perPage=500&sortBy=Technology`;
@@ -451,7 +478,6 @@ export const store = new Vuex.Store({
         .get(technologyUrl)
         .then((res) => {
           technologies = [];
-          // commit("setTechnologies", technologies);
           res.data.records.forEach((techObject) => {
             technologies.push(techObject.fields.Technology);
           });
@@ -464,21 +490,28 @@ export const store = new Vuex.Store({
   },
 
   /*************************
-  #4 - GETTERS
+  //* #4 - GETTERS
   ************************** */
   getters: {
+    
+    //? GETTER - GET Loaded Projects, (sorted by end date)
     loadedProjects(state) {
       return state.loadedProjects.sort((projectA, projectB) => {
         return projectA.endDate > projectB.endDate;
-        // return state.loadedProjects
       });
     },
+
+    //? GETTER - GET Featured Projects (Just the 3 most recent projects at the moment)
     featuredProjects(getters) {
       return getters.loadedProjects.slice(0, 3);
     },
+
+    //? GETTER - GET Featured Projects (Top 6 most recent)
     featuredExtended(getters) {
       return getters.loadedProjects.slice(0, 6);
     },
+
+    //? GETTER - GET Loaded Project - Single Project by Project ID
     loadedProject(state) {
       return (projectId) => {
         return state.loadedProjects.find((project) => {
@@ -486,18 +519,28 @@ export const store = new Vuex.Store({
         });
       };
     },
+
+    //? GETTER - GET Logged In User Data
     user(state) {
       return state.user;
     },
+
+    //? GETTER - GET Loading State (Global)
     loading(state) {
       return state.loading;
     },
+
+    //? GETTER - GET Error Modal state
     error(state) {
       return state.error;
     },
+
+    //? GETTER - GET Technologies (All Available)
     technologies(state) {
       return state.technologies;
     },
+
+    //? GETTER - GET Hackers - Users (Aside from logged in user)
     hackers(state) {
       return state.hackers;
     },
