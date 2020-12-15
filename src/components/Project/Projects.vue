@@ -23,6 +23,16 @@
               <ProjectCard :project="project" :rt="project.id" />
             </v-col>
           </v-row>
+          <!-- <v-row class="followedProjects">
+            <v-col
+              cols="12"
+              md="6"
+              v-for="project in loadedProjects"
+              :key="project.id"
+            >
+              <ProjectCard :project="project" :rt="project.id" />
+            </v-col>
+          </v-row> -->
         </v-col>
       </v-row>
     </v-layout>

@@ -58,6 +58,13 @@ export const store = new Vuex.Store({
     setLoading(state, payload) {
       state.loading = payload;
     },
+    
+    //? MUTATION - Update User Following Array
+    updateUserFollowingArray(state, payload) {
+      let { id, dbKey, following } = payload
+      console.log(id, dbKey)
+      state.user.projects = following
+    },
 
     //? MUTATION - Set Error (Open Modal)
     setError(state, payload) {
@@ -89,6 +96,43 @@ export const store = new Vuex.Store({
   //* #3 - ACTIONS
   ************************** */
   actions: {
+
+    //? ACTION - Follow Project
+    followProject({ commit, getters }, payload) {
+      commit('setLoading', true)
+      let following = []
+      let userDocId
+      const currentUser = getters.user
+      console.log(currentUser)
+      let userDocRef = db.collection('users')
+      userDocRef.get().then((doc) => {
+        doc.forEach((user) => {
+          if (user.data().id == currentUser.id) {
+            userDocId = user.id
+            following = user.data().projects
+            following.push(payload)
+          }
+        });
+      }).then(() => {
+        // console.log(userDocId)
+        db.collection('users').doc(userDocId).update({ 
+        projects: following
+        })
+        commit("setLoading", false)
+        console.log({id: payload, fbKey: userDocId, following})
+        commit("updateUserFollowingArray", {id: payload, fbKey: userDocId, following})
+      }).catch(error => {
+        console.error(error)
+        commit("setLoading", false)
+      })
+      // console.log(payload)
+      // console.log(following)
+    },
+
+    //? ACTION - Unfollow Project
+    // unfollowProject({ commit }, payload) {
+
+    // },
 
     //? ACTION - Load Hackers
     loadHackers({ commit }) {

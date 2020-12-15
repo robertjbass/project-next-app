@@ -9,6 +9,9 @@
         <!-- <br /> -->
 
         <div align="left">
+          <!--  -->
+          <v-btn @click="testDatabase">test</v-btn>
+          <!--  -->
           <img class="avatar" width="15%" :src="userData.photoURL" /><br />
           <strong>Name: </strong>{{ userData.name }}<br />
           <div :show="userData.company">
@@ -90,6 +93,9 @@ export default {
   //   this.$store.dispatch("setHackerProfile", this.id);
   // },
   methods: {
+    testDatabase() {
+      this.$store.dispatch("followProject", "u1iBIEKY0ueLnuz8hQqw");
+    },
     editProfile() {
       alert(
         "🐎🐎 Hold your horses, does this page look finished to you?... We're pulling this info from GitHub. You can't edit it here just yet - give it a few days 😉 Until then, you can edit your profile on GitHub"

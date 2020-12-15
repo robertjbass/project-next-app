@@ -1,5 +1,5 @@
 <template>
-  <div dark id="app">
+  <div dark id="app" @click="closeSideNav">
     <v-app>
       <v-toolbar max-height="64px" color="#393838" class="toolbar">
         <v-app-bar-nav-icon
@@ -110,6 +110,11 @@ export default {
     };
   },
   methods: {
+    closeSideNav() {
+      if (this.sideNav) {
+        this.sideNav = false;
+      }
+    },
     signOut() {
       this.$store.dispatch("signOut");
       if (this.$route.name != "Home") {
@@ -138,6 +143,11 @@ export default {
     })();
   },
   watch: {
+    routerWatch(from, to) {
+      if (this.sideNav && from !== to) {
+        this.sideNav = false;
+      }
+    },
     userIsAuthenticated() {
       if (!this.userIsAuthenticated && this.$route.path != "/") {
         this.$router.push("/");
@@ -146,6 +156,9 @@ export default {
   },
   computed: {
     ...mapGetters(["user"]),
+    routerWatch() {
+      return this.$route.path;
+    },
     userIsAuthenticated() {
       return this.user !== null && this.user !== undefined;
     },
