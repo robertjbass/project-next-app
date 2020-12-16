@@ -15,7 +15,11 @@
                 //* this.$store.dispatch("followProject", projectId);
       //* this.$store.dispatch("unfollowProject", projectId);
            -->
-          <!-- <v-btn @click="testDatabase">test</v-btn> -->
+          <div v-if="userData.name == 'Bob Bass'">
+            Debug: {{ userData.name }}
+            <v-btn light @click="testDatabase(true)">addProject</v-btn>
+            <v-btn light @click="testDatabase(false)">removeProject</v-btn>
+          </div>
           <!--  -->
           <img class="avatar" width="15%" :src="userData.photoURL" /><br />
           <strong>Name: </strong>{{ userData.name }}<br />
@@ -98,10 +102,10 @@ export default {
   //   this.$store.dispatch("setHackerProfile", this.id);
   // },
   methods: {
-    // testDatabase() {
-    // this.$store.dispatch("followProject", "u1iBIEKY0ueLnuz8hQqw");
-    // this.$store.dispatch("unfollowProject", "u1iBIEKY0ueLnuz8hQqw");
-    // },
+    testDatabase(value) {
+      if (value) this.$store.dispatch("followProject", "u1iBIEKY0ueLnuz8hQqw");
+      else this.$store.dispatch("unfollowProject", "u1iBIEKY0ueLnuz8hQqw");
+    },
     editProfile() {
       alert(
         "🐎🐎 Hold your horses, does this page look finished to you?... We're pulling this info from GitHub. You can't edit it here just yet - give it a few days 😉 Until then, you can edit your profile on GitHub"

@@ -136,6 +136,7 @@ export const store = new Vuex.Store({
         } else {
           console.log("Project ID did not exist, adding")
           db.collection('users').doc(userDocId).update({ 
+            // followedProjects: userProjects
             projects: userProjects
           })
           commit("updateUserFollowingArray", {newFollowedProjectId: payload, userDocumentId: userDocId, currentUserProjects: userProjects})
@@ -175,6 +176,7 @@ export const store = new Vuex.Store({
             console.log(userProjects)
             db.collection('users').doc(userDocId).update({ 
             projects: userProjects
+            // followedProjects: userProjects
           })
           commit("updateUserFollowingArrayUnfollow", payload)
           }
@@ -341,7 +343,7 @@ export const store = new Vuex.Store({
         doc.forEach((user) => {
           if (user.data().id == payload.uid) {
             // todo - add projects
-            commit("setUser", { ...user.data(), projects: [] });
+            // commit("setUser", { ...user.data(), projects: [] });
             commit("setUser", { ...user.data() });
           }
         });
