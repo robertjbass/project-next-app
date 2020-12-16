@@ -61,9 +61,15 @@ export const store = new Vuex.Store({
     
     //? MUTATION - Update User Following Array
     updateUserFollowingArray(state, payload) {
-      let { id, dbKey, following } = payload
-      console.log(id, dbKey)
-      state.user.projects = following
+      let { newFollowedProjectId, userDocumentId, currentUserProjects } = payload
+      console.log(newFollowedProjectId,userDocumentId, currentUserProjects)
+      state.user.projects.push(newFollowedProjectId)
+    },
+    
+    //? MUTATION - Update User Following Array Unfollow Project
+    updateUserFollowingArrayUnfollow(state, payload) {
+      const followedProjects = state.user.projects
+      followedProjects.splice(followedProjects.findIndex(project => project.id === payload), 1)
     },
 
     //? MUTATION - Set Error (Open Modal)
@@ -100,7 +106,7 @@ export const store = new Vuex.Store({
     //? ACTION - Follow Project
     followProject({ commit, getters }, payload) {
       commit('setLoading', true)
-      let following = []
+      let userProjects = []
       let userDocId
       const currentUser = getters.user
       console.log(currentUser)
@@ -109,18 +115,33 @@ export const store = new Vuex.Store({
         doc.forEach((user) => {
           if (user.data().id == currentUser.id) {
             userDocId = user.id
-            following = user.data().projects
-            following.push(payload)
+            userProjects = user.data().projects
+            if (userProjects.findIndex(project => payload === project) >= 0) {
+              console.log("project ID already exists in projects array")
+            } else {
+              userProjects.push(payload);
+              // following = user.data().projects
+            }
+            console.log(userProjects)
           }
         });
       }).then(() => {
         // console.log(userDocId)
-        db.collection('users').doc(userDocId).update({ 
-        projects: following
-        })
+        console.log({ userProjects: currentUser.projects, payload }) 
+        if (currentUser.projects.length !== 0) {
+          if (currentUser.projects.findIndex(project => payload === project) >= 0) {
+            console.log("project ID already exists")
+            return
+          }
+        } else {
+          console.log("Project ID did not exist, adding")
+          db.collection('users').doc(userDocId).update({ 
+            projects: userProjects
+          })
+          commit("updateUserFollowingArray", {newFollowedProjectId: payload, userDocumentId: userDocId, currentUserProjects: userProjects})
+        }
+        console.log({id: payload, fbKey: userDocId, userProjects})
         commit("setLoading", false)
-        console.log({id: payload, fbKey: userDocId, following})
-        commit("updateUserFollowingArray", {id: payload, fbKey: userDocId, following})
       }).catch(error => {
         console.error(error)
         commit("setLoading", false)
@@ -130,22 +151,49 @@ export const store = new Vuex.Store({
     },
 
     //? ACTION - Unfollow Project
-    // unfollowProject({ commit }, payload) {
-
-    // },
+    unfollowProject({ commit, getters }, payload) {
+      console.log("UNFOLLOW")
+      commit("setLoading", true)
+      let userProjects = []
+      const user = getters.user
+      let userDocId
+      // console.log(user, payload)
+      let userDocRef = db.collection('users')
+      // console.log(userDocRef)
+      userDocRef.get().then((doc) => {
+        doc.forEach((eachUser) => {
+          if (eachUser.data().id == user.id) {
+            userProjects = eachUser.data().projects
+            userDocId = eachUser.id
+            // console.log(eachUser.data())
+            if (userProjects.findIndex(project => payload === project) >= 0) {
+              console.log("project ID exists in projects array")
+              userProjects.pop(payload);
+            } else {
+              console.log("project ID doesn't exist in projects array")
+            }
+            console.log(userProjects)
+            db.collection('users').doc(userDocId).update({ 
+            projects: userProjects
+          })
+          commit("updateUserFollowingArrayUnfollow", payload)
+          }
+        });
+      })
+      commit("setLoading", false)
+    },
 
     //? ACTION - Load Hackers
     loadHackers({ commit }) {
       const hackersRef = db.collection("users");
       const query = hackersRef;
-
       query.onSnapshot((hacker) => {
         const hackers = [];
         hacker.forEach((doc) => {
           hacker = { id: doc.id, ...doc.data() };
           hackers.push(hacker);
         });
-        console.log(...hackers);
+        // console.log(...hackers);
         commit("setHackers", hackers);
       });
     },
@@ -294,6 +342,7 @@ export const store = new Vuex.Store({
           if (user.data().id == payload.uid) {
             // todo - add projects
             commit("setUser", { ...user.data(), projects: [] });
+            commit("setUser", { ...user.data() });
           }
         });
       });
