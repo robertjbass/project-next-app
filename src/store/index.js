@@ -181,15 +181,28 @@ export const store = new Vuex.Store({
     },
 
 
+    // //! ACTION - Load Hackers (Not listening, doesn't update)
+    // loadHackers({ commit }) {
+    //   let hackers = [];
+    //   db.collection("users").get().then(hacker => {
+    //     hacker.forEach(doc => {
+    //       hackers.push({ id: doc.id, ...doc.data() })
+    //     })
+    //   })
+    //   commit("setHackers", hackers);
+    // },
+
+
     //? ACTION - Load Hackers
     loadHackers({ commit }) {
+      const hackersRef = db.collection("users");
       let hackers = [];
-      db.collection("users").get().then(hacker => {
-        hacker.forEach(doc => {
-          hackers.push({ id: doc.id, ...doc.data() })
-        })
-      })
-      commit("setHackers", hackers);
+      hackersRef.onSnapshot((hacker) => {
+        hacker.forEach((doc) => {
+          hackers.push( { id: doc.id, ...doc.data() });
+        });
+        commit("setHackers", hackers);
+      });
     },
 
 
@@ -254,13 +267,14 @@ export const store = new Vuex.Store({
             photoURL,
           } = user;
           const userEmail = user.email;
-          let userData = { id: uid, githubId: id, projects: [], followedProjects: [], userEmail, isNewUser, operationType, displayName, emailVerified, isAnonymous, phoneNumber, photoURL, avatar_url, bio, blog, company, created_at, email, events_url, followers, followers_url, following, following_url, gists_url, gravatar_id, hireable, html_url, location, login, name, node_id, organizations_url, public_gists, public_repos, received_events_url, repos_url, site_admin, starred_url, subscriptions_url, twitter_username, type, updated_at, url, providerId, username, signInMethod };
+          let userData = { id: uid, githubId: id, projects: [], followedProjects: [], documentId: "", userEmail, isNewUser, operationType, displayName, emailVerified, isAnonymous, phoneNumber, photoURL, avatar_url, bio, blog, company, created_at, email, events_url, followers, followers_url, following, following_url, gists_url, gravatar_id, hireable, html_url, location, login, name, node_id, organizations_url, public_gists, public_repos, received_events_url, repos_url, site_admin, starred_url, subscriptions_url, twitter_username, type, updated_at, url, providerId, username, signInMethod };
           if (!isNewUser) {
             let userDocRef = db.collection('users');
             userDocRef.get().then((doc) => {
               doc.forEach((eachUser) => {
                 if (eachUser.data().id == uid) {
                   // console.log("FOUND", eachUser.data().id == uid);
+                  userData.documentId = eachUser.data().id
                   userData.projects = eachUser.data().projects
                   userData.followedProjects = eachUser.data().followedProjects
                  }
@@ -318,21 +332,34 @@ export const store = new Vuex.Store({
     },
 
     //? ACTION - LOAD PROJECTS
-    // Switched from onSnapshot to get() to prevent listeners
     loadProjects({ commit }) {
       commit("setLoading", true);
-      // const projectsRef = db.collection("projects").get().then((project) => {
-      let projects = [];
-      db.collection("projects").get().then((project) => {
+      const projectsRef = db.collection("projects");
+      const query = projectsRef.where("title", "!=", null);
+      query.onSnapshot((project) => {
+        const projects = [];
         project.forEach((doc) => {
           projects.push({ ...doc.data(), id: doc.id });
-        })
-      // const allProjects = projectsRef
-      // console.log(allProjects)
+        });
         commit("setLoadedProjects", projects);
         commit("setLoading", false);
       });
     },
+
+    // //? ACTION - LOAD PROJECTS
+    // //! Doesn't update
+    // // Switched from onSnapshot to get() to prevent listeners
+    // loadProjects({ commit }) {
+    //   commit("setLoading", true);
+    //   let projects = [];
+    //   db.collection("projects").get().then((project) => {
+    //     project.forEach((doc) => {
+    //       projects.push({ ...doc.data(), id: doc.id });
+    //     })
+    //     commit("setLoadedProjects", projects);
+    //     commit("setLoading", false);
+    //   });
+    // },
 
     //? ACTION - CREATE PROJECTS
     createProject({ commit, getters }, payload) {
@@ -397,9 +424,10 @@ export const store = new Vuex.Store({
               const imageUrl_1 = await imageUrl;
               db.collection("projects")
                 .doc(key)
-                .update({ imageUrl: imageUrl_1 });
+                .update({ imageUrl: imageUrl_1, documentId: key });
               commit("createProject", {
-                ...project,
+                // ...project,
+                project,
                 imageUrl: imageUrl_1,
                 id: key,
               });
@@ -549,8 +577,10 @@ export const store = new Vuex.Store({
     
     //? GETTER - GET Loaded Projects, (sorted by end date)
     loadedProjects(state) {
+      console.log(state)
+      // todo - sorting appears not to be working
       return state.loadedProjects.sort((projectA, projectB) => {
-        return projectA.endDate > projectB.endDate;
+        return projectA.created > projectB.created;
       });
     },
 

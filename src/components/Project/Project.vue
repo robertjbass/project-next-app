@@ -139,12 +139,18 @@
         </div>
         <br /><br />
         <div v-if="repoData">
+          <v-switch
+            flat
+            v-model="readmeMd"
+            :label="`Toggle ${readmeMd ? 'Rendered' : 'Markdown'}`"
+          ></v-switch>
           <!-- {{ project.githubRepo }} -->
           <!-- <pre align="left">
           {{ repoData }}
           </pre> -->
           <v-row v-if="readme" class="md-area">
-            <v-col cols="12" xl="6" lg="6" md="6" xs="12">
+            <!-- <v-col v-if="readmeMd" cols="12" xl="6" lg="6" md="6" xs="12"> -->
+            <v-col v-if="readmeMd" cols="12">
               <h3 class="md-title" align="center">README.md</h3>
               <hr />
               <div class="readme-render-box">
@@ -160,7 +166,8 @@
                 /> -->
               </div>
             </v-col>
-            <v-col cols="12" xl="6" lg="6" md="6" xs="12">
+            <v-col v-else cols="12">
+              <!-- <v-col v-else cols="12" xl="6" lg="6" md="6" xs="12"> -->
               <h3 class="md-title" align="center">README</h3>
               <hr />
               <div class="readme-render-box">
@@ -193,6 +200,7 @@ export default {
   name: "Project",
   data() {
     return {
+      readmeMd: false,
       editDialog: false,
       error: null,
       repoData: null,

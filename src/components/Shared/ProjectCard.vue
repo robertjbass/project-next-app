@@ -33,7 +33,8 @@
       </div>
     </div>
     <div class="description">
-      <strong>Description: </strong>{{ project.description }}
+      <strong>Description: </strong>{{ project.description.substr(0, 150) }}
+      {{ project.description.length > 150 ? "..." : "" }}
     </div>
     <div class="links">
       <div v-show="project.productPage" class="product-link">
