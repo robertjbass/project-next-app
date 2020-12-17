@@ -9,14 +9,16 @@
           <h4 v-if="project.title" align="center">
             {{ project.title }} by {{ project.name }}
           </h4>
-          <div class="stars" v-if="repoData">
-            <v-icon color="accentRed">mdi-star</v-icon
-            >{{ repoData.stargazers_count || "" }}
-          </div>
         </div>
         <div class="subtitle">
           <v-icon large class="gh-icon" dark>mdi-github</v-icon>
-          <div class="username">{{ project.username || "" }}</div>
+          <div class="username">
+            {{ project.username || "" }}<br /><v-icon small left color="yellow"
+              >mdi-star</v-icon
+            >{{ repoData ? repoData.stargazers_count : "" }}
+          </div>
+          <div class="stars" v-if="repoData"></div>
+          <app-project-follow-dialog :project="project" />
         </div>
         <h4>
           {{ project.created | date }} -
@@ -74,12 +76,7 @@
             <br /><br />
           </div>
         </div>
-        <!-- <FollowProject :project="project" /> -->
-        <v-row class="follow-dialog">
-          <v-col align="right">
-            <app-project-follow-dialog :project="project" />
-          </v-col>
-        </v-row>
+
         <div
           class="projectBelongsToLoggedInUser"
           v-if="projectBelongsToLoggedInUser"
@@ -191,7 +188,6 @@ import axios from "axios";
 import Alert from "@/components/Shared/Alert.vue";
 import EditButtons from "@/components/Project/EditButtons.vue";
 import UpdateForm from "@/components/Project/UpdateForm.vue";
-// import FollowProject from "@/components/Project/Follow/FollowProject.vue";
 
 export default {
   name: "Project",
@@ -303,7 +299,6 @@ export default {
     Alert,
     EditButtons,
     UpdateForm,
-    // FollowProject,
   },
 };
 </script>

@@ -13,7 +13,7 @@
             <v-card dark class="card-left card">
               <h3>What is Project NextApp?</h3>
               <div class="pna-description">
-                <h3>In short, it is a place to...</h3>
+                <h4>It is a place to...</h4>
                 <br />
                 <!-- <ul align="left"> -->
                 <div align="left">

@@ -25,7 +25,7 @@
           </v-col>
         </v-row>
       </v-layout>
-      <InfoBanner />
+      <InfoBannerMini />
       <h1>Featured Projects</h1>
       <v-layout class="carousel" style="cursor: pointer">
         <v-carousel
@@ -99,7 +99,7 @@
 <script>
 import { mapGetters } from "vuex";
 import ProjectCard from "@/components/Shared/ProjectCard.vue";
-import InfoBanner from "@/components/About/InfoBanner.vue";
+import InfoBannerMini from "@/components/About/InfoBannerMini.vue";
 
 export default {
   name: "Home",
@@ -118,7 +118,7 @@ export default {
   },
   components: {
     ProjectCard,
-    InfoBanner,
+    InfoBannerMini,
   },
   computed: {
     ...mapGetters([

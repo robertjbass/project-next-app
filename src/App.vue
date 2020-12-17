@@ -88,19 +88,11 @@
 
 <script>
 import { mapGetters } from "vuex";
-// import DataStore from "@/components/Shared/DataStore.vue";
-// import firebase from "firebase/app";
-// import "firebase/auth";
 
 import axios from "axios";
-// import { auth } from "./firebase";
-// console.log(auth);
 
 export default {
   name: "App",
-  // components: {
-  //   DataStore,
-  // },
   data() {
     return {
       loggedIn: false,
@@ -166,6 +158,11 @@ export default {
       if (this.userIsAuthenticated) {
         return [
           {
+            icon: "mdi-information-outline",
+            title: "About",
+            link: "/about",
+          },
+          {
             icon: "mdi-head-lightbulb-outline",
             title: "Hackers",
             link: "/hackers",
@@ -176,7 +173,6 @@ export default {
             link: "/projects",
           },
           {
-            // icon: "mdi-folder-plus-outline",
             icon: "mdi-plus",
             title: "Next App",
             link: "/project/new",
@@ -186,11 +182,6 @@ export default {
             title: "Profile",
             link: "/profile/" + this.user.id,
           },
-          // {
-          //   icon: "mdi-logout-variant",
-          //   title: "Log Out",
-          //   link: "/logout",
-          // },
         ];
       } else {
         return [

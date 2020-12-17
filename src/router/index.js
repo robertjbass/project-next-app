@@ -10,6 +10,7 @@ import Project from '@/components/Project/Project'
 import Hackers from '@/components/User/Hackers'
 // import Profile from '@/components/User/Profile'
 import HackerProfile from '@/components/User/HackerProfile';
+import About from '@/components/About/About.vue';
 // import Signin from '@/components/User/Signin'
 import Signup from '@/components/User/Signup'
 import AlertCmp from '@/components/Shared/Alert'
@@ -27,10 +28,15 @@ const router = new Router({
 //   return { x: 0, y: 0 }
 // },
   routes: [
-     {
+    {
       path: '/', 
       name: 'Home',
       component: Home
+    },
+    {
+      path: '/about', 
+      name: 'About',
+      component: About
     },
     {
       path: '/project/new',
