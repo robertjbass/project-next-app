@@ -1,9 +1,7 @@
 <template>
   <div class="project">
     <v-container>
-      <!-- <UpdateForm :editDialog="editDialog" /> -->
       <Alert v-show="error" :text="error" />
-
       <v-card dark class="card">
         <div class="heading">
           <h4 v-if="project.title" align="center">
@@ -114,13 +112,18 @@
                       </thead>
                       <tbody>
                         <tr>
-                          <td>{{ project.projectDuration }} Project Created</td>
+                          <td>
+                            Project Created - {{ project.projectDuration }}
+                          </td>
                           <td class="text-left">
                             {{ project.created | date }}
                           </td>
                           <td class="text-left">Project Created</td>
                         </tr>
-                        <tr v-for="(update, i) in updates" :key="update.note">
+                        <tr
+                          v-for="(update, i) in project.updates"
+                          :key="update.note"
+                        >
                           <td>Update {{ i + 1 }}</td>
                           <td>{{ update.date | date }}</td>
                           <td>
@@ -131,8 +134,6 @@
                     </v-simple-table>
                   </v-col>
                 </v-row>
-
-                <!-- {{ project.created | date }}: Project Created -->
               </div>
             </div>
           </div>
@@ -149,7 +150,6 @@
           {{ repoData }}
           </pre> -->
           <v-row v-if="readme" class="md-area">
-            <!-- <v-col v-if="readmeMd" cols="12" xl="6" lg="6" md="6" xs="12"> -->
             <v-col v-if="readmeMd" cols="12">
               <h3 class="md-title" align="center">README.md</h3>
               <hr />
@@ -167,7 +167,6 @@
               </div>
             </v-col>
             <v-col v-else cols="12">
-              <!-- <v-col v-else cols="12" xl="6" lg="6" md="6" xs="12"> -->
               <h3 class="md-title" align="center">README</h3>
               <hr />
               <div class="readme-render-box">
@@ -205,29 +204,26 @@ export default {
       error: null,
       repoData: null,
       readme: null,
-      updates: [
-        {
-          date: "2020-12-21",
-          note: "sample update 1",
-          goal: false,
-        },
-        {
-          date: "2020-12-22",
-          note: "sample update 2",
-          goal: true,
-        },
-      ],
+      // updates: [
+      //   {
+      //     date: "2020-12-21",
+      //     note: "sample update 1",
+      //     goal: false,
+      //   },
+      //   {
+      //     date: "2020-12-22",
+      //     note: "sample update 2",
+      //     goal: true,
+      //   },
+      // ],
     };
   },
   props: ["id"],
   methods: {
     onSubmitClicked() {
-      // alert("Submit Clicked");
       this.editDialog = !this.editDialog;
     },
     updateProject() {
-      // console.log("Update Project");
-      console.log("UPDATE SUBMISSION MADE");
       this.$router.go();
     },
     onEditClicked() {
@@ -256,7 +252,6 @@ export default {
         .get(`https://api.github.com/repos/${this.project.username}/${repo}`)
         .then((results) => {
           try {
-            // console.log(results.data);
             this.repoData = results.data;
             this.getReadme();
           } catch {

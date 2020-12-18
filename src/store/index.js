@@ -2,9 +2,9 @@ import Vue from "vue";
 import Vuex from "vuex";
 import firebase from "firebase/app";
 import "firebase/auth";
-import axios from "axios";
 const db = firebase.firestore();
 import { auth } from "../firebase";
+import axios from "axios";
 
 const provider = new firebase.auth.GithubAuthProvider();
 
@@ -96,6 +96,11 @@ export const store = new Vuex.Store({
     setHackers(state, payload) {
       state.hackers = payload;
     },
+
+    // todo DEBUG
+    test() {
+      console.log("test")
+    }
   },
 
   /*************************
@@ -181,18 +186,6 @@ export const store = new Vuex.Store({
     },
 
 
-    // //! ACTION - Load Hackers (Not listening, doesn't update)
-    // loadHackers({ commit }) {
-    //   let hackers = [];
-    //   db.collection("users").get().then(hacker => {
-    //     hacker.forEach(doc => {
-    //       hackers.push({ id: doc.id, ...doc.data() })
-    //     })
-    //   })
-    //   commit("setHackers", hackers);
-    // },
-
-
     //? ACTION - Load Hackers
     loadHackers({ commit }) {
       const hackersRef = db.collection("users");
@@ -273,7 +266,6 @@ export const store = new Vuex.Store({
             userDocRef.get().then((doc) => {
               doc.forEach((eachUser) => {
                 if (eachUser.data().id == uid) {
-                  // console.log("FOUND", eachUser.data().id == uid);
                   userData.documentId = eachUser.data().id
                   userData.projects = eachUser.data().projects
                   userData.followedProjects = eachUser.data().followedProjects
@@ -346,20 +338,6 @@ export const store = new Vuex.Store({
       });
     },
 
-    // //? ACTION - LOAD PROJECTS
-    // //! Doesn't update
-    // // Switched from onSnapshot to get() to prevent listeners
-    // loadProjects({ commit }) {
-    //   commit("setLoading", true);
-    //   let projects = [];
-    //   db.collection("projects").get().then((project) => {
-    //     project.forEach((doc) => {
-    //       projects.push({ ...doc.data(), id: doc.id });
-    //     })
-    //     commit("setLoadedProjects", projects);
-    //     commit("setLoading", false);
-    //   });
-    // },
 
     //? ACTION - CREATE PROJECTS
     createProject({ commit, getters }, payload) {
@@ -373,10 +351,15 @@ export const store = new Vuex.Store({
         created: payload.created,
         goals: payload.goals,
         projectDuration: payload.projectDuration,
-        userId: this.state.user.id,
-        name: this.state.user.name,
-        username: this.state.user.login,
-        emailAddress: this.state.user.email,
+        // 
+        userId: getters.user.id,
+        name: getters.user.name,
+        username: getters.user.login,
+        emailAddress: getters.user.email,
+        // userId: this.state.user.id,
+        // name: this.state.user.name,
+        // username: this.state.user.login,
+        // emailAddress: this.state.user.email,
         creatorId: getters.user.id,
       };
       let key;
@@ -426,7 +409,6 @@ export const store = new Vuex.Store({
                 .doc(key)
                 .update({ imageUrl: imageUrl_1, documentId: key });
               commit("createProject", {
-                // ...project,
                 project,
                 imageUrl: imageUrl_1,
                 id: key,
@@ -473,6 +455,47 @@ export const store = new Vuex.Store({
         .catch((error) => {
           console.error(error);
         });
+    },
+
+    
+
+    //? ACTION - LOG PROJECT UPDATE
+    logProjectUpdate({ commit }, payload) {
+      console.log('STORE - reportNewUpdate')
+      let updates = []
+      console.log(payload)
+      const { update, project, user } = payload
+      console.log(update)
+      console.log(project.documentId)
+      console.log(user.documentId)
+
+
+      // let projectRef = db.collection("projects").doc('0MvPTpuRQtSK0C9IQA83') //! Testing
+      let projectRef = db.collection("projects").doc(project.documentId) //! Good
+      projectRef.get().then((doc) => {
+
+        let document = doc.data()
+        if (document.updates) {
+          doc.data().updates.forEach(eachUpdate => {
+            console.log(eachUpdate)
+            updates.push(eachUpdate)
+          })
+        } else {
+          console.log("no current goals")
+        }
+        // console.log(document.updates)
+        
+
+      }).then(() => {
+          updates.push(update)
+          console.log('finished',updates)
+      }).then(() => {
+        db.collection("projects").doc(project.documentId).update({updates: updates})
+      })
+        commit('test')
+        commit('updateProject', {...project, updates})
+        
+
     },
 
     //? ACTION - UPDATE PROJECT (WITH IMAGE)

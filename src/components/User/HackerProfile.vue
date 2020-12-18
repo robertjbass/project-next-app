@@ -12,14 +12,14 @@
           <!--  -->
           <!-- // todo: debug
           create an action to follow or unfollow using:
-                //* this.$store.dispatch("followProject", projectId);
-      //* this.$store.dispatch("unfollowProject", projectId);
+          //* this.$store.dispatch("followProject", projectId);
+          //* this.$store.dispatch("unfollowProject", projectId);
            -->
-          <div v-if="userData.name == 'Bob Bass'">
+          <!-- <div v-if="userData.name == 'Bob Bass'">
             Debug: {{ userData.name }}
             <v-btn light @click="testDatabase(true)">addProject</v-btn>
             <v-btn light @click="testDatabase(false)">removeProject</v-btn>
-          </div>
+          </div> -->
           <!--  -->
           <img class="avatar" width="15%" :src="userData.photoURL" /><br />
           <strong>Name: </strong>{{ userData.name }}<br />
@@ -83,6 +83,23 @@
           </div>
           <div v-else>No projects yet</div>
           <br />
+          Followed Projects:
+          <div v-for="followed in userData.followedProjects" :key="followed">
+            <div v-for="project in userProjects" :key="project.id">
+              <div v-if="project.id == followed">
+                <router-link
+                  class="light-blue--text"
+                  :to="`../project/${project.id}`"
+                  >{{ project.title }}</router-link
+                >
+                by {{ project.username }}
+              </div>
+            </div>
+          </div>
+
+          <br />
+
+          <br />
         </div>
       </v-card>
     </v-container>
@@ -102,10 +119,10 @@ export default {
   //   this.$store.dispatch("setHackerProfile", this.id);
   // },
   methods: {
-    testDatabase(value) {
-      if (value) this.$store.dispatch("followProject", "u1iBIEKY0ueLnuz8hQqw");
-      else this.$store.dispatch("unfollowProject", "u1iBIEKY0ueLnuz8hQqw");
-    },
+    // testDatabase(value) {
+    //   if (value) this.$store.dispatch("followProject", "u1iBIEKY0ueLnuz8hQqw");
+    //   else this.$store.dispatch("unfollowProject", "u1iBIEKY0ueLnuz8hQqw");
+    // },
     editProfile() {
       alert(
         "🐎🐎 Hold your horses, does this page look finished to you?... We're pulling this info from GitHub. You can't edit it here just yet - give it a few days 😉 Until then, you can edit your profile on GitHub"

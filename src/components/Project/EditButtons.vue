@@ -4,7 +4,9 @@
     <!-- <code>{{ this.thisUser }}</code> <br /><br /> -->
     <!-- {{ this.project.creatorId }} -->
     <div class="buttons">
-      <v-btn class="btn" @click="edit('reportUpdate')">Document Update</v-btn>
+      <ReportUpdate :user="user" :project="project" />
+      <!-- <v-btn @click="sampleUpdate">add update (test)</v-btn> -->
+      <!-- <v-btn class="btn" @click="edit('reportUpdate')">Document Update</v-btn> -->
       <v-btn class="btn" @click="edit('edit')"><slot></slot></v-btn>
       <!-- <v-btn class="btn" @click="edit('edit')">Edit</v-btn> -->
     </div>
@@ -12,18 +14,38 @@
 </template>
 
 <script>
+import ReportUpdate from "@/components/Project/ReportUpdate.vue";
 export default {
   props: ["project", "user", "thisUser"],
   name: "EditButtons",
+  // data() {
+  //   return {
+  //     update: {
+  //       date: new Date(),
+  //       goal: false,
+  //       note: "just a sample",
+  //     },
+  //   };
+  // },
   // computed: {
   //   projectBelongsToLoggedInUser() {
   //     return this.project.creatorId == this.user.id;
   //   },
   // },
   methods: {
+    // sampleUpdate() {
+    //   this.$store.dispatch("logProjectUpdate", {
+    //     update: this.update,
+    //     project: this.project,
+    //     user: this.user,
+    //   });
+    // },
     edit(editType) {
       this.$emit(editType);
     },
+  },
+  components: {
+    ReportUpdate,
   },
 };
 </script>

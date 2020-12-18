@@ -18,50 +18,66 @@
                 <!-- mdi-nodejs -->
                 <!-- <ul align="left"> -->
                 <div align="left">
-                  <h2 class="ulli">
-                    <v-icon color="accentRed">mdi-certificate</v-icon>
-                    <v-icon color="accentBlue">mdi-school-outline</v-icon>
-                    Learn
-                  </h2>
-                  <h3>Developers learn by <u>doing</u></h3>
-                  <br />
-                  Beginner, Expert, or somewhere in between? It doesn't matter,
-                  the principles are the same. Our framework is designed to help
-                  you learn new technologies.
-                  <h2 class="ulli">
-                    <v-icon color="accentRed">mdi-thumbs-up-down</v-icon>
-                    <v-icon color="accentBlue"
-                      >mdi-head-question-outline</v-icon
-                    >
-                    Validate
-                  </h2>
-                  <h3>You have ideas</h3>
-                  <br />
-                  Challenge yourself to create it, then test the market
-                  viability.
-                  <h2 class="ulli">
-                    <v-icon color="accentRed">mdi-account-group-outline</v-icon>
-                    <v-icon color="accentBlue"
-                      >mdi-lightbulb-group-outline</v-icon
-                    >
-                    Network
-                  </h2>
-                  <h3>Us developers learn a lot from our peers</h3>
-                  <br />
-                  Get help, recommendations, and feedback from other developers.
-                  <h2 class="ulli">
-                    <v-icon color="accentRed">mdi-battery-heart-variant</v-icon>
-                    <v-icon color="accentBlue"
-                      >mdi-head-snowflake-outline</v-icon
-                    >
-                    Motivate
-                  </h2>
-                  <h3>Visualize your progress</h3>
-                  <br />
-                  The satisfaction you get when you see the metrics of your
-                  progress keep you going. Track your progress without lengthy
-                  scheduled reporting. Aggregate your projects for future
-                  employers, teammates, or friends.
+                  <div class="item">
+                    <h2 class="ulli">
+                      <v-icon color="accentRed">mdi-certificate</v-icon>
+                      <v-icon color="accentBlue">mdi-school-outline</v-icon>
+                      Learn
+                    </h2>
+                    <h3>Developers learn by <u>doing</u></h3>
+                    <br />
+                    Beginner, Expert, or somewhere in between? It doesn't
+                    matter, the principles are the same. Our framework is
+                    designed to help you learn new technologies.
+                  </div>
+
+                  <div class="item">
+                    <h2 class="ulli">
+                      <v-icon color="accentRed">mdi-thumbs-up-down</v-icon>
+                      <v-icon color="accentBlue"
+                        >mdi-head-question-outline</v-icon
+                      >
+                      Validate
+                    </h2>
+                    <h3>You have ideas</h3>
+                    <br />
+                    Challenge yourself to create it, then test the market
+                    viability.
+                  </div>
+
+                  <div class="item">
+                    <h2 class="ulli">
+                      <v-icon color="accentRed"
+                        >mdi-account-group-outline</v-icon
+                      >
+                      <v-icon color="accentBlue"
+                        >mdi-lightbulb-group-outline</v-icon
+                      >
+                      Network
+                    </h2>
+                    <h3>Us developers learn a lot from our peers</h3>
+                    <br />
+                    Get help, recommendations, and feedback from other
+                    developers.
+                  </div>
+
+                  <div class="item">
+                    <h2 class="ulli">
+                      <v-icon color="accentRed"
+                        >mdi-battery-heart-variant</v-icon
+                      >
+                      <v-icon color="accentBlue"
+                        >mdi-head-snowflake-outline</v-icon
+                      >
+                      Motivate
+                    </h2>
+                    <h3>Visualize your progress</h3>
+                    <br />
+                    The satisfaction you get when you see the metrics of your
+                    progress keep you going. Track your progress without lengthy
+                    scheduled reporting. Aggregate your projects for future
+                    employers, teammates, or friends.
+                  </div>
                 </div>
                 <!-- </ul> -->
                 <br />
@@ -138,6 +154,7 @@ ul {
 strong {
   font-weight: 600;
 }
+
 .toAbout {
   text-decoration: none;
 }
@@ -160,7 +177,7 @@ strong {
 }
 
 .ulli {
-  margin-top: 10px;
+  margin-top: 25px;
 }
 
 .card {
