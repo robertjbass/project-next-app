@@ -54,9 +54,17 @@
           <br />
           Followed Projects:
           <div v-for="project in followedProjects" :key="project">
-            <router-link :to="'../project/' + project">
-              {{ project }}</router-link
-            >
+            <div v-for="allProjects in userProjects" :key="allProjects.id">
+              <div v-if="project == allProjects.id">
+                <router-link
+                  :to="'../project/' + project"
+                  class="light-blue--text"
+                >
+                  {{ allProjects.title }} by
+                  {{ allProjects.username }}</router-link
+                >
+              </div>
+            </div>
           </div>
 
           <br />

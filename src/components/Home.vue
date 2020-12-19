@@ -134,7 +134,6 @@ export default {
       "user",
       "loading",
       "featuredExtended",
-      "loadedProjectsDates",
     ]),
     sortedProjects() {
       return _.orderBy(this.loadedProjects, "created").reverse();
@@ -145,13 +144,13 @@ export default {
     userIsAuthenticated() {
       return this.user !== null && this.user !== undefined;
     },
-    images() {
-      return `https://dummyimage.com/2:2x1080/${
-        this.projects[this.model].bgColor
-      }/${this.projects[this.model].fontColor}.jpg&text=${
-        this.projects[this.model].title
-      }`;
-    },
+    // images() {
+    //   return `https://dummyimage.com/2:2x1080/${
+    //     this.projects[this.model].bgColor
+    //   }/${this.projects[this.model].fontColor}.jpg&text=${
+    //     this.projects[this.model].title
+    //   }`;
+    // },
   },
 };
 </script>

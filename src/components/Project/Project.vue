@@ -101,11 +101,11 @@
             <br />
             <h3>Update Log</h3>
             <div class="update-log">
-              <v-row>
+              <v-row v-of="numberOfComments > 0">
                 <v-col cols="8" offset="2" align="center">
                   <v-simple-table>
                     <thead>
-                      <tr>
+                      <tr v-show="numberOfComments">
                         <th><v-icon left>mdi-note-text</v-icon>Update Log</th>
                         <th class="text-left">Date</th>
                         <th class="text-left">Update</th>
@@ -141,10 +141,6 @@
             v-model="readmeMd"
             :label="`Toggle ${readmeMd ? 'Rendered' : 'Markdown'}`"
           ></v-switch>
-          <!-- {{ project.githubRepo }} -->
-          <!-- <pre align="left">
-          {{ repoData }}
-          </pre> -->
           <v-row v-if="readme" class="md-area">
             <v-col v-if="readmeMd" cols="12">
               <h3 class="md-title" align="center">README.md</h3>
@@ -154,12 +150,6 @@
                   >{{ readme }}
             </pre
                 >
-                <!-- <textarea
-                  class="readme white--text"
-                  align="left"
-                  width="100%"
-                  v-model="readme"
-                /> -->
               </div>
             </v-col>
             <v-col v-else cols="12">
@@ -174,11 +164,87 @@
           </v-row>
           <v-row v-else><h3>No README.md file available</h3></v-row>
           <br />
-          <hr />
-          <br />
-          <div class="comment-btn-box" align="right">
-            <v-btn class="comment-btn" @click="comment">Comment</v-btn>
-          </div>
+        </div>
+        <hr />
+        <br />
+        <div class="comments" v-show="this.comments">
+          <!-- <div class="comment" v-for="comment in comments" :key="comment.id">
+            {{ comment }} -->
+          <v-simple-table>
+            <template v-slot:default>
+              <thead>
+                <tr>
+                  <th class="text-left">User</th>
+                  <th class="text-left">Date</th>
+                  <th class="text-left">Comment</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="comment in comments" :key="comment.id">
+                  <td align="left">{{ comment.author }}</td>
+                  <td align="left">{{ comment.date | date }}</td>
+                  <td align="left">{{ comment.comment }}</td>
+                </tr>
+              </tbody>
+            </template>
+          </v-simple-table>
+          <!-- </div> -->
+        </div>
+        <br />
+        <div class="comment-btn-box" align="right">
+          <!--  -->
+          <v-row justify="center">
+            <v-dialog v-model="dialog" persistent max-width="600px">
+              <template v-slot:activator="{ on, attrs }">
+                <!-- // todo - ENABLE THIS -->
+                <v-btn
+                  color="primary"
+                  :disabled="true"
+                  dark
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  Comment
+                </v-btn>
+              </template>
+              <v-card dark>
+                <v-card-title>
+                  <span class="headline"
+                    ><v-icon left>mdi-message</v-icon>Comment</span
+                  >
+                </v-card-title>
+                <v-card-text>
+                  <v-container>
+                    <v-row>
+                      <v-col cols="12">
+                        <v-textarea
+                          label="Comment"
+                          required
+                          v-model="commentText"
+                        ></v-textarea>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="red darken-1" text @click="dialog = false">
+                    Close
+                  </v-btn>
+                  <v-btn
+                    v-show="commentText"
+                    color="green darken-1"
+                    text
+                    @click="saveComment"
+                  >
+                    Comment
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </v-row>
+          <!-- // todo - fix comments -->
+          <!-- {{ newComment }} -->
         </div>
       </v-card>
     </v-container>
@@ -195,27 +261,48 @@ export default {
   name: "Project",
   data() {
     return {
+      // todo - can't find comment data
       readmeMd: false,
       editDialog: false,
       error: null,
       repoData: null,
-      readme: null,
-      // updates: [
-      //   {
-      //     date: "2020-12-21",
-      //     note: "sample update 1",
-      //     goal: false,
-      //   },
-      //   {
-      //     date: "2020-12-22",
-      //     note: "sample update 2",
-      //     goal: true,
-      //   },
-      // ],
+      readme: false,
+      commentText: null,
+      dialog: false,
+      newComment: {
+        author: this.user.username,
+        date: this.todayDate,
+        comment: this.commentText,
+      },
+      comments: [
+        {
+          id: 0,
+          date: "2020-12-21",
+          comment: "Great work!",
+          author: "716green",
+        },
+        {
+          id: 1,
+          date: "2020-12-22",
+          comment: "Keep it up",
+          author: "716green",
+        },
+      ],
     };
   },
   props: ["id"],
   methods: {
+    saveComment() {
+      this.$store.dispatch("addComment", {
+        comment: {
+          id: this.numberOfComments,
+          date: "2020-12-22",
+          comment: "Keep it up",
+          author: this.user,
+        },
+      });
+      this.dialog = false;
+    },
     onSubmitClicked() {
       this.editDialog = !this.editDialog;
     },
@@ -275,15 +362,32 @@ export default {
         });
     },
     comment() {
-      alert(
-        "We know you're excited to comment - but we didn't finish that feature yet. Try Slack instead!"
-      );
+      console.log(this.newComment);
+      // alert(
+      //   "We know you're excited to comment - but we didn't finish that feature yet. Try Slack instead!"
+      // );
     },
   },
   mounted() {
     this.getGitHubInfo();
   },
   computed: {
+    todayDateFormatted() {
+      let d = new Date(),
+        month = "" + (d.getMonth() + 1),
+        day = "" + d.getDate(),
+        year = d.getFullYear();
+      if (month.length < 2) month = "0" + month;
+      if (day.length < 2) day = "0" + day;
+      return [year, month, day].join("-");
+    },
+    numberOfComments() {
+      if (this.comments) {
+        return this.comments.length;
+      } else {
+        return 0;
+      }
+    },
     projectBelongsToLoggedInUser() {
       return this.project.creatorId == this.user.id;
     },

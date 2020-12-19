@@ -1,7 +1,7 @@
 <template>
   <div class="hackerCard">
     <v-card class="card" color="#333" dark>
-      <v-icon left> mdi-bookmark-outline </v-icon>
+      <v-icon left> mdi-account-outline </v-icon>
       <!-- <span class="title font-weight-light">{{ hacker.username }}</span> -->
 
       <router-link

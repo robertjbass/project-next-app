@@ -337,15 +337,10 @@ export const store = new Vuex.Store({
         created: payload.created,
         goals: payload.goals,
         projectDuration: payload.projectDuration,
-        // 
         userId: getters.user.id,
         name: getters.user.name,
         username: getters.user.login,
         emailAddress: getters.user.email,
-        // userId: this.state.user.id,
-        // name: this.state.user.name,
-        // username: this.state.user.login,
-        // emailAddress: this.state.user.email,
         creatorId: getters.user.id,
       };
       let key;
@@ -447,41 +442,25 @@ export const store = new Vuex.Store({
 
     //? ACTION - LOG PROJECT UPDATE
     logProjectUpdate({ commit }, payload) {
-      console.log('STORE - reportNewUpdate')
       let updates = []
-      console.log(payload)
-      const { update, project, user } = payload
-      console.log(update)
-      console.log(project.documentId)
-      console.log(user.documentId)
-
-
-      // let projectRef = db.collection("projects").doc('0MvPTpuRQtSK0C9IQA83') //! Testing
+      const { update, project } = payload
       let projectRef = db.collection("projects").doc(project.documentId) //! Good
       projectRef.get().then((doc) => {
-
         let document = doc.data()
         if (document.updates) {
           doc.data().updates.forEach(eachUpdate => {
-            console.log(eachUpdate)
             updates.push(eachUpdate)
           })
         } else {
           console.log("no current goals")
         }
-        // console.log(document.updates)
-        
-
       }).then(() => {
           updates.push(update)
-          console.log('finished',updates)
       }).then(() => {
         db.collection("projects").doc(project.documentId).update({updates: updates})
       })
         commit('test')
         commit('updateProject', {...project, updates})
-        
-
     },
 
     //? ACTION - UPDATE PROJECT (WITH IMAGE)
@@ -593,26 +572,7 @@ export const store = new Vuex.Store({
     loadedProjects(state) {
       return state.loadedProjects.sort((a, b) => {
         return a.created < b.created
-      })
-
-      // let compare = (projects) => {
-      //   return projects.forEach(project => {
-      //     return project.created - project.created
-
-      //   })
-      // }
-      
-      // return compare(loadedProjects)
-
-      
-    },
-
-    loadedProjectsDates(getters) {
-      let loadedProjectDates = []
-      getters.loadedProjects.forEach(project => {
-        loadedProjectDates.push(project.created)
-      })
-      return loadedProjectDates.sort()
+      }) 
     },
 
     //? GETTER - GET Featured Projects (Just the 3 most recent projects at the moment)
