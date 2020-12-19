@@ -25,6 +25,11 @@
           </v-col>
         </v-row>
       </v-layout>
+      <!-- // todo - debug -->
+      <!-- {{ loadedProjectsDates }} -->
+      <!-- <div v-for="project in sortedProjects" :key="project.id">
+        {{ project }}
+      </div> -->
       <InfoBannerMini />
       <h1>Featured Projects</h1>
       <v-layout class="carousel" style="cursor: pointer">
@@ -77,7 +82,7 @@
               xl="6"
               offset-lg="0"
               offset-xl="0"
-              v-for="project in featuredExtended"
+              v-for="project in sortedProjects"
               :key="project.id"
             >
               <ProjectCard :project="project" :rt="project.id" />
@@ -100,6 +105,7 @@
 import { mapGetters } from "vuex";
 import ProjectCard from "@/components/Shared/ProjectCard.vue";
 import InfoBannerMini from "@/components/About/InfoBannerMini.vue";
+import _ from "lodash";
 
 export default {
   name: "Home",
@@ -128,7 +134,11 @@ export default {
       "user",
       "loading",
       "featuredExtended",
+      "loadedProjectsDates",
     ]),
+    sortedProjects() {
+      return _.orderBy(this.loadedProjects, "created").reverse();
+    },
     projects() {
       return this.featuredProjects;
     },

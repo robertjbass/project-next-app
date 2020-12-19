@@ -88,53 +88,49 @@
               v-on:reportUpdate="newUpdate"
               >{{ editDialog ? "Close Edit" : "Edit" }}</EditButtons
             >
-            <div class="update-form">
+            <div v-if="projectBelongsToLoggedInUser" class="update-form">
               <UpdateForm
                 :thisUser="projectBelongsToLoggedInUser"
-                :id="this.id"
+                :id="id"
                 v-show="editDialog"
                 :project="project"
-                v-on:updateProject="this.updateProject"
+                v-on:updateProject="updateProject"
                 v-on:closeForm="onSubmitClicked"
               />
-              <br />
-              <h3>Update Log</h3>
-              <div class="update-log">
-                <v-row>
-                  <v-col cols="8" offset="2" align="center">
-                    <v-simple-table>
-                      <thead>
-                        <tr>
-                          <th><v-icon left>mdi-note-text</v-icon>Update Log</th>
-                          <th class="text-left">Date</th>
-                          <th class="text-left">Update</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>
-                            Project Created - {{ project.projectDuration }}
-                          </td>
-                          <td class="text-left">
-                            {{ project.created | date }}
-                          </td>
-                          <td class="text-left">Project Created</td>
-                        </tr>
-                        <tr
-                          v-for="(update, i) in project.updates"
-                          :key="update.note"
-                        >
-                          <td>Update {{ i + 1 }}</td>
-                          <td>{{ update.date | date }}</td>
-                          <td>
-                            {{ update.goal ? "✅ " : "" }}{{ update.note }}
-                          </td>
-                        </tr>
-                      </tbody>
-                    </v-simple-table>
-                  </v-col>
-                </v-row>
-              </div>
+            </div>
+            <br />
+            <h3>Update Log</h3>
+            <div class="update-log">
+              <v-row>
+                <v-col cols="8" offset="2" align="center">
+                  <v-simple-table>
+                    <thead>
+                      <tr>
+                        <th><v-icon left>mdi-note-text</v-icon>Update Log</th>
+                        <th class="text-left">Date</th>
+                        <th class="text-left">Update</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Project Created - {{ project.projectDuration }}</td>
+                        <td class="text-left">
+                          {{ project.created | date }}
+                        </td>
+                        <td class="text-left">Project Created</td>
+                      </tr>
+                      <tr
+                        v-for="(update, i) in project.updates"
+                        :key="update.note"
+                      >
+                        <td>Update {{ i + 1 }}</td>
+                        <td>{{ update.date | date }}</td>
+                        <td>{{ update.goal ? "✅ " : "" }}{{ update.note }}</td>
+                      </tr>
+                    </tbody>
+                  </v-simple-table>
+                </v-col>
+              </v-row>
             </div>
           </div>
         </div>

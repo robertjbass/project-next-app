@@ -72,25 +72,23 @@ export default {
       if (!this.userIsFollowing) {
         this.$store.dispatch("followProject", this.project.id);
       } else {
-        this.$store.dispatch("unfollowProject", this.project.id);
+        this.$store.dispatch("unfollowProject", {
+          loggedInUserId: this.user.documentId,
+          unfollowProjectId: this.project.id,
+        });
       }
       this.followProjectDialog = false;
     },
-    // unfollowProject() {
-    //   this.followProjectDialog = false;
-    // },
     onAgree() {
       console.log("agree");
     },
   },
   computed: {
+    user() {
+      return this.$store.getters.user;
+    },
     userIsFollowing() {
-      // projects are followed projects. The project owners are documented on the project object, not the user project
-      return (
-        this.$store.getters.user.followedProjects.findIndex((projectId) => {
-          return projectId === this.project.id;
-        }) >= 0
-      );
+      return this.user.followedProjects.includes(this.project.id);
     },
   },
 };

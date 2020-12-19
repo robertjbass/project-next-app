@@ -9,18 +9,6 @@
         <!-- <br /> -->
 
         <div align="left">
-          <!--  -->
-          <!-- // todo: debug
-          create an action to follow or unfollow using:
-          //* this.$store.dispatch("followProject", projectId);
-          //* this.$store.dispatch("unfollowProject", projectId);
-           -->
-          <!-- <div v-if="userData.name == 'Bob Bass'">
-            Debug: {{ userData.name }}
-            <v-btn light @click="testDatabase(true)">addProject</v-btn>
-            <v-btn light @click="testDatabase(false)">removeProject</v-btn>
-          </div> -->
-          <!--  -->
           <img class="avatar" width="15%" :src="userData.photoURL" /><br />
           <strong>Name: </strong>{{ userData.name }}<br />
           <div :show="userData.company">
@@ -37,36 +25,17 @@
         </div>
         <br />
         <div class="links" align="left">
-          <!-- <a class="light-blue--text" :href="userData.repos_url" target="_blank"
-            >My Repos</a
-          ><br />
-          <a class="light-blue--text" :href="userData.url" target="_blank"
-            >My GitHub</a
-          ><br />
-          <a class="light-blue--text" :href="userData.gists_url" target="_blank"
-            >My Gists</a -->
           <br />
-          <!--  -->
           <a
             class="light-blue--text"
             :show="userData.blog"
-            :href="this.blogUrl"
+            :href="blogUrl"
             target="_blank"
             >My Blog</a
           >
-          <!-- <a
-            class="light-blue--text"
-            :show="userData.blog"
-            :href="userData.blog"
-            target="_blank"
-            >My Blog</a
-          > -->
           <br /><br />
           <!-- // todo - allow editing -->
-          <div
-            class="editButton"
-            v-if="this.loggedInUser.id == this.userData.id"
-          >
+          <div class="editButton" v-if="loggedInUser.id == userData.id">
             <v-btn :disabled="true" @click="editProfile" color="secondary"
               ><v-icon left>mdi-pencil</v-icon>Edit</v-btn
             ><br /><br />
@@ -84,20 +53,11 @@
           <div v-else>No projects yet</div>
           <br />
           Followed Projects:
-          <div v-for="followed in userData.followedProjects" :key="followed">
-            <div v-for="project in userProjects" :key="project.id">
-              <div v-if="project.id == followed">
-                <router-link
-                  class="light-blue--text"
-                  :to="`../project/${project.id}`"
-                  >{{ project.title }}</router-link
-                >
-                by {{ project.username }}
-              </div>
-            </div>
+          <div v-for="project in followedProjects" :key="project">
+            <router-link :to="'../project/' + project">
+              {{ project }}</router-link
+            >
           </div>
-
-          <br />
 
           <br />
         </div>
@@ -115,14 +75,7 @@ export default {
       hacker: null,
     };
   },
-  // mounted() {
-  //   this.$store.dispatch("setHackerProfile", this.id);
-  // },
   methods: {
-    // testDatabase(value) {
-    //   if (value) this.$store.dispatch("followProject", "u1iBIEKY0ueLnuz8hQqw");
-    //   else this.$store.dispatch("unfollowProject", "u1iBIEKY0ueLnuz8hQqw");
-    // },
     editProfile() {
       alert(
         "🐎🐎 Hold your horses, does this page look finished to you?... We're pulling this info from GitHub. You can't edit it here just yet - give it a few days 😉 Until then, you can edit your profile on GitHub"
@@ -144,6 +97,10 @@ export default {
           .split("www.")
           .join("")
       );
+    },
+
+    followedProjects() {
+      return this.loggedInUser.followedProjects;
     },
 
     loggedInUser() {

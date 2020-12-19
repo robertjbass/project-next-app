@@ -108,16 +108,16 @@
                   id="imageUrl"
                   ref="imageUrl"
                   accept="image/png, image/jpeg, image/bmp"
-                  :rules="[
-                    (value) =>
-                      !value ||
-                      value.size < 2000000 ||
-                      'Image size should be less than 2 MB!',
-                  ]"
                   prepend-icon="mdi-paperclip"
                   label="Project Banner Image"
                   @change="onFilePicked"
                 >
+                  <!-- :rules="[
+                    (value) =>
+                      !value ||
+                      value.size < 2000000 ||
+                      'Image size should be less than 2 MB!',
+                  ]" -->
                   <!--  -->
                 </v-file-input>
                 <h3 v-if="this.imageUrl">Project Banner Image</h3>

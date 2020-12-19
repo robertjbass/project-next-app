@@ -17,22 +17,12 @@
             <v-col
               cols="12"
               md="6"
-              v-for="project in loadedProjects"
+              v-for="project in sortedProjects"
               :key="project.id"
             >
               <ProjectCard :project="project" :rt="project.id" />
             </v-col>
           </v-row>
-          <!-- <v-row class="followedProjects">
-            <v-col
-              cols="12"
-              md="6"
-              v-for="project in loadedProjects"
-              :key="project.id"
-            >
-              <ProjectCard :project="project" :rt="project.id" />
-            </v-col>
-          </v-row> -->
         </v-col>
       </v-row>
     </v-layout>
@@ -41,12 +31,16 @@
 
 <script>
 import ProjectCard from "@/components/Shared/ProjectCard.vue";
+import _ from "lodash";
 
 export default {
   name: "Projects",
   computed: {
     loadedProjects() {
       return this.$store.getters.loadedProjects;
+    },
+    sortedProjects() {
+      return _.orderBy(this.loadedProjects, "created").reverse();
     },
   },
   components: {

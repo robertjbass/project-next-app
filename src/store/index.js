@@ -68,8 +68,7 @@ export const store = new Vuex.Store({
     
     //? MUTATION - Update User Following Array Unfollow Project
     updateUserFollowingArrayUnfollow(state, payload) {
-      const followedProjects = state.user.followedProjects
-      followedProjects.splice(followedProjects.findIndex(project => project.id === payload), 1)
+        state.user.followedProjects = payload
     },
 
     //? MUTATION - Set Error (Open Modal)
@@ -154,35 +153,22 @@ export const store = new Vuex.Store({
 
     //? ACTION - Unfollow Project
     unfollowProject({ commit, getters }, payload) {
-      console.log("unfollowProject",payload)
       commit("setLoading", true)
-      let userProjects = []
-      const user = getters.user
-      let userDocId
-      let userDocRef = db.collection('users')
-      userDocRef.get().then((doc) => {
-        doc.forEach((eachUser) => {
-          if (eachUser.data().id == user.id) {
-            userProjects = eachUser.data().followedProjects
-            userDocId = eachUser.id
-            if (userProjects.findIndex(project => payload === project) >= 0) {
-              console.log("project ID exists in projects array")
-              userProjects.pop(payload);
-            } else {
-              console.log("project ID doesn't exist in projects array")
-            }
-            console.log(userProjects)
-            db.collection('users').doc(userDocId).update({ 
-            followedProjects: userProjects
-          })
-          commit("updateUserFollowingArrayUnfollow", payload)
-          commit("setLoading", false)
+      let followedProjects = getters.user.followedProjects
+      let { loggedInUserId, unfollowProjectId } = payload;
+      let newFollowedProjectArray = []
+      for (let i = 0; i < followedProjects.length; i++) {
+        if (followedProjects[i] != unfollowProjectId) {
+          newFollowedProjectArray.push(followedProjects[i])
+        } else {
+          console.log(`${followedProjects[i]} has been removed`)
         }
-      });
-    }).catch(error => {
-      console.error(error)
+      }
+      if (newFollowedProjectArray.length > 0) {
+        db.collection('users').doc(loggedInUserId.trim()).update({followedProjects: newFollowedProjectArray})
+      }
+      commit("updateUserFollowingArrayUnfollow", newFollowedProjectArray)
       commit("setLoading", false)
-      })
     },
 
 
@@ -599,12 +585,34 @@ export const store = new Vuex.Store({
   getters: {
     
     //? GETTER - GET Loaded Projects, (sorted by end date)
+    projects(state) {
+      return state.loadedProjects
+    },
+
+
     loadedProjects(state) {
-      console.log(state)
-      // todo - sorting appears not to be working
-      return state.loadedProjects.sort((projectA, projectB) => {
-        return projectA.created > projectB.created;
-      });
+      return state.loadedProjects.sort((a, b) => {
+        return a.created < b.created
+      })
+
+      // let compare = (projects) => {
+      //   return projects.forEach(project => {
+      //     return project.created - project.created
+
+      //   })
+      // }
+      
+      // return compare(loadedProjects)
+
+      
+    },
+
+    loadedProjectsDates(getters) {
+      let loadedProjectDates = []
+      getters.loadedProjects.forEach(project => {
+        loadedProjectDates.push(project.created)
+      })
+      return loadedProjectDates.sort()
     },
 
     //? GETTER - GET Featured Projects (Just the 3 most recent projects at the moment)
