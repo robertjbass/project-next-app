@@ -245,8 +245,16 @@ export const store = new Vuex.Store({
             phoneNumber,
             photoURL,
           } = user;
+          const stack = {
+          languages: [],
+          frameworksAndLibraries: [],
+          databases: [],
+          hostingPlatform: [],
+          other: [],
+          technologiesToLearn: []
+          }
           const userEmail = user.email;
-          let userData = { id: uid, githubId: id, projects: [], followedProjects: [], documentId: "", userEmail, isNewUser, operationType, displayName, emailVerified, isAnonymous, phoneNumber, photoURL, avatar_url, bio, blog, company, created_at, email, events_url, followers, followers_url, following, following_url, gists_url, gravatar_id, hireable, html_url, location, login, name, node_id, organizations_url, public_gists, public_repos, received_events_url, repos_url, site_admin, starred_url, subscriptions_url, twitter_username, type, updated_at, url, providerId, username, signInMethod };
+          let userData = { id: uid, githubId: id, stack, projects: [], followedProjects: [], documentId: "", userEmail, isNewUser, operationType, displayName, emailVerified, isAnonymous, phoneNumber, photoURL, avatar_url, bio, blog, company, created_at, email, events_url, followers, followers_url, following, following_url, gists_url, gravatar_id, hireable, html_url, location, login, name, node_id, organizations_url, public_gists, public_repos, received_events_url, repos_url, site_admin, starred_url, subscriptions_url, twitter_username, type, updated_at, url, providerId, username, signInMethod };
           if (!isNewUser) {
             let userDocRef = db.collection('users');
             userDocRef.get().then((doc) => {

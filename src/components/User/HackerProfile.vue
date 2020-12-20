@@ -3,12 +3,107 @@
     <v-container class="top-spacing">
       <v-card dark class="card">
         <h1>Profile</h1>
+        this user: {{ profileBelongsToLoggedInUser }}<br />
+        editing {{ editing }}<br />
+        <!-- <pre align="left">{{ profileUpdate }}</pre> -->
+        <pre align="left">{{ allUpdateData }}</pre>
 
         <!-- {{ this.id }} -->
         <!-- <pre align="left">{{ this.userData }}</pre> -->
         <!-- <br /> -->
 
-        <div align="left">
+        <div
+          v-if="editing && profileBelongsToLoggedInUser"
+          class="edit"
+          align="left"
+        >
+          <img class="avatar" width="15%" :src="userData.photoURL" /><br />
+          <v-text-field
+            label="Name"
+            :placeholder="userData.name"
+            v-model="profileUpdate.name"
+          />
+          <v-text-field
+            label="Company"
+            :placeholder="userData.company"
+            v-model="profileUpdate.company"
+          />
+          <v-text-field
+            label="Username"
+            :placeholder="userData.username"
+            v-model="profileUpdate.username"
+          />
+          <v-text-field
+            label="Email"
+            :placeholder="userData.userEmail"
+            v-model="profileUpdate.userEmail"
+          />
+          <v-text-field
+            label="Location"
+            :placeholder="userData.location"
+            v-model="profileUpdate.location"
+          />
+          <v-text-field
+            label="Bio"
+            :placeholder="userData.bio"
+            v-model="profileUpdate.bio"
+          />
+
+          <!-- // todo - double check to see if bank is loading with existing languages -->
+          <!-- :bank="userData.stack.languages" -->
+          <h2>My Programming Languages</h2>
+          <techSelect
+            :usedFor="'Languages'"
+            :placeholder="'Programming Languages'"
+            @arrayValue="updateLanguages"
+          />
+          <h2>My Frameworks and Libraries</h2>
+          <techSelect
+            :usedFor="'Frameworks'"
+            :placeholder="'My Frameworks & Libraries'"
+            @arrayValue="updateFrameworks"
+          />
+          <h2>My Databases</h2>
+          <techSelect
+            :usedFor="'Databases'"
+            :placeholder="'My Databases'"
+            @arrayValue="updateDatabases"
+          />
+          <h2>My Other</h2>
+          <techSelect
+            :usedFor="'Other Technologies'"
+            :placeholder="'My Other Technologies'"
+            @arrayValue="updateOther"
+          />
+          <h2>My Platforms</h2>
+          <techSelect
+            :usedFor="'Platforms'"
+            :placeholder="'My Platforms'"
+            @arrayValue="updateHosting"
+          />
+          <h2>Technologies to Learn</h2>
+          <techSelect
+            :usedFor="'Goals'"
+            :placeholder="'My Tech to Learn'"
+            @arrayValue="updateTechToLearn"
+          />
+          <!-- <v-text-field label="Edit Name" v-model="userData.bio" /> -->
+          <!-- userData.name -->
+          <br />
+          <div :show="userData.company">
+            <strong>Company: </strong>{{ userData.company }}
+          </div>
+          <strong>Username: </strong>{{ userData.username }}<br />
+          <strong>Email: </strong>{{ userData.userEmail }}<br />
+          <strong>Location: </strong>{{ userData.location }}<br /><br />
+          <strong>Bio: </strong>{{ userData.bio }}<br />
+          <br />
+          <strong>Twitter Handle: </strong>{{ userData.twitter_username }}<br />
+          <strong>Public Repos: </strong>{{ userData.public_repos }}<br />
+          <strong>GitHub Followers: </strong>{{ userData.followers }}<br />
+        </div>
+        <!--  -->
+        <div v-else class="main" align="left">
           <img class="avatar" width="15%" :src="userData.photoURL" /><br />
           <strong>Name: </strong>{{ userData.name }}<br />
           <div :show="userData.company">
@@ -23,6 +118,9 @@
           <strong>Public Repos: </strong>{{ userData.public_repos }}<br />
           <strong>GitHub Followers: </strong>{{ userData.followers }}<br />
         </div>
+        <!--  -->
+
+        <!--  -->
         <br />
         <div class="links" align="left">
           <br />
@@ -35,8 +133,11 @@
           >
           <br /><br />
           <!-- // todo - allow editing -->
-          <div class="editButton" v-if="loggedInUser.id == userData.id">
-            <v-btn :disabled="true" @click="editProfile" color="secondary"
+          <div class="editButton" v-if="profileBelongsToLoggedInUser">
+            <v-btn
+              :disabled="!profileBelongsToLoggedInUser"
+              @click="editing = !editing"
+              color="secondary"
               ><v-icon left>mdi-pencil</v-icon>Edit</v-btn
             ><br /><br />
           </div>
@@ -81,16 +182,120 @@ export default {
   data() {
     return {
       hacker: null,
+      editing: false,
+      profileUpdate: {
+        name: "",
+        company: "",
+        username: "",
+        email: "",
+        location: "",
+        bio: "",
+        stack: {
+          languages: [],
+          frameworksAndLibraries: [],
+          databases: [],
+          hostingPlatform: [],
+          other: [],
+          technologiesToLearn: [],
+        },
+      },
     };
   },
   methods: {
-    editProfile() {
-      alert(
-        "🐎🐎 Hold your horses, does this page look finished to you?... We're pulling this info from GitHub. You can't edit it here just yet - give it a few days 😉 Until then, you can edit your profile on GitHub"
-      );
+    editProfile() {},
+    updateLanguages(value) {
+      console.log(value);
+      this.profileUpdate.stack.languages = value;
+    },
+    updateFrameworks(value) {
+      console.log(value);
+      this.profileUpdate.stack.frameworksAndLibraries = value;
+    },
+    updateDatabases(value) {
+      console.log(value);
+      this.profileUpdate.stack.databases = value;
+    },
+    updateTechToLearn(value) {
+      console.log(value);
+      this.profileUpdate.stack.technologiesToLearn = value;
+    },
+    updateHosting(value) {
+      console.log(value);
+      this.profileUpdate.stack.hostingPlatform = value;
+    },
+    updateOther(value) {
+      console.log(value);
+      this.profileUpdate.stack.other = value;
+    },
+    editClicked() {
+      this.editing = !this.editing;
     },
   },
   computed: {
+    updateStack() {
+      if (!this.profileUpdate.stack) {
+        return this.userProfile.stack;
+      } else {
+        return this.profileUpdate.stack;
+      }
+    },
+    updateName() {
+      if (!this.profileUpdate.name) {
+        return this.userProfile.name;
+      } else {
+        return this.profileUpdate.name;
+      }
+    },
+    updateCompany() {
+      if (!this.profileUpdate.company) {
+        return this.userProfile.company;
+      } else {
+        return this.profileUpdate.company;
+      }
+    },
+    updateUsername() {
+      if (!this.profileUpdate.username) {
+        return this.userProfile.username;
+      } else {
+        return this.profileUpdate.username;
+      }
+    },
+    updateUserEmail() {
+      if (!this.profileUpdate.email) {
+        return this.userProfile.email;
+      } else {
+        return this.profileUpdate.email;
+      }
+    },
+    updateLocation() {
+      if (!this.profileUpdate.location) {
+        return this.userProfile.location;
+      } else {
+        return this.profileUpdate.location;
+      }
+    },
+    updateBio() {
+      if (!this.profileUpdate.bio) {
+        return this.userProfile.bio;
+      } else {
+        return this.profileUpdate.bio;
+      }
+    },
+    allUpdateData() {
+      return {
+        name: this.updateName,
+        company: this.updateCompany,
+        username: this.updateUsername,
+        email: this.updateUserEmail,
+        location: this.updateLocation,
+        bio: this.updateBio,
+        stack: this.updateStack,
+      };
+    },
+
+    profileBelongsToLoggedInUser() {
+      return this.$store.getters.user.id == this.id;
+    },
     blogUrl() {
       return "https://".concat(
         this.userData.blog
@@ -121,6 +326,10 @@ export default {
 
     userData() {
       return this.user.filter((hacker) => hacker.id == this.id)[0];
+    },
+
+    userProfile() {
+      return this.userData;
     },
 
     userProjects() {

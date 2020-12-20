@@ -9,12 +9,14 @@ import markdown from './directives/markdown';
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import FollowProject from '@/components/Project/Follow/FollowProject.vue';
+import TechnologySelector from '@/components/Shared/TechnologySelector.vue';
 
 Vue.use(firestorePlugin)
 
 Vue.filter('date', DateFilter)
 Vue.directive('markdown', markdown)
 Vue.component('app-project-follow-dialog', FollowProject)
+Vue.component('techSelect', TechnologySelector)
 
 
 new Vue({
