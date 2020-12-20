@@ -104,7 +104,7 @@ export default {
           }
         }
       } else if (e.keyCode === 13) {
-        if (this.partialMatches.length > 5) {
+        if (this.partialMatches.length > 5 && !this.currentSelected) {
           alert(
             "You're attempting to add more than 5 technologies at once. Please limit your selection."
           );
