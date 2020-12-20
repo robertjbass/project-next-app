@@ -51,37 +51,37 @@
 
           <!-- // todo - double check to see if bank is loading with existing languages -->
           <!-- :bank="userData.stack.languages" -->
-          <h2>My Programming Languages</h2>
+          <!-- <h2>My Programming Languages</h2> -->
           <techSelect
             :usedFor="'Languages'"
             :placeholder="'Programming Languages'"
             @arrayValue="updateLanguages"
           />
-          <h2>My Frameworks and Libraries</h2>
+          <!-- <h2>My Frameworks and Libraries</h2> -->
           <techSelect
             :usedFor="'Frameworks'"
             :placeholder="'My Frameworks & Libraries'"
             @arrayValue="updateFrameworks"
           />
-          <h2>My Databases</h2>
+          <!-- <h2>My Databases</h2> -->
           <techSelect
             :usedFor="'Databases'"
             :placeholder="'My Databases'"
             @arrayValue="updateDatabases"
           />
-          <h2>My Other</h2>
+          <!-- <h2>My Other</h2> -->
           <techSelect
-            :usedFor="'Other Technologies'"
+            :usedFor="'Other'"
             :placeholder="'My Other Technologies'"
             @arrayValue="updateOther"
           />
-          <h2>My Platforms</h2>
+          <!-- <h2>My Platforms</h2> -->
           <techSelect
             :usedFor="'Platforms'"
             :placeholder="'My Platforms'"
             @arrayValue="updateHosting"
           />
-          <h2>Technologies to Learn</h2>
+          <!-- <h2>Technologies to Learn</h2> -->
           <techSelect
             :usedFor="'Goals'"
             :placeholder="'My Tech to Learn'"
@@ -89,7 +89,7 @@
           />
           <!-- <v-text-field label="Edit Name" v-model="userData.bio" /> -->
           <!-- userData.name -->
-          <br />
+          <!-- <br />
           <div :show="userData.company">
             <strong>Company: </strong>{{ userData.company }}
           </div>
@@ -100,7 +100,7 @@
           <br />
           <strong>Twitter Handle: </strong>{{ userData.twitter_username }}<br />
           <strong>Public Repos: </strong>{{ userData.public_repos }}<br />
-          <strong>GitHub Followers: </strong>{{ userData.followers }}<br />
+          <strong>GitHub Followers: </strong>{{ userData.followers }}<br /> -->
         </div>
         <!--  -->
         <div v-else class="main" align="left">
@@ -122,8 +122,27 @@
 
         <!--  -->
         <br />
+        <br />
         <div class="links" align="left">
-          <br />
+          <!-- // todo - allow editing -->
+          <div class="editButton" v-if="profileBelongsToLoggedInUser">
+            <v-btn
+              small
+              style="margin-right: 20px"
+              :disabled="!profileBelongsToLoggedInUser"
+              @click="editing = !editing"
+              :color="btnColor"
+              :class="editing ? 'black--text' : 'white--text'"
+              ><v-icon left>mdi-pencil</v-icon
+              >{{ editing ? "Cancel" : "Edit" }}</v-btn
+            >
+            <v-btn small v-show="editing" class="accentRed" width="200px"
+              ><v-icon left>mdi-content-save-all-outline</v-icon>Confirm
+              Edit</v-btn
+            >
+            <br />
+          </div>
+          <br /><br />
           <a
             class="light-blue--text"
             :show="userData.blog"
@@ -131,16 +150,8 @@
             target="_blank"
             >My Blog</a
           >
+
           <br /><br />
-          <!-- // todo - allow editing -->
-          <div class="editButton" v-if="profileBelongsToLoggedInUser">
-            <v-btn
-              :disabled="!profileBelongsToLoggedInUser"
-              @click="editing = !editing"
-              color="secondary"
-              ><v-icon left>mdi-pencil</v-icon>Edit</v-btn
-            ><br /><br />
-          </div>
           Projects:
           <div v-if="projectsByUser.length > 0">
             <div v-for="project in projectsByUser" :key="project.id">
@@ -232,6 +243,9 @@ export default {
     },
   },
   computed: {
+    btnColor() {
+      return this.editing ? "accentBlue" : "accentRed";
+    },
     updateStack() {
       if (!this.profileUpdate.stack) {
         return this.userProfile.stack;
@@ -358,5 +372,13 @@ a {
 }
 .card {
   padding: 5% 10%;
+}
+.editButton {
+  margin: auto;
+  /* display: flex; */
+  justify-content: space-around;
+  text-align: end;
+  /* margin: 0 20px; */
+  /* flex: end; */
 }
 </style>

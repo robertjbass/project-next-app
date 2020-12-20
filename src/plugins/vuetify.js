@@ -21,7 +21,7 @@ export default new Vuetify({
         // accentRedLighten: '#fd043550',
         accentBlue: '#00f4f4',
         // accentBlueLighten: '#00f4f450'
-        test: colors.indigo.base
+        indigo: colors.indigo.base
       },
       // dark: {
       //   primary: '#3f51b5',

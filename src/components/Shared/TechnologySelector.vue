@@ -1,6 +1,22 @@
 <template>
   <div class="TechnologySelector">
-    <h3>{{ usedFor }}</h3>
+    <h3 v-if="isEditing">
+      {{ usedFor
+      }}<v-icon
+        small
+        color="light-blue"
+        class="edit"
+        right
+        @click="toggleEditing"
+        >mdi-pencil-outline</v-icon
+      >
+    </h3>
+    <h3 v-else>
+      {{ usedFor
+      }}<v-icon small class="edit" right @click="toggleEditing"
+        >mdi-pencil-lock-outline</v-icon
+      >
+    </h3>
 
     <form v-on:submit.prevent="dontSubmit">
       <!-- <form class="array"> -->
@@ -8,9 +24,9 @@
         <li v-for="(item, i) in bank" :key="i">
           <v-chip
             class="chip"
-            outlined
+            :outlined="isEditing"
             label
-            color="light-blue"
+            :color="isEditing ? 'light-blue' : 'secondary'"
             close
             @click:close="removeItem(item)"
             >{{ item }}</v-chip
@@ -18,8 +34,26 @@
         </li>
       </ul>
       <v-text-field
+        v-if="isEditing"
+        :disabled="!isEditing"
+        clearable
         :placeholder="this.placeholder"
         v-model="adding"
+        v-on:keyup="keyWasPressed"
+        :hint="
+          currentSelected
+            ? 'Press Enter to add ' + currentSelected
+            : partialMatchString.length > 0
+            ? 'Press enter to add:' + partialMatchString
+            : ''
+        "
+        persistent-hint
+      />
+      <v-text-field
+        v-else
+        :disabled="!isEditing"
+        :placeholder="this.placeholder"
+        v-model="saved"
         v-on:keyup="keyWasPressed"
         :hint="
           currentSelected
@@ -45,9 +79,14 @@
         </li>
       </ul>
     </div>
-    <div class="confirmButton" align="right">
-      <v-btn :disabled="this.bank == 0" color="secondary" @click="submit"
-        ><v-icon left>mdi-plus</v-icon>Confirm {{ usedFor }}</v-btn
+    <div class="confirm-btn-wrap" align="right">
+      <v-btn
+        small
+        class="confirm-btn"
+        :disabled="this.bank == 0 || !this.isEditing"
+        color="secondary"
+        @click="submit"
+        ><v-icon left small>mdi-check</v-icon>Confirm {{ usedFor }}</v-btn
       >
     </div>
   </div>
@@ -60,8 +99,10 @@ export default {
   data() {
     return {
       adding: "",
+      saved: [],
       bank: [],
       selectedIndex: -1,
+      isEditing: true,
     };
   },
   watch: {
@@ -72,6 +113,14 @@ export default {
     },
   },
   methods: {
+    toggleEditing() {
+      if (this.bank.length > 0) {
+        this.isEditing = !this.isEditing;
+      } else if (this.saved.length > 0) {
+        this.bank = this.saved;
+        this.isEditing = !this.isEditing;
+      }
+    },
     dontSubmit() {
       console.log("");
     },
@@ -82,6 +131,9 @@ export default {
     },
     submit() {
       this.$emit("arrayValue", this.bank);
+      this.saved = this.bank;
+      this.isEditing = false;
+      this.bank = [];
     },
     addThis(value) {
       if (!this.bank.includes(value)) {
@@ -104,9 +156,9 @@ export default {
           }
         }
       } else if (e.keyCode === 13) {
-        if (this.partialMatches.length > 5 && !this.currentSelected) {
+        if (this.partialMatches.length > 9 && !this.currentSelected) {
           alert(
-            "You're attempting to add more than 5 technologies at once. Please limit your selection."
+            "You're attempting to add more than 9 technologies at once. Please limit your selection."
           );
         } else if (
           this.currentSelected &&
@@ -180,7 +232,13 @@ li {
   list-style: none;
   display: inline;
 }
+.edit {
+  cursor: pointer;
+}
 .chip {
   margin: 5px;
+}
+.confirm-btn {
+  width: 200px;
 }
 </style>
