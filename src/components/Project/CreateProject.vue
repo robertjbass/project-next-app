@@ -34,22 +34,46 @@
                       required
                     ></v-textarea>
                     <br />
+                    <techSelect
+                      align="left"
+                      usedFor="Edit"
+                      v-show="!selectedItems.length"
+                      :placeholder="'Programming Languages'"
+                      @arrayValue="updateLanguages"
+                    />
+                    <h3 align="left" v-show="selectedItems.length">
+                      Technologies
+                    </h3>
+                    <!-- label="Anticipated Technologies" -->
                     <v-combobox
+                      class="chip"
+                      :disabled="true"
+                      v-show="selectedItems.length"
                       id="anticipatedTechnologies"
                       v-model="selectedItems"
                       :items="items"
-                      label="Anticipated Technologies"
                       :rules="[
                         () =>
                           !!numberOfTechnologies ||
                           'Please select at least 1 technology',
                       ]"
                       multiple
-                      chips
                       clearable
                       required
                       dense
                     ></v-combobox>
+                    <div class="clear-tech-btn-wrap">
+                      <v-btn
+                        color="accentRed"
+                        class="clear-tech-btn"
+                        align="right"
+                        v-show="selectedItems.length"
+                        small
+                        width="200px"
+                        @click="clearTech"
+                        ><v-icon left>mdi-close</v-icon>Clear</v-btn
+                      >
+                    </div>
                     <v-text-field
                       id="githubRepo"
                       v-model="githubRepo"
@@ -201,6 +225,12 @@ export default {
     };
   },
   methods: {
+    clearTech() {
+      this.selectedItems = [];
+    },
+    updateLanguages(value) {
+      this.selectedItems = value;
+    },
     onCreateProject() {
       if (!this.imageRaw) {
         // todo - add something here
@@ -352,10 +382,17 @@ export default {
 </script>
 
 <style scoped>
+.chip {
+  margin: 5px;
+}
 .card-background {
   background-color: #333;
 }
 .top-spacing {
   margin-top: 40px;
+}
+.clear-tech-btn-wrap {
+  display: flex;
+  justify-content: flex-end;
 }
 </style>

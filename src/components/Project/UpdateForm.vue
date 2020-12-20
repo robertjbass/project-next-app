@@ -142,7 +142,7 @@
                 ></v-combobox>
                 <v-divider class="mt-12"></v-divider>
                 <v-card-actions>
-                  <v-btn elevation="0" text color="warning">
+                  <v-btn elevation="0" text color="warning" @click="closeForm">
                     <v-icon left>mdi-arrow-left</v-icon>
                     Cancel
                   </v-btn>
@@ -246,6 +246,9 @@ export default {
       this.goals = null;
       this.image = null;
       this.imageUrl = null;
+    },
+    closeForm() {
+      this.$emit("closeForm");
     },
 
     submit() {

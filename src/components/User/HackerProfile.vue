@@ -162,7 +162,7 @@
         <br />
         <br />
         <div class="links" align="left">
-          <!-- // todo - allow editing -->
+          <!-- // todo - Clean Design Up -->
           <div class="editButton" v-if="profileBelongsToLoggedInUser">
             <v-btn
               small

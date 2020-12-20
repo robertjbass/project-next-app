@@ -96,6 +96,7 @@ export const store = new Vuex.Store({
       state.hackers = payload;
     },
 
+    //? MUTATION - Update User Profile
     updateUserProfile(state, payload) {
       state.user;
       let { name, company, username, email, location, bio, stack } = payload
@@ -109,6 +110,20 @@ export const store = new Vuex.Store({
       state.user.stack = stack
       
       // todo - do the same for hackers
+    },
+    
+    //? MUTATION - Add Project Comments
+    addComment(state, payload) {
+      let { id, comment } = payload
+      console.log(comment)
+      state.loadedProjects.forEach(project => {
+        if (id == project.documentId) {
+          console.log('match',id, project.documentId, project.title)
+        } else {
+          console.log('no match',id, project.documentId, project.title)
+
+        }
+      })
     }
 
     // // todo DEBUG
@@ -123,6 +138,27 @@ export const store = new Vuex.Store({
   actions: {
     
     //? ACTION - Update User Profile
+    addComment({ commit }, payload) {
+      console.table(payload)
+      let { projectId, comment, comments } = payload
+      let { id, date, commentText, authorName } = comment
+      console.table({ projectId, id, date, commentText, authorName })
+      console.table({ comment, comments })
+      comment = {
+          id: id,
+          date: date,
+          comment: commentText,
+          authorName: authorName,
+      },
+        comments.push(comment)
+      db.collection('projects').doc(projectId.trim()).update({ 
+        comments: comments
+      })
+      commit('addComment', { id, comments })
+    },
+
+
+    //? ACTION - Update User Profile
     updateUserProfile({ commit }, payload) {
       let { userId, name, company, username, email, location, bio, stack } = payload
       // let { languages, frameworksAndLibraries, databases, hostingPlatforms, other, technologiesToLearn } = stack        
@@ -135,7 +171,6 @@ export const store = new Vuex.Store({
         bio: bio,
         stack: stack
       })
-
       commit("updateUserProfile", payload)
     },
 

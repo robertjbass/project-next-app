@@ -92,7 +92,7 @@
               <UpdateForm
                 :thisUser="projectBelongsToLoggedInUser"
                 :id="id"
-                v-show="editDialog"
+                v-if="editDialog"
                 :project="project"
                 v-on:updateProject="updateProject"
                 v-on:closeForm="onSubmitClicked"
@@ -167,7 +167,8 @@
         </div>
         <hr />
         <br />
-        <div class="comments" v-show="this.comments">
+        <!-- {{ project.comments }} -->
+        <div class="comments" v-show="this.project.comments">
           <!-- <div class="comment" v-for="comment in comments" :key="comment.id">
             {{ comment }} -->
           <v-simple-table>
@@ -180,8 +181,8 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="comment in comments" :key="comment.id">
-                  <td align="left">{{ comment.author }}</td>
+                <tr v-for="comment in project.comments" :key="comment.id">
+                  <td align="left">{{ comment.authorName }}</td>
                   <td align="left">{{ comment.date | date }}</td>
                   <td align="left">{{ comment.comment }}</td>
                 </tr>
@@ -199,7 +200,7 @@
                 <!-- // todo - ENABLE THIS -->
                 <v-btn
                   color="primary"
-                  :disabled="true"
+                  :disabled="false"
                   dark
                   v-bind="attrs"
                   v-on="on"
@@ -221,14 +222,15 @@
                           label="Comment"
                           required
                           v-model="commentText"
-                        ></v-textarea>
+                          >{{ commentText }}</v-textarea
+                        >
                       </v-col>
                     </v-row>
                   </v-container>
                 </v-card-text>
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn color="red darken-1" text @click="dialog = false">
+                  <v-btn color="red darken-1" text @click="closeDialog">
                     Close
                   </v-btn>
                   <v-btn
@@ -267,40 +269,42 @@ export default {
       error: null,
       repoData: null,
       readme: false,
-      commentText: null,
+      commentText: "",
       dialog: false,
-      newComment: {
-        author: this.user.username,
-        date: this.todayDate,
-        comment: this.commentText,
-      },
-      comments: [
-        {
-          id: 0,
-          date: "2020-12-21",
-          comment: "Great work!",
-          author: "716green",
-        },
-        {
-          id: 1,
-          date: "2020-12-22",
-          comment: "Keep it up",
-          author: "716green",
-        },
-      ],
+
+      // comments: [
+      //   {
+      //     id: 0,
+      //     date: "2020-12-21",
+      //     comment: "Great work!",
+      //     author: "716green",
+      //   },
+      //   {
+      //     id: 1,
+      //     date: "2020-12-22",
+      //     comment: "Keep it up",
+      //     author: "716green",
+      //   },
+      // ],
     };
   },
   props: ["id"],
   methods: {
+    closeDialog() {
+      this.dialog = false;
+    },
     saveComment() {
       this.$store.dispatch("addComment", {
+        projectId: this.id,
+        comments: this.comments,
         comment: {
           id: this.numberOfComments,
-          date: "2020-12-22",
-          comment: "Keep it up",
-          author: this.user,
+          date: this.todayDateFormatted,
+          commentText: this.commentText,
+          authorName: this.user.username || this.user.name,
         },
       });
+      this.commentText = "";
       this.dialog = false;
     },
     onSubmitClicked() {
@@ -372,6 +376,21 @@ export default {
     this.getGitHubInfo();
   },
   computed: {
+    comments() {
+      if (this.project.comments) {
+        return this.project.comments;
+      } else {
+        return [];
+      }
+    },
+    newComment() {
+      let comment = {
+        author: this.user.username,
+        date: this.todayDate,
+        comment: this.commentText,
+      };
+      return comment;
+    },
     todayDateFormatted() {
       let d = new Date(),
         month = "" + (d.getMonth() + 1),
@@ -383,9 +402,9 @@ export default {
     },
     numberOfComments() {
       if (this.comments) {
-        return this.comments.length;
+        return this.comments.length + 1;
       } else {
-        return 0;
+        return 1;
       }
     },
     projectBelongsToLoggedInUser() {

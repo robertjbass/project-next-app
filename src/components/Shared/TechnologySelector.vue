@@ -8,12 +8,17 @@
         class="edit"
         right
         @click="toggleEditing"
-        >mdi-pencil-outline</v-icon
+        >mdi-pencil-circle-outline</v-icon
       >
     </h3>
     <h3 v-else>
       {{ usedFor
-      }}<v-icon small class="edit" right @click="toggleEditing"
+      }}<v-icon
+        small
+        class="edit"
+        color="accentRed"
+        right
+        @click="toggleEditing"
         >mdi-pencil-lock-outline</v-icon
       >
     </h3>
@@ -45,7 +50,7 @@
             ? 'Press Enter to add ' + currentSelected
             : partialMatchString.length > 0
             ? 'Press enter to add:' + partialMatchString
-            : ''
+            : 'Type for autocomplete'
         "
         persistent-hint
       />
