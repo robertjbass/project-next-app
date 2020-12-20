@@ -3,10 +3,10 @@
     <v-container class="top-spacing">
       <v-card dark class="card">
         <h1>Profile</h1>
-        this user: {{ profileBelongsToLoggedInUser }}<br />
-        editing {{ editing }}<br />
+        <!-- this user: {{ profileBelongsToLoggedInUser }}<br />
+        editing {{ editing }}<br /> -->
         <!-- <pre align="left">{{ profileUpdate }}</pre> -->
-        <pre align="left">{{ allUpdateData }}</pre>
+        <!-- <pre align="left">{{ allUpdateData }}</pre> -->
 
         <!-- {{ this.id }} -->
         <!-- <pre align="left">{{ this.userData }}</pre> -->
@@ -119,7 +119,45 @@
           <strong>GitHub Followers: </strong>{{ userData.followers }}<br />
         </div>
         <!--  -->
-
+        <div class="technologies" align="left">
+          <h3>Databases</h3>
+          <div v-for="(item, i) in userData.stack.databases" :key="i">
+            {{ item }}
+          </div>
+          <br />
+          <br />
+          <h3>Frameworks/Libraries</h3>
+          <div
+            v-for="(item, i) in userData.stack.frameworksAndLibraries"
+            :key="i"
+          >
+            {{ item }}
+          </div>
+          <br />
+          <br />
+          <h3>Platforms</h3>
+          <div v-for="(item, i) in userData.stack.hostingPlatforms" :key="i">
+            {{ item }}
+          </div>
+          <br />
+          <br />
+          <h3>Languages</h3>
+          <div v-for="(item, i) in userData.stack.languages" :key="i">
+            {{ item }}
+          </div>
+          <br />
+          <br />
+          <h3>Other</h3>
+          <div v-for="(item, i) in userData.stack.other" :key="i">
+            {{ item }}
+          </div>
+          <br />
+          <br />
+          <h3>Tech to Learn</h3>
+          <div v-for="(item, i) in userData.stack.technologiesToLearn" :key="i">
+            {{ item }}
+          </div>
+        </div>
         <!--  -->
         <br />
         <br />
@@ -136,7 +174,12 @@
               ><v-icon left>mdi-pencil</v-icon
               >{{ editing ? "Cancel" : "Edit" }}</v-btn
             >
-            <v-btn small v-show="editing" class="accentRed" width="200px"
+            <v-btn
+              small
+              v-show="editing"
+              class="accentRed"
+              width="200px"
+              @click="editProfile"
               ><v-icon left>mdi-content-save-all-outline</v-icon>Confirm
               Edit</v-btn
             >
@@ -205,7 +248,7 @@ export default {
           languages: [],
           frameworksAndLibraries: [],
           databases: [],
-          hostingPlatform: [],
+          hostingPlatforms: [],
           other: [],
           technologiesToLearn: [],
         },
@@ -213,7 +256,15 @@ export default {
     };
   },
   methods: {
-    editProfile() {},
+    editProfile() {
+      // todo - add check for changes
+      // alert("update");
+      this.$store.dispatch("updateUserProfile", {
+        userId: this.userData.documentId,
+        ...this.allUpdateData,
+      });
+      this.editing = false;
+    },
     updateLanguages(value) {
       console.log(value);
       this.profileUpdate.stack.languages = value;
@@ -232,7 +283,7 @@ export default {
     },
     updateHosting(value) {
       console.log(value);
-      this.profileUpdate.stack.hostingPlatform = value;
+      this.profileUpdate.stack.hostingPlatforms = value;
     },
     updateOther(value) {
       console.log(value);

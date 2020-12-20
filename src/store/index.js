@@ -96,16 +96,48 @@ export const store = new Vuex.Store({
       state.hackers = payload;
     },
 
-    // todo DEBUG
-    test() {
-      console.log("test")
+    updateUserProfile(state, payload) {
+      state.user;
+      let { name, company, username, email, location, bio, stack } = payload
+      // let { languages, frameworksAndLibraries, databases, hostingPlatforms, other, technologiesToLearn } = stack
+      state.user.name = name,
+      state.user.company = company,
+      state.user.username = username,
+      state.user.email = email,
+      state.user.location = location,
+      state.user.bio = bio,
+      state.user.stack = stack
+      
+      // todo - do the same for hackers
     }
+
+    // // todo DEBUG
+    // test() {
+    //   console.log("test")
+    // }
   },
 
   /*************************
   //* #3 - ACTIONS
   ************************** */
   actions: {
+    
+    //? ACTION - Update User Profile
+    updateUserProfile({ commit }, payload) {
+      let { userId, name, company, username, email, location, bio, stack } = payload
+      // let { languages, frameworksAndLibraries, databases, hostingPlatforms, other, technologiesToLearn } = stack        
+      db.collection('users').doc(userId.trim()).update({ 
+        name: name,
+        company: company,
+        username: username,
+        email: email,
+        location: location,
+        bio: bio,
+        stack: stack
+      })
+
+      commit("updateUserProfile", payload)
+    },
 
     //? ACTION - Follow Project
     followProject({ commit, getters }, payload) {
