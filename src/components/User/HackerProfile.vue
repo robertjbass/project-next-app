@@ -53,54 +53,46 @@
           <!-- :bank="userData.stack.languages" -->
           <!-- <h2>My Programming Languages</h2> -->
           <techSelect
+            :arrayItems="technologies"
             :usedFor="'Languages'"
             :placeholder="'Programming Languages'"
             @arrayValue="updateLanguages"
           />
           <!-- <h2>My Frameworks and Libraries</h2> -->
           <techSelect
+            :arrayItems="technologies"
             :usedFor="'Frameworks'"
             :placeholder="'My Frameworks & Libraries'"
             @arrayValue="updateFrameworks"
           />
           <!-- <h2>My Databases</h2> -->
           <techSelect
+            :arrayItems="technologies"
             :usedFor="'Databases'"
             :placeholder="'My Databases'"
             @arrayValue="updateDatabases"
           />
           <!-- <h2>My Other</h2> -->
           <techSelect
+            :arrayItems="technologies"
             :usedFor="'Other'"
             :placeholder="'My Other Technologies'"
             @arrayValue="updateOther"
           />
           <!-- <h2>My Platforms</h2> -->
           <techSelect
+            :arrayItems="technologies"
             :usedFor="'Platforms'"
             :placeholder="'My Platforms'"
             @arrayValue="updateHosting"
           />
           <!-- <h2>Technologies to Learn</h2> -->
           <techSelect
+            :arrayItems="technologies"
             :usedFor="'Goals'"
             :placeholder="'My Tech to Learn'"
             @arrayValue="updateTechToLearn"
           />
-          <!-- <v-text-field label="Edit Name" v-model="userData.bio" /> -->
-          <!-- userData.name -->
-          <!-- <br />
-          <div :show="userData.company">
-            <strong>Company: </strong>{{ userData.company }}
-          </div>
-          <strong>Username: </strong>{{ userData.username }}<br />
-          <strong>Email: </strong>{{ userData.userEmail }}<br />
-          <strong>Location: </strong>{{ userData.location }}<br /><br />
-          <strong>Bio: </strong>{{ userData.bio }}<br />
-          <br />
-          <strong>Twitter Handle: </strong>{{ userData.twitter_username }}<br />
-          <strong>Public Repos: </strong>{{ userData.public_repos }}<br />
-          <strong>GitHub Followers: </strong>{{ userData.followers }}<br /> -->
         </div>
         <!--  -->
         <div v-else class="main" align="left">
@@ -116,46 +108,77 @@
           <br />
           <strong>Twitter Handle: </strong>{{ userData.twitter_username }}<br />
           <strong>Public Repos: </strong>{{ userData.public_repos }}<br />
-          <strong>GitHub Followers: </strong>{{ userData.followers }}<br />
+          <strong>GitHub Followers: </strong>{{ userData.followers
+          }}<br /><br />
         </div>
         <!--  -->
-        <div class="technologies" align="left">
+        <div class="technologies" align="left" v-if="!editing">
           <h3>Databases</h3>
-          <div v-for="(item, i) in userData.stack.databases" :key="i">
-            {{ item }}
+          <div v-for="(item, i) in userData.stack.databases" :key="item[i]">
+            <router-link
+              :to="'../technology/' + removeSpecialChars(item)"
+              class="light-blue--text"
+              >{{ item }}</router-link
+            >
           </div>
           <br />
           <br />
           <h3>Frameworks/Libraries</h3>
           <div
             v-for="(item, i) in userData.stack.frameworksAndLibraries"
-            :key="i"
+            :key="item[i]"
           >
-            {{ item }}
+            <router-link
+              :to="'../technology/' + removeSpecialChars(item)"
+              class="light-blue--text"
+              >{{ item }}</router-link
+            >
           </div>
           <br />
           <br />
           <h3>Platforms</h3>
-          <div v-for="(item, i) in userData.stack.hostingPlatforms" :key="i">
-            {{ item }}
+          <div
+            v-for="(item, i) in userData.stack.hostingPlatforms"
+            :key="item[i]"
+          >
+            <router-link
+              :to="'../technology/' + removeSpecialChars(item)"
+              class="light-blue--text"
+              >{{ item }}</router-link
+            >
           </div>
           <br />
           <br />
           <h3>Languages</h3>
-          <div v-for="(item, i) in userData.stack.languages" :key="i">
-            {{ item }}
+          <div v-for="(item, i) in userData.stack.languages" :key="item[i]">
+            <router-link
+              :to="'../technology/' + removeSpecialChars(item)"
+              class="light-blue--text"
+              >{{ item }}</router-link
+            >
           </div>
           <br />
           <br />
           <h3>Other</h3>
-          <div v-for="(item, i) in userData.stack.other" :key="i">
-            {{ item }}
+          <div v-for="(item, i) in userData.stack.other" :key="item[i]">
+            <router-link
+              :to="'../technology/' + removeSpecialChars(item)"
+              class="light-blue--text"
+              >{{ item }}</router-link
+            >
           </div>
           <br />
           <br />
           <h3>Tech to Learn</h3>
-          <div v-for="(item, i) in userData.stack.technologiesToLearn" :key="i">
-            {{ item }}
+          <div
+            v-for="(item, i) in userData.stack.technologiesToLearn"
+            :key="item[i]"
+          >
+            <router-link
+              :to="'../technology/' + removeSpecialChars(item)"
+              class="light-blue--text"
+              >{{ item }}</router-link
+            >
           </div>
         </div>
         <!--  -->
@@ -171,7 +194,7 @@
               @click="editing = !editing"
               :color="btnColor"
               :class="editing ? 'black--text' : 'white--text'"
-              ><v-icon left>mdi-pencil</v-icon
+              ><v-icon left>{{ editing ? "mdi-close" : "mdi-pencil" }}</v-icon
               >{{ editing ? "Cancel" : "Edit" }}</v-btn
             >
             <v-btn
@@ -292,8 +315,21 @@ export default {
     editClicked() {
       this.editing = !this.editing;
     },
+    removeSpecialChars(value) {
+      return value
+        .split(" ")
+        .join("")
+        .split(".")
+        .join("")
+        .split("-")
+        .join("")
+        .toLowerCase();
+    },
   },
   computed: {
+    technologies() {
+      return this.$store.getters.technologies;
+    },
     btnColor() {
       return this.editing ? "accentBlue" : "accentRed";
     },
@@ -426,10 +462,7 @@ a {
 }
 .editButton {
   margin: auto;
-  /* display: flex; */
   justify-content: space-around;
   text-align: end;
-  /* margin: 0 20px; */
-  /* flex: end; */
 }
 </style>

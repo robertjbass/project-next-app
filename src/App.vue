@@ -168,9 +168,14 @@ export default {
             link: "/hackers",
           },
           {
-            icon: "mdi-code-tags",
+            icon: "mdi-apps",
             title: "Projects",
             link: "/projects",
+          },
+          {
+            icon: "mdi-code-tags",
+            title: "Technologies",
+            link: "/technologies",
           },
           {
             icon: "mdi-plus",

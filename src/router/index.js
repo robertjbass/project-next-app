@@ -14,6 +14,8 @@ import About from '@/components/About/About.vue';
 // import Signin from '@/components/User/Signin'
 import Signup from '@/components/User/Signup'
 import AlertCmp from '@/components/Shared/Alert'
+import Technology from '@/components/Technologies/Technology.vue';
+import All from '@/components/Technologies/TechList.vue';
 // import axios from 'axios'
 import { AuthGuard } from './auth-guard'
 
@@ -37,6 +39,18 @@ const router = new Router({
       path: '/about', 
       name: 'About',
       component: About
+    },
+    {
+      path: '/technology/:technology', 
+      name: 'Technology',
+      component: Technology,
+      props: true
+    },
+    {
+      path: '/technologies', 
+      name: 'TechList',
+      component: All,
+      props: true
     },
     {
       path: '/project/new',

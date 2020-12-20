@@ -22,6 +22,7 @@ export const store = new Vuex.Store({
     loading: false,
     error: null,
     technologies: null,
+    allTechnologies: null,
     countdownInfo: {
       date: new Date()
     },
@@ -83,8 +84,27 @@ export const store = new Vuex.Store({
 
     //? MUTATION - Set Available Technologies
     setTechnologies(state, payload) {
-      state.technologies = payload;
-    },
+      let { technologies, allTechnologies } = payload
+      state.technologies = technologies;
+      state.allTechnologies = []
+
+      // state.allTechnologies[0]["fields"]["Categories"][0]
+      // state.allTechnologies[0]["fields"]["Technology"]
+      // state.allTechnologies[0]["id"]
+      
+      
+      for (let i = 0; i < allTechnologies.length; i++) {
+        // const element = array[i];
+        state.allTechnologies.push({
+          id: allTechnologies[i]["id"],
+          technology: allTechnologies[i]["fields"]["Technology"],
+          categories: allTechnologies[i]["fields"]["Categories"][0]
+        })
+      }
+      console.log(state.allTechnologies)
+      
+state.allTechnologies[0]["id"]
+},
 
     //? MUTATION - Set Loaded Projects
     setLoadedProjects(state, payload) {
@@ -124,7 +144,22 @@ export const store = new Vuex.Store({
 
         }
       })
+    },
+
+    //? MUTATION - Update Airtable Tech Listing
+    updateAirtableTech(state, payload) {
+      let { params } = payload
+      let allTechnology = {
+        id: 1,
+        technology: params.technology,
+        categories: params.categories,
+      }
+      let technology = params.technology
+      state.technologies.push(technology)
+      state.allTechnologies.push(allTechnology)
+      console.log(allTechnology,technology)
     }
+  
 
     // // todo DEBUG
     // test() {
@@ -617,24 +652,36 @@ export const store = new Vuex.Store({
     //? ACTION - SET TECHNOLOGIES
     setTechnologies({ commit }) {
       let technologies = [];
+      let allTechnologies = [];
       let technologyUrl = `https://v1.nocodeapi.com/bbass/airtable/OWBByjdlNVhiKRiR?tableName=Technologies&view=All&perPage=500&sortBy=Technology`;
       axios
-        .get(technologyUrl)
-        .then((res) => {
-          technologies = [];
-          res.data.records.forEach((techObject) => {
-            technologies.push(techObject.fields.Technology);
-          });
-          commit("setTechnologies", technologies);
-        })
-        .catch((err) => {
-          console.error(err);
+      .get(technologyUrl)
+      .then((res) => {
+        technologies = [];
+        res.data.records.forEach((techObject) => {
+          technologies.push(techObject.fields.Technology);
+          allTechnologies.push(techObject);
         });
+        commit("setTechnologies", {technologies, allTechnologies});
+      })
+      .catch((err) => {
+        console.error(err);
+      });
     },
+    
+    //? ACTION - Update Airtable Tech Listing
+    updateAirtableTech({ commit }, payload) {
+      let { url, params } = payload
+      axios.post(url, params).then(res => {
+        payload.params.id = res.data.id
+        console.log(payload.params.id)
+      })
+      commit("updateAirtableTech", payload)
+    }
   },
-
+  
   /*************************
-  //* #4 - GETTERS
+   //* #4 - GETTERS
   ************************** */
   getters: {
     
@@ -692,6 +739,11 @@ export const store = new Vuex.Store({
     //? GETTER - GET Hackers - Users (Aside from logged in user)
     hackers(state) {
       return state.hackers;
+    },
+
+    //? GETTER - GET All Technologies
+    allTechnologies(state) {
+      return state.allTechnologies;
     },
   },
 });

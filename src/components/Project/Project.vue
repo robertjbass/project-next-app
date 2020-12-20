@@ -271,21 +271,6 @@ export default {
       readme: false,
       commentText: "",
       dialog: false,
-
-      // comments: [
-      //   {
-      //     id: 0,
-      //     date: "2020-12-21",
-      //     comment: "Great work!",
-      //     author: "716green",
-      //   },
-      //   {
-      //     id: 1,
-      //     date: "2020-12-22",
-      //     comment: "Keep it up",
-      //     author: "716green",
-      //   },
-      // ],
     };
   },
   props: ["id"],

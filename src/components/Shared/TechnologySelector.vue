@@ -49,7 +49,7 @@
           currentSelected
             ? 'Press Enter to add ' + currentSelected
             : partialMatchString.length > 0
-            ? 'Press enter to add:' + partialMatchString
+            ? 'Press Enter to add ' + partialMatchString
             : 'Type for autocomplete'
         "
         persistent-hint
@@ -100,7 +100,7 @@
 <script>
 export default {
   name: "TechnologySelector",
-  props: ["usedFor", "placeholder"],
+  props: ["usedFor", "placeholder", "arrayItems"],
   data() {
     return {
       adding: "",
@@ -223,8 +223,11 @@ export default {
       });
     },
     technologies() {
-      return this.$store.getters.technologies;
+      return this.arrayItems;
     },
+    // technologies() {
+    //   return this.$store.getters.technologies;
+    // },
     addingTechIsInList() {
       return this.technologies.indexOf(this.adding) >= 0;
     },

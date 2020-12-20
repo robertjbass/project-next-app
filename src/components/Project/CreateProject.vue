@@ -37,6 +37,7 @@
                     <techSelect
                       align="left"
                       usedFor="Edit"
+                      :arrayItems="technologies"
                       v-show="!selectedItems.length"
                       :placeholder="'Programming Languages'"
                       @arrayValue="updateLanguages"
@@ -44,7 +45,7 @@
                     <h3 align="left" v-show="selectedItems.length">
                       Technologies
                     </h3>
-                    <!-- label="Anticipated Technologies" -->
+
                     <v-combobox
                       class="chip"
                       :disabled="true"
@@ -106,9 +107,7 @@
                       label="Project Goals"
                       required
                     ></v-textarea>
-                    <!-- // todo - 
-                    https://vuetifyjs.com/en/components/file-inputs/#show-size 
-                    -->
+
                     <v-file-input
                       ref="fileInput"
                       :rules="[
@@ -125,15 +124,7 @@
                       hint="Please select any image. It can be a screenshot, a gradient, a theme, or anything else that you'd like. Take a look at unsplash.com if you need help."
                       :persistent-hint="true"
                     ></v-file-input>
-                    <!-- placeholder="Select a banner image" -->
-                    <!-- <v-text-field
-                      v-model="imageUrl"
-                      name="imageUrl"
-                      label="Image URL"
-                      id="imageUrl"
-                      ref="imageUrl"
-                    > -->
-                    <!-- </v-text-field> -->
+
                     <h3 v-if="this.imageUrl">Project Banner Image</h3>
                     <img :src="imageUrl" width="400px" />
                     <v-combobox
@@ -181,33 +172,10 @@
 </template>
 
 <script>
-// import uuidv4 from "uuid";
-// import { storage } from "../../firebase";
 export default {
   name: "CreateProject",
   data() {
     return {
-      // selectedDuration: "2 Weeks",
-      // projectDurations: ["1 Week", "2 Weeks", "1 Month", "Long Term"],
-      //       selectedItems: [],
-      //       errorMessages: "",
-      //       projectName: "Project NextApp",
-      //       formHasErrors: false,
-      //       summary:
-      //         '"Project Next App" is a hub for developers to find their creative spark in a gamified weekly hackathon to add structure to side projects, learning new technologies, and meeting developers.',
-      //       search: null,
-      //       githubRepo: "https://github.com/716green/project-next-app",
-      //       productPage: "https://projectnext.app",
-      //       goals: `1️⃣ Get a full and complete understanding of Vuex state management. Currently, my knowledge is functional at best making debugging very hard.
-      // 2️⃣ Solidify my understanding of Firestore. I've used it but never felt comfortable with it.
-      // 3️⃣ Implement Firebase storage. Storage is one of the features I've yet to try out.
-      // 4️⃣ Learn GitHub OAuth authentication. In order to integrate with GitHub, I need to authenticate with OAuth (or OAuth2) with GitHub. I've only ever done this with Google, or with an email/password combo so far.
-      // 5️⃣ Get this app live and hosted as a proof of concept within 1 week
-      // 6️⃣ Learn Vuetify grid. I've never taken the time to learn a grid system like Bootstrap or anything similar and then I tell people I'm not a 'front-end developer' because I don't like UI/UX. It's become a serious requirement for most projects and it's time I finally learn and understand it. I don't want to use that as an excuse for bad UI going into 2021.
-      // 7️⃣ Create a logo with Figma. Right now, the temporary logo is text that says: project(() => {NextApp('💡')}. I need to learn to mock-up quick logos. I want to have a basic understanding of Figma going into 2021.`,
-      //       image: null,
-      //       imageUrl: null,
-      //       imageRaw: null,
       selectedDuration: "2 Weeks",
       projectDurations: ["1 Week", "2 Weeks", "1 Month", "Long Term"],
       selectedItems: [],
@@ -308,7 +276,6 @@ export default {
         emailAddress: this.user.email,
         created: this.dateCreated,
         goals: this.goals,
-        // imageUrl: this.imageUrl,
         image: this.imageRaw,
         projectDuration: this.selectedDuration,
       };
@@ -350,6 +317,9 @@ export default {
           () => this.productPage.length > 5 || "Too short",
         ];
       }
+    },
+    technologies() {
+      return this.$store.getters.technologies;
     },
   },
 

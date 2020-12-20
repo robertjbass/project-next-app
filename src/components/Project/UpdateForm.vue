@@ -5,7 +5,7 @@
         <v-layout>
           <v-row justify="center">
             <v-col cols="12" sm="12" md="8" lg="6">
-              <div class="card-background">
+              <div class="card-background" v-if="this.project.technologies">
                 <h1>Create Next App</h1>
                 Sumbission Date: {{ dateCreated | date }}
                 <v-text-field
@@ -38,23 +38,53 @@
                   label="Project Summary"
                   required
                 ></v-textarea>
+                <techSelect
+                  align="left"
+                  usedFor="Edit"
+                  :arrayItems="technologies"
+                  v-show="!project.technologies.length"
+                  :placeholder="'Programming Languages'"
+                  @arrayValue="updateLanguages"
+                />
+                <h3 align="left" v-show="project.technologies.length">
+                  Technologies<v-icon
+                    @click="toggleEditTech"
+                    class="editIcon"
+                    small
+                    right
+                    >mdi-pencil-circle</v-icon
+                  >
+                </h3>
+
                 <v-combobox
-                  class="section"
+                  class="chip"
+                  :disabled="true"
+                  v-show="project.technologies.length && !this.editTech"
                   id="anticipatedTechnologies"
-                  ref="anticipatedTechnologies"
-                  v-model="projectUpdate.updatedProject.technologies"
+                  v-model="project.technologies"
                   :items="items"
-                  label="Anticipated Technologies"
                   :rules="[
                     () =>
                       !!numberOfTechnologies ||
                       'Please select at least 1 technology',
                   ]"
                   multiple
-                  chips
                   clearable
                   required
+                  dense
                 ></v-combobox>
+                <div class="clear-tech-btn-wrap">
+                  <v-btn
+                    color="accentRed"
+                    class="clear-tech-btn"
+                    align="right"
+                    v-show="project.technologies.length"
+                    small
+                    width="200px"
+                    @click="clearTech"
+                    ><v-icon left>mdi-close</v-icon>Clear</v-btn
+                  >
+                </div>
                 <v-text-field
                   class="section"
                   id="githubRepo"
@@ -93,15 +123,7 @@
                   label="Project Goals"
                   required
                 ></v-textarea>
-                <!-- <v-text-field
-                  class="section"
-                  v-model="projectUpdate.updatedProject.imageUrl"
-                  name="imageUrl"
-                  label="Image URL"
-                  id="imageUrl"
-                  ref="imageUrl"
-                >
-                </v-text-field> -->
+
                 <v-file-input
                   v-model="projectUpdate.updatedProject.imageRaw"
                   name="imageUrl"
@@ -112,13 +134,6 @@
                   label="Project Banner Image"
                   @change="onFilePicked"
                 >
-                  <!-- :rules="[
-                    (value) =>
-                      !value ||
-                      value.size < 2000000 ||
-                      'Image size should be less than 2 MB!',
-                  ]" -->
-                  <!--  -->
                 </v-file-input>
                 <h3 v-if="this.imageUrl">Project Banner Image</h3>
                 <img
@@ -126,7 +141,6 @@
                   class="section"
                   width="400px"
                 />
-                <!-- :src="projectUpdate.updatedProject.imageUrl" -->
                 <v-combobox
                   class="section"
                   label="Duration"
@@ -188,6 +202,7 @@ export default {
       goals: null,
       image: null,
       imageUrl: null,
+      editTech: false,
       projectUpdate: {
         projectId: this.id,
         userId: "",
@@ -207,6 +222,16 @@ export default {
     };
   },
   methods: {
+    updateLanguages(value) {
+      this.project.technologies = value;
+    },
+    clearTech() {
+      this.project.technologies = [];
+      this.toggleEditTech;
+    },
+    toggleEditTech() {
+      this.editTech = !this.editTech;
+    },
     onFilePicked() {
       const files = event.target.files;
       let filename = files[0].name;
@@ -273,6 +298,10 @@ export default {
   },
 
   computed: {
+    technologies() {
+      return this.$store.getters.technologies;
+    },
+
     submitDisabled() {
       return (
         this.projectUpdate.updatedProject.title == this.project.title &&
@@ -366,7 +395,6 @@ export default {
 
 <style scoped>
 * {
-  /* margin-top: 20px; */
   padding: 0;
   background-color: #444;
 }
@@ -379,10 +407,17 @@ export default {
   padding-top: 15px;
   margin-top: 15px;
 }
-/* .card-background {
-  background-color: #333;
-} */
-/* .top-spacing {
-  margin-top: 40px;
-} */
+
+.editIcon {
+  cursor: pointer;
+  color: #fd0435;
+}
+
+.chip {
+  margin: 5px;
+}
+.clear-tech-btn-wrap {
+  display: flex;
+  justify-content: flex-end;
+}
 </style>
