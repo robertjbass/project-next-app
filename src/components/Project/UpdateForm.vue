@@ -82,7 +82,7 @@
                     small
                     width="200px"
                     @click="clearTech"
-                    ><v-icon left>mdi-close</v-icon>Clear</v-btn
+                    >Clear</v-btn
                   >
                 </div>
                 <v-text-field
@@ -106,23 +106,39 @@
                   clearable
                   :required="false"
                 ></v-text-field>
-                <v-textarea
-                  class="section"
-                  id="goals"
-                  ref="goals"
-                  v-model="projectUpdate.updatedProject.goals"
-                  :rules="[
-                    () =>
-                      !!projectUpdate.updatedProject.goals ||
-                      'This field is required',
-                    () =>
-                      (!!projectUpdate.updatedProject.goals &&
-                        projectUpdate.updatedProject.goals.length >= 15) ||
-                      'Just a little bit more information',
-                  ]"
-                  label="Project Goals"
+                <div class="goals">
+                  <ol>
+                    <li
+                      v-for="(goal, i) in project.goals"
+                      :key="goal[i]"
+                      align="left"
+                      id="goals"
+                      ref="goals"
+                    >
+                      {{ goal }}
+                      <v-icon small @click="deleteGoal(i)" color="accentRed"
+                        >mdi-close</v-icon
+                      >
+                    </li>
+                    <li
+                      v-show="currentGoal"
+                      class="pending-goal light-blue--text"
+                    >
+                      {{ currentGoal }}
+                    </li>
+                  </ol>
+                </div>
+
+                <v-text-field
+                  :label="goalCount"
                   required
-                ></v-textarea>
+                  class="goals"
+                  v-model="currentGoal"
+                  v-on:keyup="listenForNewGoal"
+                  hint="Press enter after each goal to add it"
+                  persistent-hint
+                />
+                <br />
 
                 <v-file-input
                   v-model="projectUpdate.updatedProject.imageRaw"
@@ -199,7 +215,8 @@ export default {
       search: null,
       githubRepo: "",
       productPage: "",
-      goals: null,
+      currentGoal: "",
+      goals: [],
       image: null,
       imageUrl: null,
       editTech: false,
@@ -222,6 +239,15 @@ export default {
     };
   },
   methods: {
+    listenForNewGoal: function (e) {
+      if (e.keyCode === 13) {
+        this.project.goals.push(this.currentGoal);
+        this.currentGoal = "";
+      }
+    },
+    deleteGoal(i) {
+      this.project.goals.splice(i, 1);
+    },
     updateLanguages(value) {
       this.project.technologies = value;
     },
@@ -268,7 +294,7 @@ export default {
       this.search = null;
       this.githubRepo = "";
       this.productPage = "";
-      this.goals = null;
+      this.goals = [];
       this.image = null;
       this.imageUrl = null;
     },
@@ -298,6 +324,10 @@ export default {
   },
 
   computed: {
+    goalCount() {
+      return `Goal ${this.project.goals.length + 1}`;
+    },
+
     technologies() {
       return this.$store.getters.technologies;
     },
@@ -397,6 +427,12 @@ export default {
 * {
   padding: 0;
   background-color: #444;
+}
+li {
+  margin: 15px 0;
+}
+.goals {
+  padding: 8px 0;
 }
 .updateForm {
   margin: 0;

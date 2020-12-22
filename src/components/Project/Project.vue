@@ -27,8 +27,14 @@
           :style="`background-image:url('${project.imageUrl}')`"
         ></div>
         <br />
-        <h4>Goals</h4>
-        <p align="left">{{ project.goals }}</p>
+        <div class="goals">
+          <strong>Goals: </strong>
+          <ul>
+            <li v-for="(goal, i) in project.goals.slice(0, 3)" :key="goal[i]">
+              {{ goal }}
+            </li>
+          </ul>
+        </div>
         <br />
         <h4 align="left">Technologies</h4>
         <v-chip
@@ -88,6 +94,7 @@
               v-on:reportUpdate="newUpdate"
               >{{ editDialog ? "Close Edit" : "Edit" }}</EditButtons
             >
+            <br />
             <div v-if="projectBelongsToLoggedInUser" class="update-form">
               <UpdateForm
                 :thisUser="projectBelongsToLoggedInUser"
@@ -102,7 +109,8 @@
             <h3>Update Log</h3>
             <div class="update-log">
               <v-row v-of="numberOfComments > 0">
-                <v-col cols="8" offset="2" align="center">
+                <v-col cols="12" align="center">
+                  <!-- <v-col cols="8" offset="2" align="center"> -->
                   <v-simple-table>
                     <thead>
                       <tr v-show="numberOfComments">
@@ -134,7 +142,93 @@
             </div>
           </div>
         </div>
-        <br /><br />
+
+        <br />
+        <!-- {{ project.comments }} -->
+        <h3>Comments</h3>
+        <!-- <br /> -->
+        <div v-show="this.project.comments">
+          <!-- <div class="comment" v-for="comment in comments" :key="comment.id">
+            {{ comment }} -->
+          <v-row>
+            <v-col class="comments">
+              <v-simple-table>
+                <template v-slot:default>
+                  <thead>
+                    <tr>
+                      <th class="text-left">User</th>
+                      <th class="text-left">Date</th>
+                      <th class="text-left">Comment</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="comment in project.comments" :key="comment.id">
+                      <td align="left">{{ comment.authorName }}</td>
+                      <td align="left">{{ comment.date | date }}</td>
+                      <td align="left">{{ comment.comment }}</td>
+                    </tr>
+                  </tbody>
+                </template>
+              </v-simple-table>
+              <!-- </div> -->
+            </v-col></v-row
+          >
+        </div>
+        <br />
+
+        <v-row justify="center">
+          <v-dialog v-model="dialog" persistent max-width="600px">
+            <template v-slot:activator="{ on, attrs }">
+              <!-- // todo - ENABLE THIS -->
+              <v-btn
+                color="primary"
+                :disabled="false"
+                dark
+                v-bind="attrs"
+                v-on="on"
+              >
+                Comment
+              </v-btn>
+            </template>
+            <v-card dark>
+              <v-card-title>
+                <span class="headline"
+                  ><v-icon left>mdi-message</v-icon>Comment</span
+                >
+              </v-card-title>
+              <v-card-text>
+                <v-container>
+                  <v-row>
+                    <v-col cols="12">
+                      <v-textarea
+                        label="Comment"
+                        required
+                        v-model="commentText"
+                        >{{ commentText }}</v-textarea
+                      >
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="red darken-1" text @click="closeDialog">
+                  Close
+                </v-btn>
+                <v-btn
+                  v-show="commentText"
+                  color="green darken-1"
+                  text
+                  @click="saveComment"
+                >
+                  Comment
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-row>
+        <br />
+        <hr />
         <div v-if="repoData">
           <v-switch
             flat
@@ -165,86 +259,10 @@
           <v-row v-else><h3>No README.md file available</h3></v-row>
           <br />
         </div>
-        <hr />
-        <br />
-        <!-- {{ project.comments }} -->
-        <div class="comments" v-show="this.project.comments">
-          <!-- <div class="comment" v-for="comment in comments" :key="comment.id">
-            {{ comment }} -->
-          <v-simple-table>
-            <template v-slot:default>
-              <thead>
-                <tr>
-                  <th class="text-left">User</th>
-                  <th class="text-left">Date</th>
-                  <th class="text-left">Comment</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="comment in project.comments" :key="comment.id">
-                  <td align="left">{{ comment.authorName }}</td>
-                  <td align="left">{{ comment.date | date }}</td>
-                  <td align="left">{{ comment.comment }}</td>
-                </tr>
-              </tbody>
-            </template>
-          </v-simple-table>
-          <!-- </div> -->
-        </div>
-        <br />
+
         <div class="comment-btn-box" align="right">
           <!--  -->
-          <v-row justify="center">
-            <v-dialog v-model="dialog" persistent max-width="600px">
-              <template v-slot:activator="{ on, attrs }">
-                <!-- // todo - ENABLE THIS -->
-                <v-btn
-                  color="primary"
-                  :disabled="false"
-                  dark
-                  v-bind="attrs"
-                  v-on="on"
-                >
-                  Comment
-                </v-btn>
-              </template>
-              <v-card dark>
-                <v-card-title>
-                  <span class="headline"
-                    ><v-icon left>mdi-message</v-icon>Comment</span
-                  >
-                </v-card-title>
-                <v-card-text>
-                  <v-container>
-                    <v-row>
-                      <v-col cols="12">
-                        <v-textarea
-                          label="Comment"
-                          required
-                          v-model="commentText"
-                          >{{ commentText }}</v-textarea
-                        >
-                      </v-col>
-                    </v-row>
-                  </v-container>
-                </v-card-text>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="red darken-1" text @click="closeDialog">
-                    Close
-                  </v-btn>
-                  <v-btn
-                    v-show="commentText"
-                    color="green darken-1"
-                    text
-                    @click="saveComment"
-                  >
-                    Comment
-                  </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-          </v-row>
+
           <!-- // todo - fix comments -->
           <!-- {{ newComment }} -->
         </div>
@@ -426,6 +444,10 @@ h5 {
 a {
   text-decoration: none;
   color: white;
+}
+
+.comments {
+  padding: 12px;
 }
 
 .follow-dialog {

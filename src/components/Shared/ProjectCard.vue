@@ -51,8 +51,12 @@
       </div>
     </div>
     <div class="goals">
-      <strong>Goals: </strong>{{ project.goals.substr(0, 150)
-      }}{{ project.goals.length > 150 ? "..." : "" }}
+      <strong>Goals: </strong>
+      <ul>
+        <li v-for="(goal, i) in project.goals.slice(0, 3)" :key="goal[i]">
+          {{ goal }}
+        </li>
+      </ul>
     </div>
     <!-- <div class="debug">
       <pre class="json">
@@ -88,6 +92,10 @@ export default {
 a {
   text-decoration: none;
   color: white;
+}
+
+li {
+  list-style: none;
 }
 
 /* .debug {

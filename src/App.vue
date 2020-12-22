@@ -47,6 +47,12 @@
         <v-divider></v-divider>
 
         <v-list dense nav>
+          <v-list-item to="/">
+            <v-list-item-icon>
+              <v-icon left>mdi-home-outline</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>Home</v-list-item-content>
+          </v-list-item>
           <v-list-item
             v-for="item in this.menuItems"
             :key="item.title"

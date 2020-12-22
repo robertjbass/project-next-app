@@ -94,7 +94,7 @@
                       clearable
                       :required="false"
                     ></v-text-field>
-                    <v-textarea
+                    <!-- <v-textarea
                       id="goals"
                       ref="goals"
                       v-model="goals"
@@ -106,7 +106,40 @@
                       ]"
                       label="Project Goals"
                       required
-                    ></v-textarea>
+                    ></v-textarea> -->
+                    <div class="goals">
+                      <ol>
+                        <li
+                          v-for="(goal, i) in goals"
+                          :key="goal[i]"
+                          align="left"
+                          id="goals"
+                          ref="goals"
+                        >
+                          {{ goal }}
+                          <v-icon small @click="deleteGoal(i)" color="accentRed"
+                            >mdi-close</v-icon
+                          >
+                        </li>
+                        <li
+                          v-show="currentGoal"
+                          class="pending-goal light-blue--text"
+                        >
+                          {{ currentGoal }}
+                        </li>
+                      </ol>
+                    </div>
+
+                    <v-text-field
+                      :label="goalCount"
+                      required
+                      class="goals"
+                      v-model="currentGoal"
+                      v-on:keyup="listenForNewGoal"
+                      hint="Press enter after each goal to add it"
+                      persistent-hint
+                    />
+                    <!-- :placeholder="goalCount" -->
 
                     <v-file-input
                       ref="fileInput"
@@ -186,13 +219,23 @@ export default {
       search: null,
       githubRepo: "",
       productPage: "",
-      goals: null,
+      currentGoal: "",
+      goals: [],
       image: null,
       imageUrl: null,
       imageRaw: null,
     };
   },
   methods: {
+    deleteGoal(i) {
+      this.goals.splice(i, 1);
+    },
+    listenForNewGoal: function (e) {
+      if (e.keyCode === 13) {
+        this.goals.push(this.currentGoal);
+        this.currentGoal = "";
+      }
+    },
     clearTech() {
       this.selectedItems = [];
     },
@@ -239,7 +282,7 @@ export default {
       this.search = null;
       this.githubRepo = "";
       this.productPage = "";
-      this.goals = null;
+      this.goals = [];
       this.image = null;
       this.imageUrl = null;
     },
@@ -250,6 +293,9 @@ export default {
     },
   },
   computed: {
+    goalCount() {
+      return `Goal ${this.goals.length + 1}`;
+    },
     user() {
       return this.$store.getters.user;
     },
@@ -261,7 +307,7 @@ export default {
         this.projectName &&
         this.summary &&
         this.selectedItems &&
-        this.goals &&
+        this.goals.length > 0 &&
         this.selectedDuration &&
         this.imageRaw
       );
@@ -352,6 +398,13 @@ export default {
 </script>
 
 <style scoped>
+.goals {
+  padding: 8px 0;
+}
+.pending-goal {
+  font-weight: 600;
+}
+
 .chip {
   margin: 5px;
 }
