@@ -142,7 +142,7 @@ export const store = new Vuex.Store({
     updateAirtableTech(state, payload) {
       let { params } = payload
       let allTechnology = {
-        id: 1,
+        id: params.id,
         technology: params.technology,
         categories: params.categories,
       }
@@ -664,11 +664,20 @@ export const store = new Vuex.Store({
     //? ACTION - Update Airtable Tech Listing
     updateAirtableTech({ commit }, payload) {
       let { url, params } = payload
-      axios.post(url, params).then(res => {
-        payload.params.id = res.data.id
+      axios.post(url, params).then(async (res) => {
+        console.log(res.data[0])
+        // console.log(res.data.params)
+        payload.params.id = await res.data[0].id
+        payload.params.id = await res.data[0].fields
+        payload.params.categories = await res.data[0].fields.Categories
+        payload.params.technology = await res.data[0].fields.Technology
+        // payload.params.id = await res.data[0].fields.Notes
         console.log(payload.params.id)
+        
+
+      }).finally(() => {
+        commit("updateAirtableTech", payload)
       })
-      commit("updateAirtableTech", payload)
     }
   },
   
