@@ -112,9 +112,16 @@
           }}<br /><br />
         </div>
         <!--  -->
+        <hr />
+        <br />
+
         <div class="technologies" align="left" v-if="!editing">
           <h3>Databases</h3>
-          <div v-for="(item, i) in userData.stack.databases" :key="item[i]">
+          <div
+            v-show="userData.stack.databases"
+            v-for="(item, i) in userData.stack.databases"
+            :key="item[i]"
+          >
             <router-link
               :to="'../technology/' + removeSpecialChars(item)"
               class="light-blue--text"
@@ -125,6 +132,7 @@
           <br />
           <h3>Frameworks/Libraries</h3>
           <div
+            v-show="userData.stack.frameworksAndLibraries"
             v-for="(item, i) in userData.stack.frameworksAndLibraries"
             :key="item[i]"
           >
@@ -138,6 +146,7 @@
           <br />
           <h3>Platforms</h3>
           <div
+            v-show="userData.stack.hostingPlatforms"
             v-for="(item, i) in userData.stack.hostingPlatforms"
             :key="item[i]"
           >
@@ -150,7 +159,11 @@
           <br />
           <br />
           <h3>Languages</h3>
-          <div v-for="(item, i) in userData.stack.languages" :key="item[i]">
+          <div
+            v-show="userData.stack.languages"
+            v-for="(item, i) in userData.stack.languages"
+            :key="item[i]"
+          >
             <router-link
               :to="'../technology/' + removeSpecialChars(item)"
               class="light-blue--text"
@@ -160,7 +173,11 @@
           <br />
           <br />
           <h3>Other</h3>
-          <div v-for="(item, i) in userData.stack.other" :key="item[i]">
+          <div
+            v-show="userData.stack.other"
+            v-for="(item, i) in userData.stack.other"
+            :key="item[i]"
+          >
             <router-link
               :to="'../technology/' + removeSpecialChars(item)"
               class="light-blue--text"
@@ -171,6 +188,7 @@
           <br />
           <h3>Tech to Learn</h3>
           <div
+            v-show="userData.stack.technologiesToLearn"
             v-for="(item, i) in userData.stack.technologiesToLearn"
             :key="item[i]"
           >
@@ -218,7 +236,7 @@
           >
 
           <br /><br />
-          Projects:
+          <h3>Projects</h3>
           <div v-if="projectsByUser.length > 0">
             <div v-for="project in projectsByUser" :key="project.id">
               <router-link
@@ -230,7 +248,7 @@
           </div>
           <div v-else>No projects yet</div>
           <br />
-          Followed Projects:
+          <h3>Followed Projects</h3>
           <div v-for="project in followedProjects" :key="project">
             <div v-for="allProjects in userProjects" :key="allProjects.id">
               <div v-if="project == allProjects.id">
@@ -414,7 +432,7 @@ export default {
     },
 
     followedProjects() {
-      return this.loggedInUser.followedProjects;
+      return this.userData.followedProjects;
     },
 
     loggedInUser() {

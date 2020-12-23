@@ -105,6 +105,47 @@
                 >Start a Project</router-link
               >
             </v-card>
+            <!--  -->
+            <v-card dark class="right-card card">
+              <h3>Technology Library</h3>
+              Check out the
+              <router-link class="link light-blue--text" to="../technologies"
+                >Technology Library</router-link
+              >
+              to share your knowledge with the community. You can link your
+              tutorials and share your insight to help others<br /><br />
+              <h4>Recent additions:</h4>
+              <div class="recentAdditions" align="left">
+                <h4>NodeJS</h4>
+                <h4>JavaScript</h4>
+                <h4>Firestore</h4>
+                <h4>Vue.js</h4>
+                <h4>MySQL</h4>
+                <h4>TypeScript</h4>
+              </div>
+            </v-card>
+            <!--  -->
+            <v-card dark class="right-card card">
+              <h3>Learn Software Development</h3>
+              <br />
+              <h4>Recent additions:</h4>
+              <div class="recentAdditions" align="left">
+                <ul>
+                  <li class="lesson">NodeJS - From Zero to Hero</li>
+                  <li class="lesson">
+                    Which JavaScript framework is right for me?
+                  </li>
+                  <li class="lesson">
+                    Which programming language should I learn?
+                  </li>
+                  <li class="lesson">My first web app (Featuring Vue.js)</li>
+                  <li class="lesson">A beginners guide to databases</li>
+                  <li class="lesson">
+                    Setting up your development environment
+                  </li>
+                </ul>
+              </div>
+            </v-card>
           </v-col>
         </v-row>
       </v-layout>
@@ -151,8 +192,16 @@ h3 {
 ul {
   padding: 0;
 }
+li {
+  list-style: none;
+  margin-top: 20px;
+}
 strong {
   font-weight: 600;
+}
+
+.right-card {
+  margin-bottom: 20px;
 }
 
 .toAbout {

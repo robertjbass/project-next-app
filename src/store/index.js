@@ -87,14 +87,7 @@ export const store = new Vuex.Store({
       let { technologies, allTechnologies } = payload
       state.technologies = technologies;
       state.allTechnologies = []
-
-      // state.allTechnologies[0]["fields"]["Categories"][0]
-      // state.allTechnologies[0]["fields"]["Technology"]
-      // state.allTechnologies[0]["id"]
-      
-      
       for (let i = 0; i < allTechnologies.length; i++) {
-        // const element = array[i];
         state.allTechnologies.push({
           id: allTechnologies[i]["id"],
           technology: allTechnologies[i]["fields"]["Technology"],
@@ -102,9 +95,8 @@ export const store = new Vuex.Store({
         })
       }
       console.log(state.allTechnologies)
-      
-state.allTechnologies[0]["id"]
-},
+      state.allTechnologies[0]["id"]
+      },
 
     //? MUTATION - Set Loaded Projects
     setLoadedProjects(state, payload) {
@@ -348,12 +340,12 @@ state.allTechnologies[0]["id"]
             photoURL,
           } = user;
           const stack = {
-          languages: [],
-          frameworksAndLibraries: [],
-          databases: [],
-          hostingPlatform: [],
-          other: [],
-          technologiesToLearn: []
+            languages: [],
+            frameworksAndLibraries: [],
+            databases: [],
+            hostingPlatform: [],
+            other: [],
+            technologiesToLearn: []
           }
           const userEmail = user.email;
           let userData = { id: uid, githubId: id, stack, projects: [], followedProjects: [], documentId: "", userEmail, isNewUser, operationType, displayName, emailVerified, isAnonymous, phoneNumber, photoURL, avatar_url, bio, blog, company, created_at, email, events_url, followers, followers_url, following, following_url, gists_url, gravatar_id, hireable, html_url, location, login, name, node_id, organizations_url, public_gists, public_repos, received_events_url, repos_url, site_admin, starred_url, subscriptions_url, twitter_username, type, updated_at, url, providerId, username, signInMethod };

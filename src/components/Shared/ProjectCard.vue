@@ -54,7 +54,12 @@
       <strong>Goals: </strong>
       <ul>
         <li v-for="(goal, i) in project.goals.slice(0, 3)" :key="goal[i]">
-          {{ goal }}
+          {{
+            goal
+              .substr(0, 60)
+              .trim()
+              .concat(goal.length > 60 ? "..." : "")
+          }}
         </li>
       </ul>
     </div>
