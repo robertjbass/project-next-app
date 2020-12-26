@@ -188,8 +188,21 @@ export default {
       return this.selectedTechnology.reviews;
     },
     selectedTechnology() {
+      // todo - fix this terrible hack
+      let flag = "";
+      if (
+        this.technology == "aspnetcore" ||
+        this.technology === "net" ||
+        this.technology == "aspnet" ||
+        this.technology == "netcore"
+      ) {
+        flag = this.technology.replace("net", "dotnet");
+      } else {
+        flag = this.technology;
+      }
       return this.$store.getters.loadedTechnology(
-        this.$route.params.technology
+        flag
+        // this.$route.params.technology
       );
     },
     user() {

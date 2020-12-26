@@ -137,15 +137,13 @@ export const store = new Vuex.Store({
       state.user;
       let { name, company, username, email, location, bio, stack } = payload;
       // let { languages, frameworksAndLibraries, databases, hostingPlatforms, other, technologiesToLearn } = stack
-      (state.user.name = name),
-        (state.user.company = company),
-        (state.user.username = username),
-        (state.user.email = email),
-        (state.user.location = location),
-        (state.user.bio = bio),
-        (state.user.stack = stack);
-
-      // todo - do the same for hackers
+      state.user.name = name
+      state.user.company = company
+      state.user.username = username
+      state.user.email = email
+      state.user.location = location
+      state.user.bio = bio
+      state.user.stack = stack
     },
 
     //? MUTATION - Add Project Comments
@@ -174,26 +172,21 @@ export const store = new Vuex.Store({
       let technology = params.technology;
       state.technologies.push(technology);
       state.allTechnologies.push(allTechnology);
-      console.log(allTechnology, technology);
+      // console.log(allTechnology, technology);
     },
 
-    //? MUTATION - Update Airtable Tech Listing
-    // todo - in progress
+    //? MUTATION - Set Technologies from Firestore
     addTechnologiesFromFirestore(state, payload) {
       if (payload.isArray) {
         state.technologies = payload
       } else {
         state.technologies = [payload]
       }
-      console.log(state.technologies);
-      console.log(payload);
+      // console.log(state.technologies);
+      // console.log(payload);
     },
     
     
-    // //? MUTATION - Update Airtable Tech Listing
-    // demo() {
-    //   console.log('demo')
-    // },
 
     //? MUTATION - Update Single Technology - can also be used for general tech info modification
     addTechnologyReview(state, payload) {
@@ -286,7 +279,8 @@ export const store = new Vuex.Store({
 
       if (newTechnology) {
         console.log(`added by ${username} - user ID ${userId}`);
-
+        // todo - isn't adding to array without a refresh
+        // todo - add a special commit here for new technologies to be added to vuex
       }
       console.log(
         newTechnology ? "New Technology Added" : "Existing Technology"
@@ -1003,6 +997,7 @@ export const store = new Vuex.Store({
     },
 
     //? ACTION - Update Airtable Tech Listing
+    // todo - remove if still in use
     updateAirtableTech({ commit }, payload) {
       let { url, params } = payload;
       axios
@@ -1095,5 +1090,15 @@ export const store = new Vuex.Store({
     allTechnologies(state) {
       return state.allTechnologies;
     },
+
+    //? GETTER - GET All Technologies sorted by Date Modified
+    allTechnologiesDateSorted(state) {
+      if (state.allTechnologies) {
+
+        return state.allTechnologies.sort((a,b) => (a.dateModified.split("-").join("") < b.dateModified.split("-").join("") ? 1 : -1));
+      } else {
+        return []
+      }
+      },
   },
 });

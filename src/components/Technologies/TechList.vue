@@ -100,9 +100,11 @@
         v-model="reusePotential"
         label="this technology is likely to be used by hackers other than myself"
       />
+      <!-- //todo - fix and show -->
+      <!-- v-show="false" -->
       <v-btn
         small
-        @click="addNewTechnolog"
+        @click="addNewTechnology"
         :disabled="!ableToSubmit"
         color="accentRed"
         ><v-icon left>mdi-content-save-outline</v-icon>Submit</v-btn
@@ -128,7 +130,7 @@ export default {
     };
   },
   methods: {
-    addNewTechnolog() {
+    addNewTechnology() {
       // let url =
       //   "https://v1.nocodeapi.com/bbass/airtable/OWBByjdlNVhiKRiR?tableName=NewTechnologies";
       let params = {
@@ -139,9 +141,10 @@ export default {
         newTechnology: true,
         dateModified: this.todayDate,
       };
-      // this.$store.dispatch("addNewTechnolog", { url, params });
+      // this.$store.dispatch("addNewTechnology", { url, params });
       // todo -
       this.$store.dispatch("addTechnologiesToFirestore", params);
+      this.$router.go("../technologies");
     },
     addTechnology() {
       this.addTech = true;

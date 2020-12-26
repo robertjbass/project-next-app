@@ -116,6 +116,24 @@
               tutorials and share your insight to help others<br /><br />
               <h4>Recent additions:</h4>
               <div class="recentAdditions" align="left">
+                <div
+                  class="recentItems"
+                  v-if="allTechnologiesDateSorted.length"
+                >
+                  <div
+                    class="descriptionsByDate"
+                    v-for="updated in technologiesByDate.slice(0, 5)"
+                    :key="updated.documentId"
+                  >
+                    <router-link
+                      :to="`../technology/${updated.urlSlug}`"
+                      class="light-blue--text"
+                      style="text-decoration: none; font-weight: 600"
+                      >{{ updated.technology }}</router-link
+                    >
+                  </div>
+                  <br />
+                </div>
                 <h4>NodeJS</h4>
                 <h4>JavaScript</h4>
                 <h4>Firestore</h4>
@@ -164,6 +182,12 @@ export default {
     },
   },
   computed: {
+    technologiesByDate() {
+      return this.allTechnologiesDateSorted;
+    },
+    allTechnologiesDateSorted() {
+      return this.$store.getters.allTechnologiesDateSorted;
+    },
     todayIsMonday() {
       return new Date().getDay() == 1;
     },
