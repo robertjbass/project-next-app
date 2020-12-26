@@ -105,10 +105,15 @@
                   </div>
                   <div class="review">
                     <br />
-                    {{ review.newDescription }}<br /><br />
-                    <strong>Recommendation: </strong>{{ review.recommendation
-                    }}<br /><br />
-                    <strong>Use Case: </strong>{{ review.useCase }}<br />
+                    {{ review.newDescription }}
+                    <div v-if="review.recommendation" class="first-added">
+                      <br /><br />
+                      <strong v-show="review.recommendation"
+                        >Recommendation: </strong
+                      >{{ review.recommendation }}<br /><br />
+                      <strong v-show="review.useCase">Use Case: </strong
+                      >{{ review.useCase }}<br />
+                    </div>
                   </div>
                 </div>
               </div>

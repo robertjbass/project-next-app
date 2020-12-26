@@ -86,6 +86,8 @@
           'Runtime/Environment',
           'Software Platform',
           'Text Editor/IDE',
+          'Package',
+          'Other',
         ]"
       />
       <v-checkbox
@@ -121,7 +123,7 @@ export default {
   data() {
     return {
       searchValue: "",
-      addTech: "",
+      addTech: false,
       newTechToAdd: "",
       category: "",
       spellingGood: false,
@@ -131,8 +133,6 @@ export default {
   },
   methods: {
     addNewTechnology() {
-      // let url =
-      //   "https://v1.nocodeapi.com/bbass/airtable/OWBByjdlNVhiKRiR?tableName=NewTechnologies";
       let params = {
         technology: this.newTechToAdd,
         categories: this.category,
@@ -140,11 +140,12 @@ export default {
         userId: this.currentUser.documentId,
         newTechnology: true,
         dateModified: this.todayDate,
+        avatar: this.currentUser.avatar_url,
       };
-      // this.$store.dispatch("addNewTechnology", { url, params });
-      // todo -
       this.$store.dispatch("addTechnologiesToFirestore", params);
-      this.$router.go("../technologies");
+      this.addTech = false;
+      this.searchValue = this.newTechToAdd;
+      // this.$router.go("../technologies");
     },
     addTechnology() {
       this.addTech = true;
@@ -192,17 +193,18 @@ export default {
       );
     },
     addNew() {
-      if (this.searchValue.length > 0 && this.partialMatches.length == 0) {
+      // todo - if someone types in "JavaScript-----" it will present them with the option to add
+      // todo - changed from partialMatches to keywordAdded because it includes the normalized version but won't flag an exact match based on the normalized version
+      if (this.searchValue.length > 0 && this.keywordAddedSearch.length == 0) {
+        // if (this.searchValue.length > 0 && this.partialMatches.length == 0) {
         return this.searchValue;
       } else {
         return "";
       }
     },
     technologies() {
-      // return this.$store.getters.technologies;
       return this.$store.getters.allTechnologies;
     },
-    // todo - not matching
     exactMatch() {
       if (this.searchValue == "") {
         return [];
@@ -229,7 +231,7 @@ export default {
         });
       }
     },
-    //* Not currently in use - replaced with keyword added search (for now at least)
+    //* Not currently in use - replaced with keyword added search (for now at least) - however, this is still in use for the "exact match"
     partialMatches() {
       if (this.searchValue == "") {
         return [];

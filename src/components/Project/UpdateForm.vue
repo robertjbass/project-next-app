@@ -124,7 +124,14 @@
                       v-show="currentGoal"
                       class="pending-goal light-blue--text"
                     >
-                      {{ currentGoal }}
+                      {{ currentGoal
+                      }}<v-icon
+                        @click="addGoalWithClick"
+                        right
+                        x-small
+                        class="add-goal light-green--text"
+                        >mdi-check</v-icon
+                      >
                     </li>
                   </ol>
                 </div>
@@ -220,6 +227,8 @@ export default {
       image: null,
       imageUrl: null,
       editTech: false,
+      // This isn't a perfect solution but it's a temporary and probably 'good enough' fix for the submit button not otherwise activating when adding new goals
+      modifiedGoals: false,
       projectUpdate: {
         projectId: this.id,
         userId: "",
@@ -239,13 +248,20 @@ export default {
     };
   },
   methods: {
+    addGoalWithClick() {
+      this.project.goals.push(this.currentGoal);
+      this.modifiedGoals = true;
+      this.currentGoal = "";
+    },
     listenForNewGoal: function (e) {
       if (e.keyCode === 13) {
         this.project.goals.push(this.currentGoal);
+        this.modifiedGoals = true;
         this.currentGoal = "";
       }
     },
     deleteGoal(i) {
+      this.modifiedGoals = true;
       this.project.goals.splice(i, 1);
     },
     updateLanguages(value) {
@@ -284,7 +300,7 @@ export default {
     },
 
     resetForm() {
-      this.errorMessages = [];
+      (this.modifiedGoals = false), (this.errorMessages = []);
       this.formHasErrors = false;
       this.selectedItems = [];
       this.errorMessages = "";
@@ -334,6 +350,7 @@ export default {
 
     submitDisabled() {
       return (
+        this.modifiedGoals == false &&
         this.projectUpdate.updatedProject.title == this.project.title &&
         this.projectUpdate.updatedProject.description ==
           this.project.description &&
@@ -430,6 +447,9 @@ export default {
 }
 li {
   margin: 15px 0;
+}
+.add-goal {
+  cursor: pointer;
 }
 .goals {
   padding: 8px 0;

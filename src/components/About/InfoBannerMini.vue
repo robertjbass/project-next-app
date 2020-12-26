@@ -146,7 +146,7 @@
             <v-card dark class="right-card card">
               <h3>Learn Software Development</h3>
               <br />
-              <h4>Recent additions:</h4>
+              <h4>In Progress:</h4>
               <div class="recentAdditions" align="left">
                 <ul>
                   <li class="lesson">NodeJS - From Zero to Hero</li>

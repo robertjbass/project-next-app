@@ -125,7 +125,14 @@
                           v-show="currentGoal"
                           class="pending-goal light-blue--text"
                         >
-                          {{ currentGoal }}
+                          {{ currentGoal
+                          }}<v-icon
+                            @click="addGoalWithClick"
+                            right
+                            x-small
+                            class="add-goal light-green--text"
+                            >mdi-check</v-icon
+                          >
                         </li>
                       </ol>
                     </div>
@@ -227,6 +234,10 @@ export default {
     };
   },
   methods: {
+    addGoalWithClick() {
+      this.goals.push(this.currentGoal);
+      this.currentGoal = "";
+    },
     deleteGoal(i) {
       this.goals.splice(i, 1);
     },
@@ -401,6 +412,11 @@ export default {
 .goals {
   padding: 8px 0;
 }
+
+.add-goal {
+  cursor: pointer;
+}
+
 .pending-goal {
   font-weight: 600;
 }

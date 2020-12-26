@@ -25,11 +25,6 @@
           </v-col>
         </v-row>
       </v-layout>
-      <!-- // todo - debug -->
-      <!-- {{ loadedProjectsDates }} -->
-      <!-- <div v-for="project in sortedProjects" :key="project.id">
-        {{ project }}
-      </div> -->
       <InfoBannerMini />
       <h1>Featured Projects</h1>
       <v-layout class="carousel" style="cursor: pointer">
@@ -144,13 +139,6 @@ export default {
     userIsAuthenticated() {
       return this.user !== null && this.user !== undefined;
     },
-    // images() {
-    //   return `https://dummyimage.com/2:2x1080/${
-    //     this.projects[this.model].bgColor
-    //   }/${this.projects[this.model].fontColor}.jpg&text=${
-    //     this.projects[this.model].title
-    //   }`;
-    // },
   },
 };
 </script>
@@ -178,6 +166,5 @@ export default {
   margin: 0 2.5% 20px 2.5%;
   padding: 0 0 20px 0;
   align-items: stretch;
-  /* margin: 5%; */
 }
 </style>

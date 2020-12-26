@@ -10,6 +10,8 @@ const provider = new firebase.auth.GithubAuthProvider();
 
 Vue.use(Vuex);
 
+// todo - set loading where needed
+
 export const store = new Vuex.Store({
   /*************************
   //* #1 - STATE
@@ -51,12 +53,12 @@ export const store = new Vuex.Store({
       state.technologies.push(technology);
       state.allTechnologies.forEach((tech) => {
         if (technology == tech.technology) {
-          (tech.categories = categories),
-            (tech.description = description),
-            (tech.id = documentId),
-            (tech.technology = technology),
-            (tech.updated = dateUpdated),
-            tech.recommendation.push(newRecommendation);
+          tech.categories = categories;
+          tech.description = description;
+          tech.id = documentId;
+          tech.technology = technology;
+          tech.updated = dateUpdated;
+          tech.recommendation.push(newRecommendation);
         }
       });
     },
@@ -118,7 +120,7 @@ export const store = new Vuex.Store({
     setTechnologies(state, payload) {
       // console.log(payload);
       let { technologies, allTechnologies } = payload;
-      state.allTechnologies = allTechnologies
+      state.allTechnologies = allTechnologies;
       state.technologies = technologies;
     },
 
@@ -137,18 +139,19 @@ export const store = new Vuex.Store({
       state.user;
       let { name, company, username, email, location, bio, stack } = payload;
       // let { languages, frameworksAndLibraries, databases, hostingPlatforms, other, technologiesToLearn } = stack
-      state.user.name = name
-      state.user.company = company
-      state.user.username = username
-      state.user.email = email
-      state.user.location = location
-      state.user.bio = bio
-      state.user.stack = stack
+      state.user.name = name;
+      state.user.company = company;
+      state.user.username = username;
+      state.user.email = email;
+      state.user.location = location;
+      state.user.bio = bio;
+      state.user.stack = stack;
     },
 
     //? MUTATION - Add Project Comments
     addComment(state, payload) {
       let { id, comment } = payload;
+      // only the id needs to be logged, the comment is only for visual reference
       console.log(comment);
       state.loadedProjects.forEach((project) => {
         if (id == project.documentId) {
@@ -172,72 +175,94 @@ export const store = new Vuex.Store({
       let technology = params.technology;
       state.technologies.push(technology);
       state.allTechnologies.push(allTechnology);
-      // console.log(allTechnology, technology);
     },
 
-    //? MUTATION - Set Technologies from Firestore
+    //? MUTATION - Set NEW Technology just added to Firestore
     addTechnologiesFromFirestore(state, payload) {
-      if (payload.isArray) {
-        state.technologies = payload
+      let { newTechnology, newTechObject } = payload;
+      if (newTechnology) {
+        state.technologies.push(newTechObject.technology);
+        state.allTechnologies.push(newTechObject);
       } else {
-        state.technologies = [payload]
+        console.log("Do nothing, addTechnologyReview instead");
       }
-      // console.log(state.technologies);
-      // console.log(payload);
     },
-    
-    
 
     //? MUTATION - Update Single Technology - can also be used for general tech info modification
+    // todo - when adding a review for DENO, it didn't show up until after a refresh. Look into this
     addTechnologyReview(state, payload) {
-      let { categories, dateModified, description, documentId, keywords, reviews, technology, urlSlug } = payload
-      state.allTechnologies.forEach(tech => {
-        if (tech.documentId == documentId) {
-          tech.categories = categories
-          tech.dateModified = dateModified
-          tech.description = description
-          tech.documentId = documentId
-          tech.keywords = keywords
-          tech.reviews = reviews
-          tech.technology = technology
-          tech.urlSlug = urlSlug
-        }
-      })
-    }
-
+      let { techWithReview, newTechnology } = payload;
+      if (!newTechnology) {
+        let {
+          categories,
+          dateModified,
+          description,
+          documentId,
+          keywords,
+          reviews,
+          technology,
+          urlSlug,
+        } = payload;
+        state.allTechnologies.forEach((tech) => {
+          if (tech.documentId == documentId) {
+            tech.categories = categories;
+            tech.dateModified = dateModified;
+            tech.description = description;
+            tech.documentId = documentId;
+            tech.keywords = keywords;
+            tech.reviews = reviews;
+            tech.technology = technology;
+            tech.urlSlug = urlSlug;
+          }
+        });
+      } else {
+        // console.log(techWithReview);
+        state.allTechnologies.push(techWithReview);
+      }
+    },
   },
 
   /*************************
   //* #3 - ACTIONS
   ************************** */
   actions: {
-
-    //? ACTIONS: Pull Data from Airtable and add to firestore
+    //? ACTIONS: Technology Review from User
     addTechnologyReview({ commit, getters }, payload) {
-      let { newTechnology, name, dateUpdated, techInfo, user, review } = payload
-      // console.log(payload)
-      let { documentId, keywords } = techInfo
-      let existingTechData = getters.loadedTechnology(documentId)
-      // console.log(existingTechData)
-      let { categories, dateModified, description, reviews, technology, urlSlug } = existingTechData
-      console.log(dateModified, " is the original date")
-      console.log(newTechnology, ' is not used currently')
-      console.log(name, " not used")
-      let { userId, username, avatar } = user
-      let { newDescription, useCase, recommendation } = review
-      
-      reviews.unshift({
-          date: dateUpdated,
-          newDescription,
-          useCase,
-          recommendation,
-          user: {
-            userId,
-            username,
-            avatar,
-          },
-        })
+      let {
+        newTechnology,
+        name,
+        dateUpdated,
+        techInfo,
+        user,
+        review,
+      } = payload;
+      let { documentId, keywords } = techInfo;
+      let existingTechData = getters.loadedTechnology(documentId);
+      let {
+        categories,
+        dateModified,
+        description,
+        reviews,
+        technology,
+        urlSlug,
+      } = existingTechData;
+      console.log(dateModified, " is the original date");
+      console.log(newTechnology, " is not used currently");
+      console.log(name, " not used");
+      let { userId, username, avatar } = user;
+      let { newDescription, useCase, recommendation } = review;
 
+      reviews.unshift({
+        date: dateUpdated,
+        newDescription,
+        useCase,
+        recommendation,
+        user: {
+          userId,
+          username,
+          avatar,
+        },
+      });
       let techWithReview = {
         categories,
         dateModified: dateUpdated,
@@ -246,25 +271,24 @@ export const store = new Vuex.Store({
         keywords,
         reviews,
         technology,
-        urlSlug
-      }
-      console.log(techWithReview)
-      // todo -
-
-
+        urlSlug,
+      };
       let techRef = db.collection("technologies").doc(documentId);
       techRef.get().then((docSnapshot) => {
         if (docSnapshot.exists) {
-          console.log("document exists");
-            db.collection("technologies").doc(documentId).update({...techWithReview})
+          console.log("exists");
+          db.collection("technologies")
+            .doc(documentId)
+            .update({ ...techWithReview });
         } else {
-          console.log("document doesn't exist");
-          db.collection("technologies").doc(documentId).set({...techWithReview})
+          console.log("new");
+          db.collection("technologies")
+            .doc(documentId)
+            .set({ ...techWithReview });
         }
       });
-      commit("addTechnologiesFromFirestore", techWithReview);
+      commit("addTechnologiesFromFirestore", { techWithReview, newTechnology });
     },
-
 
     //? ACTIONS: Add New Technology to Firestore (TEST ME)
     addTechnologiesToFirestore({ commit }, payload) {
@@ -273,22 +297,15 @@ export const store = new Vuex.Store({
         categories,
         username,
         userId,
+        avatar,
         dateModified,
         newTechnology,
       } = payload;
 
-      if (newTechnology) {
-        console.log(`added by ${username} - user ID ${userId}`);
-        // todo - isn't adding to array without a refresh
-        // todo - add a special commit here for new technologies to be added to vuex
-      }
-      console.log(
-        newTechnology ? "New Technology Added" : "Existing Technology"
-      );
-      console.log(payload);
-      let newTechObjectArray = [];
       let description = "";
-      let slug = technology
+      let reviews = [];
+
+      let documentId = technology
         .split(" ")
         .join("")
         .split(".NET")
@@ -302,6 +319,9 @@ export const store = new Vuex.Store({
         .split("+")
         .join("p")
         .toLowerCase();
+
+      let slug = documentId;
+
       let keyword = slug.includes("js")
         ? "javascript"
         : slug.includes("sql")
@@ -309,96 +329,60 @@ export const store = new Vuex.Store({
         : slug.includes("dotnet")
         ? "dotnet"
         : slug;
-      let newTechObject = {
-        documentId: slug,
-        technology: technology,
-        categories: [categories],
-        description: description,
-        dateModified: dateModified,
-        keywords: [keyword],
-        urlSlug: slug,
-        reviews: [],
-      };
-      newTechObjectArray.push(newTechObject);
 
-      newTechObjectArray.forEach((item) => {
-        let techRef = db.collection("technologies").doc(item.urlSlug);
-        techRef.get().then((docSnapshot) => {
-          if (docSnapshot.exists) {
-            console.log("document exists");
-            techRef.onSnapshot((doc) => {
-              doc.update({ ...item });
-            });
-          } else {
-            console.log("document doesn't exist");
-            techRef.set({ ...item });
-          }
+      if (newTechnology) {
+        reviews.push({
+          date: dateModified,
+          newDescription: `New technology added by ${username}`,
+          recommendation: "",
+          useCase: "",
+          user: {
+            avatar,
+            userId,
+            username,
+          },
         });
-        commit("addTechnologiesFromFirestore", newTechObjectArray);
+      }
+      console.log(
+        newTechnology ? "New Technology Added" : "Existing Technology"
+      );
+      let newTechObject = {
+        categories: [categories.toString()],
+        dateModified,
+        description,
+        documentId,
+        keywords: [keyword],
+        reviews,
+        technology,
+        urlSlug: slug,
+      };
+      let techRef = db.collection("technologies").doc(slug);
+      techRef.get().then((docSnapshot) => {
+        if (docSnapshot.exists) {
+          console.log("document exists - this shouldn't happen");
+          techRef.onSnapshot((doc) => {
+            doc.update({ ...newTechObject });
+          });
+        } else {
+          console.log("document doesn't exist");
+          db.collection("technologies")
+            .doc(slug)
+            .set(newTechObject);
+        }
+        commit("addTechnologiesFromFirestore", {
+          newTechObject,
+          newTechnology,
+        });
       });
     },
 
-    //? ACTIONS: Pull Data from Airtable and add to firestore
-    //! This may never be used again - Not sure yet.
-    // addTechnologiesToFirestoreAirtable({ commit }) {
-      // let airtableTechArray = [];
-      //  let url =
-      //    "https://v1.nocodeapi.com/bbass/airtable/OWBByjdlNVhiKRiR?tableName=Technologies&view=All&perPage=200";
-      //  axios
-      //    .get(url)
-      //    .then((res) => {
-      //      let { records } = res.data;
-      //      console.log(records)
-      //      records.forEach(async (record) => {
-      //        let technology = record.fields.Technology;
-      //        let description = record.fields.Description == undefined ? "" : record.fields.Description;
-      //        let slug = technology
-      //          .split(" ").join("").split('/').join('-').split(".NET").join("dotnet").split(".").join("").split("-").join("").split("#").join("sharp").split("+").join("p").toLowerCase();
-      //        let keyword = slug.includes("js") ? "javascript" : slug.includes("sql") ? "sql" : slug.includes("dotnet") ? "dotnet" : slug;
-      //        let airtableTechObject = {
-      //         documentId: slug,
-      //         technology: technology,
-      //         categories: [record.fields.Categories[0]],
-      //         description: description,
-      //         dateModified: record.fields["Last Modified"],
-      //         keywords: [keyword],
-      //         urlSlug: slug,
-      //         reviews: [],
-      //        };
-      //        airtableTechArray.push(airtableTechObject);
-      //      });
-      //    })
-      //    .catch((err) => {
-      //      console.error(err);
-      //    })
-      //    .then(() => {
-      //      airtableTechArray.forEach(item => {
-      //        let techRef = db.collection('technologies').doc(item.urlSlug);
-      //        techRef.get()
-      //          .then((docSnapshot) => {
-      //          if (docSnapshot.exists) {
-      //            console.log("document exists", item.urlSlug);
-      //            techRef.onSnapshot((doc) => {
-      //              console.log(doc.id, {...item})
-      //              db.collection('technologies').doc(item.urlSlug).update({...item})
-      //            });
-      //          } else {
-      //            console.log("document doesn't exist", item.urlSlug, { ...item });
-      //            db.collection('technologies').doc(item.urlSlug).set({...item})
-      //          }
-      //        })
-      //        commit("addTechnologiesToFirestore", airtableTechArray);
-      //      });
-      //    })
-    // },
-
     //? ACTION - Update User Profile
     addComment({ commit }, payload) {
-      console.table(payload);
+      // console.table(payload);
       let { projectId, comment, comments } = payload;
       let { id, date, commentText, authorName } = comment;
-      console.table({ projectId, id, date, commentText, authorName });
-      console.table({ comment, comments });
+      // console.table({ projectId, id, date, commentText, authorName });
+      // console.table({ comment, comments });
       (comment = {
         id: id,
         date: date,
@@ -426,7 +410,6 @@ export const store = new Vuex.Store({
         bio,
         stack,
       } = payload;
-      // let { languages, frameworksAndLibraries, databases, hostingPlatforms, other, technologiesToLearn } = stack
       db.collection("users")
         .doc(userId.trim())
         .update({
@@ -443,12 +426,11 @@ export const store = new Vuex.Store({
 
     //? ACTION - Follow Project
     followProject({ commit, getters }, payload) {
-      console.log("followProject", payload);
       commit("setLoading", true);
       let userProjects = [];
       let userDocId;
       const currentUser = getters.user;
-      console.log(currentUser);
+      // console.log(currentUser);
       let userDocRef = db.collection("users");
       userDocRef
         .get()
@@ -464,7 +446,7 @@ export const store = new Vuex.Store({
               } else {
                 userProjects.push(payload);
               }
-              console.log(userProjects);
+              // console.log(userProjects);
             }
           });
         })
@@ -492,7 +474,7 @@ export const store = new Vuex.Store({
               currentUserProjects: userProjects,
             });
           }
-          console.log({ id: payload, fbKey: userDocId, userProjects });
+          // console.log({ id: payload, fbKey: userDocId, userProjects });
           commit("setLoading", false);
         })
         .catch((error) => {
@@ -948,7 +930,6 @@ export const store = new Vuex.Store({
       commit("clearError");
     },
 
-    //  todo -
     //? ACTION - SET TECHNOLOGIES
     setTechnologies({ commit }) {
       let technologies = [];
@@ -958,64 +939,34 @@ export const store = new Vuex.Store({
         const snapshot = await db.collection("technologies").get();
         snapshot.forEach((doc) => {
           allTechnologies.push(doc.data());
-          // console.log(doc.data());
           technologies.push(doc.data().technology);
         });
       };
 
       getTechnologies().then(() => {
-        // commit("demo", 'test')
-        console.log('setTechnologies',{ technologies, allTechnologies })
+        console.log("setTechnologies", { technologies, allTechnologies });
         commit("setTechnologies", { technologies, allTechnologies });
       });
-      // //  .then(console.log(item))
-      // // return snapshot.docs.map(doc => doc.data());
-
-      // //  let techRef = db.collection('technologies').get().then(() => {
-
-      // //  console.log(techRef)
-      // //  })
-      // //  .forEach(item => {
-      // //  allTechnologies.push(item)
-      // //  console.log(item)
-      // //  })
-      // //  let technologyUrl = `https://v1.nocodeapi.com/bbass/airtable/OWBByjdlNVhiKRiR?tableName=Technologies&view=All&perPage=500&sortBy=Technology`;
-      // //  axios
-      // //    .get(technologyUrl)
-      // //    .then((res) => {
-      // //      technologies = [];
-      // //      res.data.records.forEach((techObject) => {
-      // //        technologies.push(techObject.fields.Technology);
-      // //        allTechnologies.push(techObject);
-      // //      });
-      // //  })
-      // //  .catch((err) => {
-      // //    console.error(err);
-      // //  });
-      // //  todo - delete me:
-      // //  store.dispatch("addTechnologiesToFirestore")
     },
 
     //? ACTION - Update Airtable Tech Listing
     // todo - remove if still in use
-    updateAirtableTech({ commit }, payload) {
-      let { url, params } = payload;
-      axios
-        .post(url, params)
-        .then(async (res) => {
-          console.log(res.data[0]);
-          // console.log(res.data.params)
-          payload.params.id = await res.data[0].id;
-          payload.params.id = await res.data[0].fields;
-          payload.params.categories = await res.data[0].fields.Categories;
-          payload.params.technology = await res.data[0].fields.Technology;
-          // payload.params.id = await res.data[0].fields.Notes
-          console.log(payload.params.id);
-        })
-        .finally(() => {
-          commit("updateAirtableTech", payload);
-        });
-    },
+    // updateAirtableTech({ commit }, payload) {
+    //   let { url, params } = payload;
+    //   axios
+    //     .post(url, params)
+    //     .then(async (res) => {
+    //       console.log(res.data[0]);
+    //       payload.params.id = await res.data[0].id;
+    //       payload.params.id = await res.data[0].fields;
+    //       payload.params.categories = await res.data[0].fields.Categories;
+    //       payload.params.technology = await res.data[0].fields.Technology;
+    //       console.log(payload.params.id);
+    //     })
+    //     .finally(() => {
+    //       commit("updateAirtableTech", payload);
+    //     });
+    // },
   },
 
   /*************************
@@ -1027,9 +978,11 @@ export const store = new Vuex.Store({
       return state.loadedProjects;
     },
 
+
+    //? GETTER - GET Projects in order of creation
     loadedProjects(state) {
       return state.loadedProjects.sort((a, b) => {
-        return a.created < b.created;
+        return a.created < b.created ? 1 : -1;
       });
     },
 
@@ -1094,11 +1047,16 @@ export const store = new Vuex.Store({
     //? GETTER - GET All Technologies sorted by Date Modified
     allTechnologiesDateSorted(state) {
       if (state.allTechnologies) {
-
-        return state.allTechnologies.sort((a,b) => (a.dateModified.split("-").join("") < b.dateModified.split("-").join("") ? 1 : -1));
+        return state.allTechnologies.sort((a, b) =>
+          a.dateModified.split("-").join("") <
+          b.dateModified.split("-").join("")
+            ? 1
+            : -1
+        );
       } else {
-        return []
+        return [];
       }
-      },
+    },
+
   },
 });
