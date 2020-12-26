@@ -7,18 +7,43 @@
         class="search"
         v-model="searchValue"
       />
+      <!-- <p v-for="technology in technologies" :key="technology">
+        <br />
+        {{
+          technology.technology
+            .concat(" ")
+            .concat(technology.keywords.toString())
+        }} 
+      </p>-->
       <v-btn small class="accentRed" v-show="addNew" @click="addTechnology">{{
         addNew ? "add " + addNew : ""
       }}</v-btn
       ><br />
       {{ partialMatches.length }}/{{ technologies.length }}
-      <div v-for="match in partialMatches" :key="match.id" align="left">
-        <router-link
-          style="text-decoration: none; font-weight: 700; font-size: 1.5rem"
-          class="light-blue--text"
-          :to="'../technology/' + removeSpecialChars(match.technology)"
-          >{{ match.technology }} </router-link
-        >- {{ match.categories }}
+      <!--  -->
+      <div class="exactMatch" v-if="exactMatch.length">
+        <h3 align="left">Exact Match</h3>
+        <div v-for="match in exactMatch" :key="match.id" align="left">
+          <router-link
+            style="text-decoration: none; font-weight: 700; font-size: 1.5rem"
+            class="accentBlue--text"
+            :to="'../technology/' + removeSpecialChars(match.technology)"
+            >{{ match.technology }} </router-link
+          >- {{ match.categories.toString() }}
+          <hr />
+        </div>
+      </div>
+      <br />
+      <div class="includesMatch">
+        <div v-for="match in keywordAddedSearch" :key="match.id" align="left">
+          <!-- <div v-for="match in partialMatches" :key="match.id" align="left"> -->
+          <router-link
+            style="text-decoration: none; font-weight: 700; font-size: 1.5rem"
+            class="light-blue--text"
+            :to="'../technology/' + removeSpecialChars(match.technology)"
+            >{{ match.technology }} </router-link
+          >- {{ match.categories.toString() }}
+        </div>
       </div>
     </v-card>
     <v-card dark class="card" v-if="addTech">
@@ -60,6 +85,7 @@
           'Programming Language',
           'Runtime/Environment',
           'Software Platform',
+          'Text Editor/IDE',
         ]"
       />
       <v-checkbox
@@ -76,7 +102,7 @@
       />
       <v-btn
         small
-        @click="updateAirtableTech"
+        @click="addNewTechnolog"
         :disabled="!ableToSubmit"
         color="accentRed"
         ><v-icon left>mdi-content-save-outline</v-icon>Submit</v-btn
@@ -102,17 +128,20 @@ export default {
     };
   },
   methods: {
-    updateAirtableTech() {
-      let url =
-        "https://v1.nocodeapi.com/bbass/airtable/OWBByjdlNVhiKRiR?tableName=NewTechnologies";
-      let params = [
-        {
-          Technology: this.newTechToAdd,
-          Categories: this.category,
-          Notes: this.currentUser.username,
-        },
-      ];
-      this.$store.dispatch("updateAirtableTech", { url, params });
+    addNewTechnolog() {
+      // let url =
+      //   "https://v1.nocodeapi.com/bbass/airtable/OWBByjdlNVhiKRiR?tableName=NewTechnologies";
+      let params = {
+        technology: this.newTechToAdd,
+        categories: this.category,
+        username: this.currentUser.username,
+        userId: this.currentUser.documentId,
+        newTechnology: true,
+        dateModified: this.todayDate,
+      };
+      // this.$store.dispatch("addNewTechnolog", { url, params });
+      // todo -
+      this.$store.dispatch("addTechnologiesToFirestore", params);
     },
     addTechnology() {
       this.addTech = true;
@@ -139,6 +168,15 @@ export default {
     },
   },
   computed: {
+    todayDate() {
+      let d = new Date(),
+        month = "" + (d.getMonth() + 1),
+        day = "" + d.getDate(),
+        year = d.getFullYear();
+      if (month.length < 2) month = "0" + month;
+      if (day.length < 2) day = "0" + day;
+      return [year, month, day].join("-");
+    },
     currentUser() {
       return this.$store.getters.user;
     },
@@ -158,8 +196,37 @@ export default {
       }
     },
     technologies() {
+      // return this.$store.getters.technologies;
       return this.$store.getters.allTechnologies;
     },
+    // todo - not matching
+    exactMatch() {
+      if (this.searchValue == "") {
+        return [];
+      } else {
+        return this.technologies.filter((technology) => {
+          if (technology.technology) {
+            return (
+              technology.technology
+                .toLowerCase()
+                .split(" ")
+                .join("")
+                .split(".")
+                .join("") ===
+              this.searchValue
+                .toLowerCase()
+                .split(" ")
+                .join("")
+                .split(".")
+                .join("")
+            );
+          } else {
+            return [];
+          }
+        });
+      }
+    },
+    //* Not currently in use - replaced with keyword added search (for now at least)
     partialMatches() {
       if (this.searchValue == "") {
         return [];
@@ -172,6 +239,39 @@ export default {
               .join("")
               .split(".")
               .join("")
+              .includes(
+                this.searchValue
+                  .toLowerCase()
+                  .split(" ")
+                  .join("")
+                  .split(".")
+                  .join("")
+              );
+          } else {
+            return [];
+          }
+        });
+      }
+    },
+    //* In Use
+    keywordAddedSearch() {
+      if (this.searchValue == "") {
+        return [];
+      } else {
+        return this.technologies.filter((technology) => {
+          if (technology.technology) {
+            return technology.technology
+              .toLowerCase()
+              .split(" ")
+              .join("")
+              .split(".")
+              .join("")
+              .concat(
+                technology.technology
+                  .concat(" ")
+                  .concat(technology.keywords)
+                  .toString()
+              )
               .includes(
                 this.searchValue
                   .toLowerCase()
