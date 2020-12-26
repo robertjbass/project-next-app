@@ -134,12 +134,12 @@
                   </div>
                   <br />
                 </div>
-                <h4>NodeJS</h4>
+                <!-- <h4>NodeJS</h4>
                 <h4>JavaScript</h4>
                 <h4>Firestore</h4>
                 <h4>Vue.js</h4>
                 <h4>MySQL</h4>
-                <h4>TypeScript</h4>
+                <h4>TypeScript</h4> -->
               </div>
             </v-card>
             <!--  -->
