@@ -59,6 +59,17 @@
           {{ project.description }}
         </div>
         <br />
+        <div v-if="project.videoUrl" class="video">
+          <iframe
+            width="560"
+            height="315"
+            :src="project.videoUrl"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </div>
+        <br />
         <div class="links">
           <div v-show="project.productPage" class="product-link">
             <v-icon dark>mdi-link</v-icon

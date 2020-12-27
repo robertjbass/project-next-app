@@ -164,8 +164,45 @@
                       hint="Please select any image. It can be a screenshot, a gradient, a theme, or anything else that you'd like. Take a look at unsplash.com if you need help."
                       :persistent-hint="true"
                     ></v-file-input>
+                    <br />
+                    <br />
+                    <v-text-field
+                      label="Video Embed URL"
+                      class="videoUrl"
+                      v-model="videoUrl"
+                      placeholder="https://www.youtube.com/embed/your_video_id"
+                      hint="Paste a YouTube embed link in here to embed a video. You can add, update or remove a video at any time in your project settings."
+                      persistent-hint
+                      append-icon="mdi-youtube red--text"
+                    />
+                    <br />
+                    <div class="videoError" v-if="this.videoError">
+                      <a @click="closeWarning">
+                        <img
+                          width="100%"
+                          src="../../assets/images/ytVideo.png"
+                        />
+                        <p
+                          class="pink--text"
+                          style="font-size: 0.8rem; font-weight: 600"
+                        >
+                          {{ errorMessage }}
+                        </p>
+                      </a>
+                    </div>
+                    <br />
+                    <div v-if="videoUrl" class="video">
+                      <iframe
+                        max-width="100%"
+                        width="400"
+                        :src="videoUrl"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen
+                      ></iframe>
+                    </div>
 
-                    <h3 v-if="this.imageUrl">Project Banner Image</h3>
+                    <h3 v-if="imageUrl">Project Banner Image</h3>
                     <img :src="imageUrl" width="400px" />
                     <v-combobox
                       label="Starting Duration"
@@ -231,9 +268,15 @@ export default {
       image: null,
       imageUrl: null,
       imageRaw: null,
+      videoUrl: null,
+      videoError: false,
+      errorMessage: null,
     };
   },
   methods: {
+    closeWarning() {
+      this.videoError = false;
+    },
     addGoalWithClick() {
       this.goals.push(this.currentGoal);
       this.currentGoal = "";
@@ -296,6 +339,7 @@ export default {
       this.goals = [];
       this.image = null;
       this.imageUrl = null;
+      this.videoUrl = null;
     },
     submit() {
       if (!this.submitEnabled) {
@@ -335,6 +379,7 @@ export default {
         goals: this.goals,
         image: this.imageRaw,
         projectDuration: this.selectedDuration,
+        videoUrl: this.videoUrl,
       };
     },
     dateCreated() {
@@ -381,6 +426,20 @@ export default {
   },
 
   watch: {
+    videoUrl() {
+      if (this.videoUrl.includes(".be/")) {
+        this.videoError = true;
+        this.videoUrl = this.videoUrl.split(".be/").join("be.com/embed/");
+        this.errorMessage = `You've entered an invalid URL. We've detected a
+        YouTube 'link URL' instead of the 'embed URL'. We've
+        tried to fix this for you, but it's best that you
+        paste the correct URL to be sure. Reference the image
+        below for context. Click the image below to close this
+        warning. If you see the video preview, no further
+        action is required.`;
+      }
+    },
+
     // Only gets rid of whitespace
     selectedItems() {
       let mostRecentEntry = this.selectedItems[this.selectedItems.length - 1];

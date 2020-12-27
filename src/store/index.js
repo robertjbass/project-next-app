@@ -66,10 +66,10 @@ export const store = new Vuex.Store({
     //? MUTATION - Update Project
     updateProject(state, payload) {
       let projectUpdateObject = payload;
-      console.log(projectUpdateObject);
+      // console.log(projectUpdateObject);
       state.loadedProjects.forEach((project) => {
         if (project.id == state.loadedProjects.id) {
-          console.log(project.projectId);
+          console.log(project.projectId, projectUpdateObject);
         }
       });
     },
@@ -178,6 +178,7 @@ export const store = new Vuex.Store({
     },
 
     //? MUTATION - Set NEW Technology just added to Firestore
+    // todo - this may no longer be in use - double check, technologies are now reactive with a listener
     addTechnologiesFromFirestore(state, payload) {
       let { newTechnology, newTechObject } = payload;
       if (newTechnology) {
@@ -189,7 +190,7 @@ export const store = new Vuex.Store({
     },
 
     //? MUTATION - Update Single Technology - can also be used for general tech info modification
-    // todo - when adding a review for DENO, it didn't show up until after a refresh. Look into this
+    // todo - this may no longer be in use - double check, technologies are now reactive with a listener
     addTechnologyReview(state, payload) {
       let { techWithReview, newTechnology } = payload;
       if (!newTechnology) {
@@ -291,7 +292,10 @@ export const store = new Vuex.Store({
     },
 
     //? ACTIONS: Add New Technology to Firestore (TEST ME)
+    // addTechnologiesToFirestore({ commit }, payload) {
     addTechnologiesToFirestore({ commit }, payload) {
+      // todo - figure this out, can't comment this out but also not using this
+      console.log(commit)
       let {
         technology,
         categories,
@@ -369,10 +373,10 @@ export const store = new Vuex.Store({
             .doc(slug)
             .set(newTechObject);
         }
-        commit("addTechnologiesFromFirestore", {
-          newTechObject,
-          newTechnology,
-        });
+        // commit("addTechnologiesFromFirestore", {
+        //   newTechObject,
+        //   newTechnology,
+        // });
       });
     },
 
@@ -730,6 +734,7 @@ export const store = new Vuex.Store({
         username: getters.user.login,
         emailAddress: getters.user.email,
         creatorId: getters.user.id,
+        videoUrl: payload.videoUrl
       };
       let key;
       let ext;
@@ -802,6 +807,7 @@ export const store = new Vuex.Store({
         projectDuration,
         technologies,
         title,
+        videoUrl
       } = updatedProject;
 
       let project = {
@@ -813,6 +819,7 @@ export const store = new Vuex.Store({
         projectDuration,
         technologies,
         title,
+        videoUrl
       };
       let updateProjectRef = db.collection("projects").doc(projectId);
       return updateProjectRef
@@ -931,23 +938,63 @@ export const store = new Vuex.Store({
     },
 
     //? ACTION - SET TECHNOLOGIES
+    // todo - this should be called loadTechnologies for consistancy
     setTechnologies({ commit }) {
       let technologies = [];
       let allTechnologies = [];
 
-      const getTechnologies = async () => {
-        const snapshot = await db.collection("technologies").get();
-        snapshot.forEach((doc) => {
-          allTechnologies.push(doc.data());
-          technologies.push(doc.data().technology);
-        });
-      };
 
-      getTechnologies().then(() => {
-        console.log("setTechnologies", { technologies, allTechnologies });
-        commit("setTechnologies", { technologies, allTechnologies });
-      });
+      // const getTech = () => {
+        const techRef = db.collection("technologies")
+        const query = techRef.where("documentId", "!=", null)
+        // let allTechnologies = []
+        // let technologies = []
+        query.onSnapshot((allTech) => {
+          allTech.forEach((doc) => {
+            allTechnologies.push(doc.data())
+            technologies.push(doc.data().technology)
+            return {
+              technologies: technologies,
+              allTechnologies: allTechnologies
+            }
+          })
+            // .then((tech) => {
+            commit("setTechnologies", { technologies, allTechnologies });
+          // })
+        })
+
+      // }
+
+      // const getTechnologies = async () => {
+      //   const snapshot = await db.collection("technologies").get();
+      //   snapshot.forEach((doc) => {
+      //     allTechnologies.push(doc.data());
+      //     technologies.push(doc.data().technology);
+      //   });
+      // };
+      // getTechnologies().then(() => {
+      // getTech().then(() => {
+      //   // console.log("setTechnologies", { technologies, allTechnologies });
+      //   commit("setTechnologies", { technologies, allTechnologies });
+      // });
     },
+    
+    
+    
+    // // ! for testing - delete me
+    //    loadProjects({ commit }) {
+    //   commit("setLoading", true);
+    //   const projectsRef = db.collection("projects");
+    //   const query = projectsRef.where("title", "!=", null);
+    //   query.onSnapshot((project) => {
+    //     const projects = [];
+    //     project.forEach((doc) => {
+    //       projects.push({ ...doc.data(), id: doc.id });
+    //     });
+    //     commit("setLoadedProjects", projects);
+    //     commit("setLoading", false);
+    //   });
+    // },
 
     //? ACTION - Update Airtable Tech Listing
     // todo - remove if still in use

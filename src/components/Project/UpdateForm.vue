@@ -145,8 +145,6 @@
                   hint="Press enter after each goal to add it"
                   persistent-hint
                 />
-                <br />
-
                 <v-file-input
                   v-model="projectUpdate.updatedProject.imageRaw"
                   name="imageUrl"
@@ -164,6 +162,29 @@
                   class="section"
                   width="400px"
                 />
+                <br />
+                <br />
+                <v-text-field
+                  label="Video Embed URL"
+                  class="videoUrl"
+                  v-model="projectUpdate.updatedProject.videoUrl"
+                  placeholder="https://www.youtube.com/embed/your_video_id"
+                  hint="Paste a YouTube embed link in here to embed a video. You can add, update or remove this at any time."
+                  persistent-hint
+                  append-icon="mdi-youtube red--text"
+                />
+                <br />
+                <div class="videoError" v-if="this.videoError">
+                  <a @click="closeWarning">
+                    <img width="100%" src="../../assets/images/ytVideo.png" />
+                    <p
+                      class="pink--text"
+                      style="font-size: 0.8rem; font-weight: 600"
+                    >
+                      {{ errorMessage }}
+                    </p>
+                  </a>
+                </div>
                 <v-combobox
                   class="section"
                   label="Duration"
@@ -184,9 +205,9 @@
                     Cancel
                   </v-btn>
                   <v-spacer></v-spacer>
-                  <v-btn elevation="0" color="info" text @click="resetForm">
+                  <!-- does the same as close -->
+                  <v-btn elevation="0" color="info" text @click="closeForm">
                     <v-icon left>mdi-refresh</v-icon>
-                    Clear
                   </v-btn>
                   <v-spacer></v-spacer>
                   <v-btn
@@ -226,9 +247,13 @@ export default {
       goals: [],
       image: null,
       imageUrl: null,
+      videoUrl: null,
       editTech: false,
+      videoUrlChanged: false,
       // This isn't a perfect solution but it's a temporary and probably 'good enough' fix for the submit button not otherwise activating when adding new goals
       modifiedGoals: false,
+      videoError: false,
+      errorMessage: null,
       projectUpdate: {
         projectId: this.id,
         userId: "",
@@ -243,11 +268,15 @@ export default {
           imageUrl: this.project.imageUrl,
           projectDuration: this.project.projectDuration,
           imageRaw: this.project.imageUrl,
+          videoUrl: this.project.videoUrl,
         },
       },
     };
   },
   methods: {
+    closeWarning() {
+      this.videoError = false;
+    },
     addGoalWithClick() {
       this.project.goals.push(this.currentGoal);
       this.modifiedGoals = true;
@@ -299,21 +328,6 @@ export default {
       return true;
     },
 
-    resetForm() {
-      (this.modifiedGoals = false), (this.errorMessages = []);
-      this.formHasErrors = false;
-      this.selectedItems = [];
-      this.errorMessages = "";
-      this.projectName = null;
-      this.formHasErrors = false;
-      this.summary = null;
-      this.search = null;
-      this.githubRepo = "";
-      this.productPage = "";
-      this.goals = [];
-      this.image = null;
-      this.imageUrl = null;
-    },
     closeForm() {
       this.$emit("closeForm");
     },
@@ -340,6 +354,9 @@ export default {
   },
 
   computed: {
+    videoUrlWatcher() {
+      return this.projectUpdate.updatedProject.videoUrl;
+    },
     goalCount() {
       return `Goal ${this.project.goals.length + 1}`;
     },
@@ -350,6 +367,7 @@ export default {
 
     submitDisabled() {
       return (
+        !this.videoUrlChanged &&
         this.modifiedGoals == false &&
         this.projectUpdate.updatedProject.title == this.project.title &&
         this.projectUpdate.updatedProject.description ==
@@ -421,6 +439,19 @@ export default {
   },
 
   watch: {
+    videoUrlWatcher() {
+      if (this.projectUpdate.updatedProject.videoUrl.includes(".be/")) {
+        this.videoError = true;
+        this.projectUpdate.updatedProject.videoUrl = this.projectUpdate.updatedProject.videoUrl
+          .split(".be/")
+          .join("be.com/embed/");
+        this.errorMessage = `You've entered an invalid URL. We've detected a YouTube 'link URL' instead of the 'embed URL'. We've tried to fix this for you, but it's best that you paste the correct URL to be sure. This can be found on YouTube at 'share' → 'embed' after 'src=' in the iframe text area.`;
+      } else if (
+        this.projectUpdate.updatedProject.videoUrl != this.project.url
+      ) {
+        this.videoUrlChanged = true;
+      }
+    },
     user() {
       if (this.user === null || this.user === undefined) {
         this.$router.push("/");
