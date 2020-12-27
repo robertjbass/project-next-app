@@ -28,36 +28,39 @@
       <InfoBannerMini />
       <h1>Featured Projects</h1>
       <v-layout class="carousel" style="cursor: pointer">
-        <div class="loggedInContent" v-if="userIsAuthenticated">
-          <v-carousel
-            v-model="model"
-            :show-arrows="false"
-            cycle
-            class="carousel"
-            height="400"
+        <!-- <div class="loggedInContent" v-if="userIsAuthenticated"> -->
+        <v-carousel
+          v-model="model"
+          :show-arrows="false"
+          cycle
+          class="carousel"
+          height="400"
+        >
+          <v-progress-circular
+            v-if="loading"
+            indeterminate
+            color="purple"
+          ></v-progress-circular>
+          <v-carousel-item
+            v-for="project in featuredProjects"
+            :key="project.id"
+            :src="project.imageUrl"
+            @click="onLoadProject(project.id)"
+            hide-on-leave
           >
-            <v-progress-circular
-              v-if="loading"
-              indeterminate
-              color="purple"
-            ></v-progress-circular>
-            <v-carousel-item
-              v-for="project in featuredProjects"
-              :key="project.id"
-              :src="project.imageUrl"
-              @click="onLoadProject(project.id)"
-              hide-on-leave
-            >
-              <div class="title">{{ project.title }}</div>
-              <div class="user">{{ project.username }}</div>
-            </v-carousel-item>
-          </v-carousel>
-        </div>
-        <div class="notLoggedIn" v-else>
-          <router-link class="light-blue--text" style="text-decoration: none"
+            <div class="title">{{ project.title }}</div>
+            <div class="user">{{ project.username }}</div>
+          </v-carousel-item>
+        </v-carousel>
+        <!-- </div>
+        <div class="notLoggedIn" v-else> -->
+        <!-- <router-link
+            class="light-blue--text"
+            style="text-decoration: none"
+            to="../signup"
             >Sign Up or Log in </router-link
-          >to view user content
-        </div>
+          >to view user content -->
+        <!-- </div> -->
       </v-layout>
     </v-container>
     <h2>Recent Projects</h2>
