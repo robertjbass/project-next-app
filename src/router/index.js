@@ -44,7 +44,8 @@ const router = new Router({
       path: '/technology/:technology', 
       name: 'Technology',
       component: Technology,
-      props: true
+      props: true,
+      beforeEnter: AuthGuard
     },
     {
       path: '/technologies', 
@@ -62,7 +63,8 @@ const router = new Router({
       path: '/project/:id',
       name: 'Project',
       props: true,
-      component: Project
+      component: Project,
+      beforeEnter: AuthGuard
     },
     {
       path: '/projects',
