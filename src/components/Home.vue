@@ -28,7 +28,6 @@
       <InfoBannerMini />
       <h1>Featured Projects</h1>
       <v-layout class="carousel" style="cursor: pointer">
-        <!-- <div class="loggedInContent" v-if="userIsAuthenticated"> -->
         <v-carousel
           v-model="model"
           :show-arrows="false"
@@ -52,15 +51,6 @@
             <div class="user">{{ project.username }}</div>
           </v-carousel-item>
         </v-carousel>
-        <!-- </div>
-        <div class="notLoggedIn" v-else> -->
-        <!-- <router-link
-            class="light-blue--text"
-            style="text-decoration: none"
-            to="../signup"
-            >Sign Up or Log in </router-link
-          >to view user content -->
-        <!-- </div> -->
       </v-layout>
     </v-container>
     <h2>Recent Projects</h2>
